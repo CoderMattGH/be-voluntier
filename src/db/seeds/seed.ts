@@ -15,6 +15,7 @@ function seed(volUsers: VolUser[]): Promise<any> {
             CREATE TABLE vol_user_table (
               vol_id SERIAL PRIMARY KEY,
               vol_email VARCHAR(200) NOT NULL,
+              vol_password VARCHAR(100) NOT NULL,
               vol_first_name VARCHAR(100) NOT NULL,
               vol_last_name VARCHAR(100) NOT NULL,
               vol_contact_tel VARCHAR(50),
