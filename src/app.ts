@@ -1,7 +1,6 @@
-const express = require("express");
-
-const cors = require("cors");
-const Router = require("./routes/api-router");
+import express from 'express';
+import cors from 'cors';
+import Router from './routes/api-router';
 
 const app = express();
 
@@ -11,4 +10,11 @@ app.use(express.json());
 
 app.use("/api", Router);
 
-module.exports = app;
+// Test endpoint. OK to delete
+app.get('/', (req, res, next) => {
+  console.log("GET / Endpoint OK!");
+
+  res.status(200).send();
+});
+
+export default app;
