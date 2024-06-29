@@ -1,0 +1,5 @@
+DROP DATABASE IF EXISTS voluntier;
+DROP DATABASE IF EXISTS voluntier_db;
+
+CREATE DATABASE voluntier;
+CREATE DATABASE voluntier_db;
