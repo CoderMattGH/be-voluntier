@@ -1,7 +1,7 @@
 import format from 'pg-format';
 import db from '../connection';
 
-import { VolUser } from '../data/dev-data/vol_users';
+import { VolUser } from '../data/types';
 
 function seed(volUsers: VolUser[]): Promise<any> {
   console.log("Seeding database!");
