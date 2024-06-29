@@ -3,6 +3,9 @@ import db from '../connection';
 
 import { VolUser } from '../data/types';
 
+import authUtils from '../../auth/auth-utils';
+const { hashPassword } = authUtils;
+
 function seed(volUsers: VolUser[]): Promise<any> {
   console.log("Seeding database!");
   
@@ -35,6 +38,7 @@ function seed(volUsers: VolUser[]): Promise<any> {
                 vol_first_name,
                 vol_last_name,
                 vol_email,
+                vol_password,
                 vol_contact_tel,
                 vol_bio,
                 vol_hours
@@ -44,6 +48,7 @@ function seed(volUsers: VolUser[]): Promise<any> {
                 volUser.vol_first_name,
                 volUser.vol_last_name,
                 volUser.vol_email,
+                hashPassword(volUser.vol_password),
                 volUser.vol_contact_tel,
                 volUser.vol_bio,
                 volUser.vol_hours
