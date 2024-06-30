@@ -54,6 +54,8 @@ type Skill = {
   skill_name: string
 };
 
+
+
 type Badge = {
   badge_id?: number,
   badge_name: string,
