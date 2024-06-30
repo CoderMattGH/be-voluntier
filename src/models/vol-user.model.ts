@@ -1,7 +1,7 @@
-import db from '../db/connection';
+import {db} from '../db/connection';
 
 // TODO: Validate email
-function selectVolUserByEmail(email: string) {
+export function selectVolUserByEmail(email: string) {
   email = email.trim();
 
   const queryStr = `SELECT * FROM vol_user WHERE vol_user.vol_email ILIKE $1;`;
@@ -17,5 +17,3 @@ function selectVolUserByEmail(email: string) {
         return rows[0];
       });
 };
-
-export default {selectVolUserByEmail};

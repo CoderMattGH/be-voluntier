@@ -1,10 +1,10 @@
 import format from 'pg-format';
-import db from '../connection';
+import {db} from '../connection';
 
-import { VolUser } from '../data/types';
+import {VolUser} from '../data/types';
 
-import authUtils from '../../auth/auth-utils';
-const { hashPassword } = authUtils;
+import * as authUtils from '../../auth/auth-utils';
+const {hashPassword} = authUtils;
 
 function setupSessionTable() {
   console.log("Setting up user session table!");
@@ -28,7 +28,7 @@ function setupSessionTable() {
       });
 }
 
-function seed(volUsers: VolUser[]) {
+export function seed(volUsers: VolUser[]) {
   console.log("Seeding database!");
   
   return db
@@ -87,5 +87,3 @@ function seed(volUsers: VolUser[]) {
         console.log("Database successfully seeded!");
       });
 }
-
-export default seed;

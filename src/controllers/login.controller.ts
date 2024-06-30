@@ -1,9 +1,9 @@
-import volUserModel from "../models/vol-user.model";
-import authUtils from "../auth/auth-utils";
-import { Request, Response, NextFunction } from "express";
+import * as volUserModel from "../models/vol-user.model";
+import * as authUtils from "../auth/auth-utils";
+import {Request, Response, NextFunction} from "express";
 
 // TODO: Organiser and Admin roles
-function loginUser(req: Request, res: Response, next: NextFunction) : void {
+export function loginUser(req: Request, res: Response, next: NextFunction) : void {
   const email = req.body.email;
   const password = req.body.password;
 
@@ -35,7 +35,7 @@ function loginUser(req: Request, res: Response, next: NextFunction) : void {
 }
 
 // TODO: Error handling
-function logoutUser(req: Request, res: Response, next: NextFunction) : void {
+export function logoutUser(req: Request, res: Response, next: NextFunction) : void {
   console.log("Trying to log out user!");
 
   if (req.session.user) {
@@ -52,5 +52,3 @@ function logoutUser(req: Request, res: Response, next: NextFunction) : void {
     res.status(500).send();
   }
 }
-
-export default {loginUser, logoutUser};

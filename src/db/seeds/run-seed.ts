@@ -1,6 +1,6 @@
-import seed from './seed';
+import {seed} from './seed';
 
-import { VolUser } from '../data/types';
+import {VolUser} from '../data/types';
 import volUsers from '../data/dev-data/vol_users';
 
 function runSeed() {

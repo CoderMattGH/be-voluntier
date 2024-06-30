@@ -1,4 +1,4 @@
-import authUtils from "../../auth/auth-utils";
+import * as authUtils from "../../auth/auth-utils";
 const {hashPassword, checkPassword} = authUtils;
 
 describe("hashPassword()", () => {

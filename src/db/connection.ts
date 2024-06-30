@@ -1,4 +1,4 @@
-import { Pool } from 'pg';
+import {Pool} from 'pg';
 import dotenv from 'dotenv';
 
 const ENV: string = process.env.NODE_ENV || "development";
@@ -19,4 +19,4 @@ if (ENV === "production") {
   config.max = 2;
 }
 
-export default new Pool(config);
+export const db = new Pool(config);
