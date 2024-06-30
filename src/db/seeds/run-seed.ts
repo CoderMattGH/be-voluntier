@@ -9,18 +9,21 @@ import {listings} from '../data/dev-data/listings';
 import {skills} from '../data/dev-data/skills';
 import {badges} from '../data/dev-data/badge';
 import {applications} from '../data/dev-data/applications';
+import {listSkillJuncs} from '../data/dev-data/list-skill-junc';
+import {volUserBadgeJuncs} from '../data/dev-data/vol-user-badge-junc';
 
 function runSeed() {
   logger.info("Seeding database!");
 
-  seed(volUsers, orgUsers, listings, skills, orgTypes, badges, applications)
-      .then(() => {
-        logger.info("Seeding successful!");
-      })
-      .catch((err: Error) => {
-        logger.error("ERROR: Unable to complete seed!");
-        logger.error(err);
-      });
+  seed(volUsers, orgUsers, listings, skills, orgTypes, badges, applications, listSkillJuncs,
+      volUserBadgeJuncs)
+    .then(() => {
+      logger.info("Seeding successful!");
+    })
+    .catch((err: Error) => {
+      logger.error("ERROR: Unable to complete seed!");
+      logger.error(err);
+    });
 }
 
 runSeed();
