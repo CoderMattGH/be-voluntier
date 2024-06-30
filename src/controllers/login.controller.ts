@@ -5,6 +5,7 @@ import * as authUtils from "../auth/auth-utils";
 import {Request, Response, NextFunction} from "express";
 
 // TODO: Organiser and Admin roles
+// TODO: Validation
 export function loginUser(req: Request, res: Response, next: NextFunction) {
   logger.debug(`In loginUser() in login.controller`);
 
@@ -39,6 +40,7 @@ export function loginUser(req: Request, res: Response, next: NextFunction) {
 }
 
 // TODO: Error handling
+// TODO: Validation
 export function logoutUser(req: Request, res: Response, next: NextFunction) {
   logger.debug(`In logoutUser() in login.controller`);
   logger.info(`Logging out user: ${req.session.user}`);
