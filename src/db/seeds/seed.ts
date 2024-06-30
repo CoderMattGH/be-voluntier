@@ -1,19 +1,19 @@
 import {logger} from '../../logger';
-
 import format from 'pg-format';
 import {db} from '../';
+import {hashPassword} from '../../auth/auth-utils';
 
-import type {VolUser, Listing} from '../data/types';
+import type {VolUser, Listing, Skill} from '../data/types';
 
-import * as authUtils from '../../auth/auth-utils';
-const {hashPassword} = authUtils;
-
-export function seed(volUsers: VolUser[], listings: Listing[]) {
+export function seed(volUsers: VolUser[], listings: Listing[], skills: Skill[]) {
   logger.debug("Starting db seed!");
   
-  return setupVolUsersTable(volUsers)
+  return setupSkillsTable(skills)
       .then(() => {
         return setupListingsTable(listings);
+      })
+      .then(() => {
+        return setupVolUsersTable(volUsers);
       })
       .then(() => {
         return setupSessionTable();
@@ -148,4 +148,30 @@ function setupListingsTable(listings: Listing[]) {
 
         return db.query(queryStr);
       })
+}
+
+function setupSkillsTable(skills: Skill[]) {
+  logger.debug("Setting up skills table!");
+
+  return db.query(`DROP TABLE IF EXISTS skills;`)
+      .then(() => {
+        return db.query(
+          `CREATE TABLE skills (
+            skill_id SERIAL PRIMARY KEY,
+            skill_name VARCHAR(100)
+          );`
+        );
+      })
+      .then(() => {
+        const queryStr = format(
+          `INSERT INTO skills (
+            skill_name
+          ) VALUES %L;`,
+          skills.map((skill) => {
+            return [skill.skill_name];
+          })
+        );
+
+        return db.query(queryStr);
+      });
 }
