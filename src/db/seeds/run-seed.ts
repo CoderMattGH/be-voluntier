@@ -2,14 +2,14 @@ import {logger} from '../../logger';
 
 import {seed} from './seed';
 
-import {VolUser} from '../data/types';
-import volUsers from '../data/dev-data/vol_users';
+import type {VolUser, Listing} from '../data/types';
+import {volUsers} from '../data/dev-data/vol_users';
+import {listings} from '../data/dev-data/listings';
 
 function runSeed() {
   logger.info("Seeding database!");
 
-  const typedVolUsers: VolUser[] = volUsers;
-  seed(typedVolUsers)
+  seed(volUsers, listings)
       .then(() => {
         logger.info("Seeding successful!");
       })
