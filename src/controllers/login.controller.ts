@@ -4,8 +4,8 @@ import { Request, Response, NextFunction } from "express";
 
 // TODO: Organiser and Admin roles
 function loginUser(req: Request, res: Response, next: NextFunction) : void {
-  const email: string = req.body.email;
-  const password: string = req.body.password;
+  const email = req.body.email;
+  const password = req.body.password;
 
   volUserModel.selectVolUserByEmail(email)
       .then((volUser) => {

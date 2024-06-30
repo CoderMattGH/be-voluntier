@@ -6,7 +6,7 @@ import { VolUser } from '../data/types';
 import authUtils from '../../auth/auth-utils';
 const { hashPassword } = authUtils;
 
-function setupSessionTable() : Promise<any> {
+function setupSessionTable() {
   console.log("Setting up user session table!");
 
   return db
@@ -28,7 +28,7 @@ function setupSessionTable() : Promise<any> {
       });
 }
 
-function seed(volUsers: VolUser[]): Promise<any> {
+function seed(volUsers: VolUser[]) {
   console.log("Seeding database!");
   
   return db

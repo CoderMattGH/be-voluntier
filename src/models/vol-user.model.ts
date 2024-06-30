@@ -1,10 +1,10 @@
 import db from '../db/connection';
 
 // TODO: Validate email
-function selectVolUserByEmail(email: string) : Promise<any> {
+function selectVolUserByEmail(email: string) {
   email = email.trim();
 
-  const queryStr: string = `SELECT * FROM vol_user WHERE vol_user.vol_email ILIKE $1;`;
+  const queryStr = `SELECT * FROM vol_user WHERE vol_user.vol_email ILIKE $1;`;
 
   return db.query(queryStr, [email])
       .then((result) => {
