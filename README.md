@@ -4,6 +4,11 @@ Please try and follow as closely as you can:
 
 https://google.github.io/styleguide/tsguide.html
 
+### Main points:
+
+* Avoid default exports.
+* Avoid redundant explicit type declaration.
+* 100 character line limit.
 
 ## Running
 
