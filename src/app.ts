@@ -23,13 +23,6 @@ app.use(express.json());
 
 app.use("/api", apiRouter);
 
-// TODO: OK to delete.  Just for testing
-app.get("/", (req, res, next) => {
-  logger.info("GET / Endpoint OK!");
-
-  res.status(200).send();
-});
-
 // Handle psql errors
 app.use(
   (
@@ -45,15 +38,20 @@ app.use(
       err.code === "23502" ||
       err.code === "2201X" ||
       err.code === "2201W"
-    )
+    ) {
       res.status(400).send({ msg: "Bad request!" });
-    else if (err.code === "23503")
+    }
+    else if (err.code === "23503") {
       // Violates Foreign Key constraint
       res.status(404).send({ msg: "Resource not found!" });
-    else if (err.code === "23505")
+    }
+    else if (err.code === "23505") {
       // Duplicate Primary Key found
       res.status(409).send({ msg: "Resource already exists!" });
-    else next(err);
+    }
+    else {
+      next(err);
+    }
   }
 );
 
