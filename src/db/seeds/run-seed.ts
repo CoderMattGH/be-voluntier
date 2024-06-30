@@ -1,15 +1,17 @@
 import {logger} from '../../logger';
-
 import {seed} from './seed';
 
-import type {VolUser, Listing} from '../data/types';
+// TODO: Import based on env
 import {volUsers} from '../data/dev-data/vol_users';
 import {listings} from '../data/dev-data/listings';
+import {skills} from '../data/dev-data/skills';
+
+import type {VolUser, Listing, Skill} from '../data/types';
 
 function runSeed() {
   logger.info("Seeding database!");
 
-  seed(volUsers, listings)
+  seed(volUsers, listings, skills)
       .then(() => {
         logger.info("Seeding successful!");
       })

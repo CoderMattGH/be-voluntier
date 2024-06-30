@@ -2,7 +2,6 @@ import type {Listing} from "../types";
 
 export const listings: Listing[] = [
     {
-        list_id: 1,
         list_title: "Community Garden Cleanup",
         list_location: "SW1A 1AA",
         list_longitude: -0.1246,
@@ -17,7 +16,6 @@ export const listings: Listing[] = [
         list_skills: ["Gardening", "Teamwork", "Physical Work"]
     },
     {
-        list_id: 2,
         list_title: "Beach Cleanup Event",
         list_location: "BN1 1AA",
         list_longitude: -0.1364,
@@ -32,7 +30,6 @@ export const listings: Listing[] = [
         list_skills: ["Environmental Awareness", "Teamwork", "Physical Work"]
     },
     {
-        list_id: 3,
         list_title: "Charity Fun Run",
         list_location: "E1 6AN",
         list_longitude: -0.0722,
@@ -47,7 +44,6 @@ export const listings: Listing[] = [
         list_skills: ["Running", "Fundraising", "Community Engagement"]
     },
     {
-        list_id: 4,
         list_title: "Food Bank Volunteering",
         list_location: "M1 1AE",
         list_longitude: -2.2374,
@@ -62,7 +58,6 @@ export const listings: Listing[] = [
         list_skills: ["Organization", "Customer Service", "Teamwork"]
     },
     {
-        list_id: 5,
         list_title: "Park Clean Up",
         list_location: "B1 1AA",
         list_longitude: -1.8959,
@@ -77,7 +72,6 @@ export const listings: Listing[] = [
         list_skills: ["Environmental Awareness", "Teamwork", "Physical Work"]
     },
     {
-        list_id: 6,
         list_title: "Animal Shelter Support",
         list_location: "NG1 1AA",
         list_longitude: -1.1489,
@@ -92,7 +86,6 @@ export const listings: Listing[] = [
         list_skills: ["Animal Care", "Patience", "Teamwork"]
     },
     {
-        list_id: 7,
         list_title: "Library Book Sale",
         list_location: "LS1 1AA",
         list_longitude: -1.5476,
@@ -107,7 +100,6 @@ export const listings: Listing[] = [
         list_skills: ["Sales", "Organization", "Customer Service"]
     },
     {
-        list_id: 8,
         list_title: "Homeless Shelter Dinner Service",
         list_location: "EC1A 1BB",
         list_longitude: -0.0983,
@@ -122,7 +114,6 @@ export const listings: Listing[] = [
         list_skills: ["Cooking", "Customer Service", "Compassion"]
     },
     {
-        list_id: 9,
         list_title: "Youth Sports Coaching",
         list_location: "CF10 1AA",
         list_longitude: -3.1781,
@@ -137,7 +128,6 @@ export const listings: Listing[] = [
         list_skills: ["Coaching", "Mentoring", "Sports"]
     },
     {
-        list_id: 10,
         list_title: "Art Workshop for Seniors",
         list_location: "EH1 1AA",
         list_longitude: -3.1883,
