@@ -47,4 +47,11 @@ type Skill = {
   skill_name: string
 };
 
-export type {VolUser, OrgUser, OrgType, Listing, Skill};
+type Badge = {
+  badge_id?: number,
+  badge_name: string,
+  badge_img_path: string,
+  badge_points: number
+};
+
+export type {VolUser, OrgUser, OrgType, Listing, Skill, Badge};
