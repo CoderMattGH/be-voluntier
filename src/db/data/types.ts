@@ -11,4 +11,20 @@ type VolUser = {
   vol_badges?: number
 };
 
-export type { VolUser };
+type Listing = {
+    list_id: number;
+    list_title: string;
+    list_location: string;
+    list_longitude: number;
+    list_latitude: number;
+    list_date: string;
+    list_time: string;
+    list_duration: number;
+    list_description: string;
+    list_img: string;
+    list_visible: boolean;
+    list_org: string;
+    list_skills: string[];
+};
+
+export type {VolUser, Listing};
