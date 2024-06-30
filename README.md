@@ -24,6 +24,23 @@ Download a ready-made one @ https://github.com/CoderMattGH/voluntier-docs/tree/m
 
 3. `npm install`
 
+### Available environment variables
+
+* #### `PGDATABASE` 
+
+  *Database name.*
+
+  For example: `PGDATABASE=voluntier_db`
+
+
+* #### `LOGL`  
+  
+  *Log level. Can take values `debug`, `info`, `error`.*
+
+  For example: `LOGL=debug`
+
+  *Note: If you would like to remove log messages, set the level to `error`.*
+
 
 ### Setup database
 
