@@ -24,28 +24,28 @@ Download a ready-made one @ https://github.com/CoderMattGH/voluntier-docs/tree/m
 
 1. Set up the psql databases:
 
-`npm run setup-dbs`
+    `npm run setup-dbs`
 
 2. Seed the databases:
 
-`npm run seed`
+    `npm run seed`
 
 
 ### Finally
 
 1. Compile the project:
 
-`npm run build`
+    `npm run build`
 
 2. Run the project:
 
-`npm start`
+    `npm start`
 
-OR
+**OR**
 
-1. Compile and then run if successful
+1. Compile and then run if successful:
 
-`./COMP_RUN.sh`
+    `./COMP_RUN.sh`
 
 ## Testing
 
