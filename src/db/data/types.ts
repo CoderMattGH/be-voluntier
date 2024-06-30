@@ -12,7 +12,7 @@ type VolUser = {
 };
 
 type Listing = {
-    list_id: number;
+    list_id?: number;
     list_title: string;
     list_location: string;
     list_longitude: number;
