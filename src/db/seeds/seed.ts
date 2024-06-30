@@ -3,12 +3,13 @@ import format from 'pg-format';
 import {db} from '../';
 import {hashPassword} from '../../auth/auth-utils';
 
-import type {VolUser, OrgUser, Listing, Skill, OrgType, Badge, Application, ListSkillJunc, VolUserBadgeJunc} 
+import type {VolUser, OrgUser, Listing, Skill, OrgType, Badge, Application, ListSkillJunc, VolUserBadgeJunc, VolUserSkillJunc} 
     from '../data/types';
 
 export function seed(volUsers: VolUser[], orgUsers: OrgUser[], listings: Listing[], skills: Skill[],
     orgTypes: OrgType[], badges: Badge[], applications: Application[], 
-    listSkillJuncs: ListSkillJunc[], volUserBadgeJuncs: VolUserBadgeJunc[]) {
+    listSkillJuncs: ListSkillJunc[], volUserBadgeJuncs: VolUserBadgeJunc[], 
+    volUserSkillJuncs: VolUserSkillJunc[]) {
   logger.debug("Starting db seed!");
   
   return dropTables()
@@ -42,6 +43,9 @@ export function seed(volUsers: VolUser[], orgUsers: OrgUser[], listings: Listing
       return setupVolUserBadgeJuncTable(volUserBadgeJuncs);
     })
     .then(() => {
+      return setupVolUserSkillJuncTable(volUserSkillJuncs);
+    })
+    .then(() => {
       return setupSessionTable();
     })
     .finally(() => {
@@ -66,6 +70,11 @@ function dropTables() {
       logger.debug(`Dropping vol_user_badge_junc table!`);
 
       return db.query(`DROP TABLE IF EXISTS vol_user_badge_junc;`);
+    })
+    .then(() => {
+      logger.debug(`Dropping vol_user_skill_junc table!`);
+
+      return db.query(`DROP TABLE IF EXISTS vol_user_skill_junc`);
     })
     .then(() => {
       logger.debug(`Dropping badges table!`);
@@ -431,3 +440,28 @@ function setupVolUserBadgeJuncTable(volUserBadgeJuncs: VolUserBadgeJunc[]) {
       )
     });
 }
+
+function setupVolUserSkillJuncTable(volUserSkillJuncs: VolUserSkillJunc[]) {
+  logger.debug("Setting up vol_user_skill_junc table!");
+
+  return db.query(
+    `CREATE TABLE vol_user_skill_junc (
+      vol_user_skill_id SERIAL PRIMARY KEY,
+      vol_id INT REFERENCES vol_users(vol_id),
+      skill_id INT REFERENCES skills(skill_id)
+    )`)
+    .then(() => {
+      const queryStr = format(
+        `INSERT INTO vol_user_skill_junc (
+          vol_id,
+          skill_id
+        ) VALUES %L;`,
+        volUserSkillJuncs.map((obj) => {
+          return [
+            obj.vol_id,
+            obj.skill_id
+          ];
+        })
+      );
+    });
+};
