@@ -1,5 +1,27 @@
 {
   "GET /api": {
     "description": "Serves up a JSON representation of all the available endpoints of the API"
+  },
+  "GET /api/listings": {
+    "description": "Serves up an array of all the visible volunteer listings",
+    "queries": ["visible (true/false)"],
+    "exampleResponse": {
+      "listings": [
+        {
+          "list_id": 1,
+          "list_title": "Community Garden Cleanup",
+          "list_location": "SW1A 1AA",
+          "list_longitude": -0.1246,
+          "list_latitude": 51.5014,
+          "list_date": "2024-06-30T23:00:00.000Z",
+          "list_time": "09:00:00",
+          "list_duration": 4,
+          "list_description": "Description text...",
+          "list_img": null,
+          "org_name": "Oxfam",
+          "org_avatar": null
+        }
+      ]
+    }
   }
 }

@@ -24,7 +24,7 @@ export const listings: Listing[] = [
         list_duration: 3,
         list_description: "Help us clean up the beach and protect marine life. We will provide all the necessary equipment. All you need to bring is your enthusiasm and love for the environment.",
         list_img: "./images/image2",
-        list_visible: false,
+        list_visible: true,
         list_org: 4,
     },
     {
@@ -50,7 +50,7 @@ export const listings: Listing[] = [
         list_duration: 5,
         list_description: "Assist in organizing and distributing food at our local food bank. Your help will make a significant difference in the lives of those in need.",
         list_img: "./images/image4",
-        list_visible: false,
+        list_visible: true,
         list_org: 2,
     },
     {
@@ -102,7 +102,7 @@ export const listings: Listing[] = [
         list_duration: 3,
         list_description: "Volunteer to serve dinner at our homeless shelter. Your kindness will provide a warm meal and a friendly face to those in need.",
         list_img: "./images/image8",
-        list_visible: false,
+        list_visible: true,
         list_org: 7,
     },
     {
