@@ -2,14 +2,15 @@ import {logger} from '../../logger';
 import {seed} from './seed';
 
 // TODO: Import based on env
-import {volUsers} from '../data/dev-data/vol_users';
+import {volUsers} from '../data/dev-data/vol-users';
+import { orgUsers } from '../data/dev-data/org-users';
 import {listings} from '../data/dev-data/listings';
 import {skills} from '../data/dev-data/skills';
 
 function runSeed() {
   logger.info("Seeding database!");
 
-  seed(volUsers, listings, skills)
+  seed(volUsers, orgUsers, listings, skills)
       .then(() => {
         logger.info("Seeding successful!");
       })

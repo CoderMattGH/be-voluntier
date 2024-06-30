@@ -11,6 +11,16 @@ type VolUser = {
   vol_badges?: number
 };
 
+type OrgUser = {
+  org_id?: number,
+  org_name: string,
+  org_email: string,
+  org_contact_tel?: string,
+  org_bio?: string,
+  org_avatar?: Blob,
+  org_verified: boolean
+};
+
 type Listing = {
     list_id?: number;
     list_title: string;
@@ -32,4 +42,4 @@ type Skill = {
   skill_name: string
 };
 
-export type {VolUser, Listing, Skill};
+export type {VolUser, OrgUser, Listing, Skill};

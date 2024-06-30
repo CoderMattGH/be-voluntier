@@ -15,7 +15,7 @@ export function selectVolUserByEmail(email: string) {
         const {rows} = result;
 
         if (!rows.length) {
-          return new Error("VOL_USER_NOT_FOUND");
+          throw new Error("VOL_USER_NOT_FOUND");
         }
 
         return rows[0];
