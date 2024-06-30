@@ -3,9 +3,9 @@ import format from 'pg-format';
 import {db} from '../';
 import {hashPassword} from '../../auth/auth-utils';
 
-import type {VolUser, Listing, Skill} from '../data/types';
+import type {VolUser, OrgUser, Listing, Skill} from '../data/types';
 
-export function seed(volUsers: VolUser[], listings: Listing[], skills: Skill[]) {
+export function seed(volUsers: VolUser[], orgUsers: OrgUser[], listings: Listing[], skills: Skill[]) {
   logger.debug("Starting db seed!");
   
   return setupSkillsTable(skills)
@@ -14,6 +14,9 @@ export function seed(volUsers: VolUser[], listings: Listing[], skills: Skill[]) 
       })
       .then(() => {
         return setupVolUsersTable(volUsers);
+      })
+      .then(() => {
+        return setupOrgUsersTable(orgUsers);
       })
       .then(() => {
         return setupSessionTable();
@@ -92,6 +95,47 @@ function setupVolUsersTable(volUsers: VolUser[]) {
       });  
 }
 
+function setupOrgUsersTable(orgUsers: OrgUser[]) {
+  logger.debug(`Setting up org_users table!`);
+
+  return db.query(`DROP TABLE IF EXISTS org_users;`)
+      .then(() => {
+        return db.query(
+          `CREATE TABLE org_users (
+            org_id SERIAL PRIMARY KEY,
+            org_name VARCHAR(100) NOT NULL,
+            org_email VARCHAR(100) NOT NULL,
+            org_contact_tel VARCHAR(100),
+            org_bio TEXT,
+            org_avatar BYTEA,
+            org_verified BOOLEAN
+          );`
+        )
+        .then(() => {
+          const queryStr = format(
+            `INSERT INTO org_users (
+              org_name,
+              org_email,
+              org_contact_tel,
+              org_bio,
+              org_verified
+            ) VALUES %L;`,
+            orgUsers.map((orgUser) => {
+              return [
+                orgUser.org_name,
+                orgUser.org_email,
+                orgUser.org_contact_tel,
+                orgUser.org_bio,
+                orgUser.org_verified
+              ];
+            })
+          );
+
+          return db.query(queryStr);
+        });
+      });
+}
+
 function setupListingsTable(listings: Listing[]) {
   logger.debug("Setting up listings table!");
 
@@ -158,7 +202,7 @@ function setupSkillsTable(skills: Skill[]) {
         return db.query(
           `CREATE TABLE skills (
             skill_id SERIAL PRIMARY KEY,
-            skill_name VARCHAR(100)
+            skill_name VARCHAR(100) NOT NULL
           );`
         );
       })
