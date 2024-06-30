@@ -1,5 +1,3 @@
 import {Router} from 'express';
 
-const apiRouter = Router();
-
-export default apiRouter;
+export const apiRouter = Router();

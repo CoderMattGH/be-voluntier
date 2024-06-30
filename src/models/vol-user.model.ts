@@ -1,10 +1,10 @@
-import db from '../db/connection';
+import {db} from '../db/connection';
 
 // TODO: Validate email
-function selectVolUserByEmail(email: string) : Promise<any> {
+export function selectVolUserByEmail(email: string) {
   email = email.trim();
 
-  const queryStr: string = `SELECT * FROM vol_user WHERE vol_user.vol_email ILIKE $1;`;
+  const queryStr = `SELECT * FROM vol_user WHERE vol_user.vol_email ILIKE $1;`;
 
   return db.query(queryStr, [email])
       .then((result) => {
@@ -17,5 +17,3 @@ function selectVolUserByEmail(email: string) : Promise<any> {
         return rows[0];
       });
 };
-
-export default {selectVolUserByEmail};
