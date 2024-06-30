@@ -54,4 +54,12 @@ type Badge = {
   badge_points: number
 };
 
-export type {VolUser, OrgUser, OrgType, Listing, Skill, Badge};
+type Application = {
+  app_id?: number,
+  vol_id: number,
+  listing_id: number,
+  prov_confirm: boolean,
+  full_conf: boolean
+};
+
+export type {VolUser, OrgUser, OrgType, Listing, Skill, Badge, Application};
