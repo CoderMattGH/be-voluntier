@@ -16,6 +16,7 @@ type OrgUser = {
   org_name: string,
   org_email: string,
   org_contact_tel?: string,
+  org_type: number,
   org_bio?: string,
   org_avatar?: Blob,
   org_verified: boolean
@@ -38,9 +39,15 @@ type Listing = {
   list_description: string;
   list_img: string;
   list_visible: boolean;
-  list_org: string;
-  list_skills: string[];
+  list_org: number;
 };
+
+// List <-> Skill junction table
+export type ListSkillJunc = {
+  list_skill_id?: number,
+  list_id: number,
+  skill_id: number
+}
 
 type Skill = {
   skill_id?: number,
@@ -54,6 +61,13 @@ type Badge = {
   badge_points: number
 };
 
+// Vol_User <-> Badge junction table
+type VolUserBadgeJunc = {
+  vol_user_badge_id?: number,
+  vol_id: number,
+  badge_id: number
+}
+
 type Application = {
   app_id?: number,
   vol_id: number,
@@ -62,4 +76,4 @@ type Application = {
   full_conf: boolean
 };
 
-export type {VolUser, OrgUser, OrgType, Listing, Skill, Badge, Application};
+export type {VolUser, OrgUser, OrgType, Listing, Skill, Badge, Application, VolUserBadgeJunc};

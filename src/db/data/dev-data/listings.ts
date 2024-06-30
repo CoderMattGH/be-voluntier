@@ -12,8 +12,7 @@ export const listings: Listing[] = [
         list_description: "Join us for a morning of community gardening in the heart of the city. We will be cleaning up the garden, planting new flowers, and making the area beautiful for everyone to enjoy.",
         list_img: "./images/image1",
         list_visible: true,
-        list_org: "Green Spaces Charity",
-        list_skills: ["Gardening", "Teamwork", "Physical Work"]
+        list_org: 1,
     },
     {
         list_title: "Beach Cleanup Event",
@@ -26,8 +25,7 @@ export const listings: Listing[] = [
         list_description: "Help us clean up the beach and protect marine life. We will provide all the necessary equipment. All you need to bring is your enthusiasm and love for the environment.",
         list_img: "./images/image2",
         list_visible: false,
-        list_org: "Ocean Guardians",
-        list_skills: ["Environmental Awareness", "Teamwork", "Physical Work"]
+        list_org: 4,
     },
     {
         list_title: "Charity Fun Run",
@@ -40,8 +38,7 @@ export const listings: Listing[] = [
         list_description: "Join our charity fun run to raise funds for local schools. Whether you're a seasoned runner or a beginner, everyone is welcome to participate.",
         list_img: "./images/image3",
         list_visible: true,
-        list_org: "School Support Fund",
-        list_skills: ["Running", "Fundraising", "Community Engagement"]
+        list_org: 2,
     },
     {
         list_title: "Food Bank Volunteering",
@@ -54,8 +51,7 @@ export const listings: Listing[] = [
         list_description: "Assist in organizing and distributing food at our local food bank. Your help will make a significant difference in the lives of those in need.",
         list_img: "./images/image4",
         list_visible: false,
-        list_org: "City Food Bank",
-        list_skills: ["Organization", "Customer Service", "Teamwork"]
+        list_org: 2,
     },
     {
         list_title: "Park Clean Up",
@@ -68,8 +64,7 @@ export const listings: Listing[] = [
         list_description: "Join us in cleaning up the local park. We'll be picking up litter, removing graffiti, and ensuring the park is safe and welcoming for all visitors.",
         list_img: "./images/image5",
         list_visible: true,
-        list_org: "Clean Parks Initiative",
-        list_skills: ["Environmental Awareness", "Teamwork", "Physical Work"]
+        list_org: 4,
     },
     {
         list_title: "Animal Shelter Support",
@@ -82,8 +77,7 @@ export const listings: Listing[] = [
         list_description: "Help care for animals at our shelter. Duties include feeding, cleaning, and playing with the animals to ensure they receive the attention they need.",
         list_img: "./images/image6",
         list_visible: false,
-        list_org: "Happy Paws Rescue",
-        list_skills: ["Animal Care", "Patience", "Teamwork"]
+        list_org: 3,
     },
     {
         list_title: "Library Book Sale",
@@ -96,8 +90,7 @@ export const listings: Listing[] = [
         list_description: "Assist in setting up and running our library book sale. This event helps raise funds for new books and library programs.",
         list_img: "./images/image7",
         list_visible: true,
-        list_org: "Friends of the Library",
-        list_skills: ["Sales", "Organization", "Customer Service"]
+        list_org: 5,
     },
     {
         list_title: "Homeless Shelter Dinner Service",
@@ -110,8 +103,7 @@ export const listings: Listing[] = [
         list_description: "Volunteer to serve dinner at our homeless shelter. Your kindness will provide a warm meal and a friendly face to those in need.",
         list_img: "./images/image8",
         list_visible: false,
-        list_org: "Shelter Helpers",
-        list_skills: ["Cooking", "Customer Service", "Compassion"]
+        list_org: 7,
     },
     {
         list_title: "Youth Sports Coaching",
@@ -124,8 +116,7 @@ export const listings: Listing[] = [
         list_description: "Coach a youth sports team and help kids develop their skills and confidence. This is a great opportunity to make a positive impact on young lives.",
         list_img: "./images/image9",
         list_visible: true,
-        list_org: "Youth Sports League",
-        list_skills: ["Coaching", "Mentoring", "Sports"]
+        list_org: 8,
     },
     {
         list_title: "Art Workshop for Seniors",
@@ -138,8 +129,7 @@ export const listings: Listing[] = [
         list_description: "Facilitate an art workshop for seniors. This event provides an opportunity for creative expression and social interaction for elderly community members.",
         list_img: "./images/image10",
         list_visible: false,
-        list_org: "Senior Arts Fund",
-        list_skills: ["Art", "Teaching", "Patience"]
+        list_org: 4,
     }
 ];
 
