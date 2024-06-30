@@ -2,7 +2,7 @@
  * A file for global types
  */
 
-export interface CustomError extends Error {
+export interface CustomReqError extends Error {
   status: number,
   msg: string
 };
