@@ -1,6 +1,6 @@
 import {VolUser} from '../types';
 
-const volUsers: VolUser[] = [
+export const volUsers: VolUser[] = [
   {
     vol_first_name: "Matt",
     vol_last_name: "Dixon",
@@ -92,5 +92,3 @@ const volUsers: VolUser[] = [
     vol_hours: 7800
   }
 ];
-
-export default volUsers;
