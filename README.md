@@ -9,11 +9,11 @@ https://google.github.io/styleguide/tsguide.html
 
 ### Setup .env files
 
-1. Add a '.env.development' file to your root directory.
+1. Add a `.env.development` file to your root directory.
 
 Download a ready-made one @ https://github.com/CoderMattGH/voluntier-docs/tree/main/be
 
-2. Add a '.env.test' file to your root directory.
+2. Add a `.env.test` file to your root directory.
 
 Download a ready-made one @ https://github.com/CoderMattGH/voluntier-docs/tree/main/be
 
