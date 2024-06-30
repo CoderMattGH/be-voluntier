@@ -2,21 +2,17 @@ import volUserModel from "../models/vol-user.model";
 import authUtils from "../auth/auth-utils";
 import { Request, Response, NextFunction } from "express";
 
-// TODO: role
+// TODO: Organiser and Admin roles
 function loginUser(req: Request, res: Response, next: NextFunction) : void {
-  console.log(req.body);
-  console.log(req.sessionID);
-  console.log(req.session);
   const email: string = req.body.email;
   const password: string = req.body.password;
 
   volUserModel.selectVolUserByEmail(email)
       .then((volUser) => {
-        console.log(volUser);
+        console.log("Trying to login!");
 
-        // Compare password
         if (authUtils.checkPassword(password, volUser.vol_password)) {
-          console.log("Logging in!");
+          console.log("Username and password OK!");
 
           // Attach user object to session
           req.session.user = {
@@ -27,7 +23,7 @@ function loginUser(req: Request, res: Response, next: NextFunction) : void {
 
           res.status(200).send();
         } else {
-          throw new Error("WRONG USERNAME OR PASSWORD!");
+          throw new Error("Incorrect username or password!");
         }
       })
       .catch((err) => {
@@ -38,11 +34,9 @@ function loginUser(req: Request, res: Response, next: NextFunction) : void {
       });
 }
 
+// TODO: Error handling
 function logoutUser(req: Request, res: Response, next: NextFunction) : void {
-  console.log("Logging out user!");
-
-  console.log(req.sessionID);
-  console.log(req.session);
+  console.log("Trying to log out user!");
 
   if (req.session.user) {
     req.session.destroy(() => {
@@ -50,10 +44,12 @@ function logoutUser(req: Request, res: Response, next: NextFunction) : void {
 
       // req.session.user = null;
       res.clearCookie('connect.sid');
-      res.status(200).send("LOG OUT OK!");
+      res.status(200).send();
     });
   } else {
-    res.status(500).send("LOG OUT NO GOOD!");
+    console.log("User was not logged in!");
+
+    res.status(500).send();
   }
 }
 
