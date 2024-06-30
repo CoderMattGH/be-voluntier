@@ -30,8 +30,6 @@ app.get("/", (req, res, next) => {
   res.status(200).send();
 });
 
-// TODO: Move once routes setup
-
 // Handle psql errors
 app.use(
   (

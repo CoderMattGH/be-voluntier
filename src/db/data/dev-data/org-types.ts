@@ -20,9 +20,6 @@ export const orgTypes: OrgType[] = [
     type_title: "Community Development"
   },
   {
-    type_title: "Youth and Children"
-  },
-  {
     type_title: "Social Justice and Advocacy"
   },
   {
