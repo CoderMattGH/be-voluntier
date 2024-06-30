@@ -24,6 +24,11 @@ export function seed(volUsers: VolUser[], orgUsers: OrgUser[], listings: Listing
       })
       .then(() => {
         return setupSessionTable();
+      })
+      .finally(() => {
+        logger.info("Closing connection to database!");
+        
+        return db.end();
       });      
 }
 
