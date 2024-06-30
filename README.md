@@ -12,7 +12,7 @@ https://google.github.io/styleguide/tsguide.html
 
 ## Running
 
-### Setup .env files
+### Setup .env files and install dependencies
 
 1. Add a `.env.development` file to your root directory.
 
