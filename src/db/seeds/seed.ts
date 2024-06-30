@@ -10,12 +10,12 @@ function seed(volUsers: VolUser[]): Promise<any> {
   console.log("Seeding database!");
   
   return db
-      .query(`DROP TABLE IF EXISTS vol_user_table;`)
+      .query(`DROP TABLE IF EXISTS vol_user;`)
       .then(() => {
-        console.log("Creating vol_user_table!");
+        console.log("Creating vol_user table!");
 
         return db.query(`
-            CREATE TABLE vol_user_table (
+            CREATE TABLE vol_user (
               vol_id SERIAL PRIMARY KEY,
               vol_email VARCHAR(200) NOT NULL,
               vol_password VARCHAR(100) NOT NULL,
@@ -30,10 +30,10 @@ function seed(volUsers: VolUser[]): Promise<any> {
         );
       })
       .then(() => {
-        console.log("Populating vol_user_table!");
+        console.log("Populating vol_user table!");
 
         const insertVolUsersQueryStr = format(`
-            INSERT INTO vol_user_table 
+            INSERT INTO vol_user 
               (
                 vol_first_name,
                 vol_last_name,
