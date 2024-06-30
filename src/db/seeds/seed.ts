@@ -3,12 +3,16 @@ import format from 'pg-format';
 import {db} from '../';
 import {hashPassword} from '../../auth/auth-utils';
 
-import type {VolUser, OrgUser, Listing, Skill} from '../data/types';
+import type {VolUser, OrgUser, Listing, Skill, OrgType} from '../data/types';
 
-export function seed(volUsers: VolUser[], orgUsers: OrgUser[], listings: Listing[], skills: Skill[]) {
+export function seed(volUsers: VolUser[], orgUsers: OrgUser[], listings: Listing[], skills: Skill[],
+    orgTypes: OrgType[]) {
   logger.debug("Starting db seed!");
   
   return setupSkillsTable(skills)
+      .then(() => {
+        return setupOrgTypesTable(orgTypes);
+      })
       .then(() => {
         return setupListingsTable(listings);
       })
@@ -20,6 +24,11 @@ export function seed(volUsers: VolUser[], orgUsers: OrgUser[], listings: Listing
       })
       .then(() => {
         return setupSessionTable();
+      })
+      .finally(() => {
+        logger.info("Closing connection to database!");
+        
+        return db.end();
       });      
 }
 
@@ -133,6 +142,34 @@ function setupOrgUsersTable(orgUsers: OrgUser[]) {
 
           return db.query(queryStr);
         });
+      });
+}
+
+function setupOrgTypesTable(orgTypes: OrgType[]) {
+  logger.debug("Setting up org_types table!");
+
+  return db.query(`DROP TABLE IF EXISTS org_types`)
+      .then(() => {
+        return db.query(
+          `CREATE TABLE org_types (
+            type_id SERIAL PRIMARY KEY,
+            type_title VARCHAR(100)
+          );`
+        );
+      })
+      .then(() => {
+        const queryStr = format(
+          `INSERT INTO org_types(
+            type_title
+          ) VALUES %L;`,
+          orgTypes.map((orgType) => {
+            return [
+              orgType.type_title
+            ];
+          })
+        );
+
+        return db.query(queryStr);
       });
 }
 
