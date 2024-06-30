@@ -21,6 +21,11 @@ type OrgUser = {
   org_verified: boolean
 };
 
+type OrgType = {
+  type_id?: number,
+  type_title: string
+};
+
 type Listing = {
     list_id?: number;
     list_title: string;
@@ -42,4 +47,4 @@ type Skill = {
   skill_name: string
 };
 
-export type {VolUser, OrgUser, Listing, Skill};
+export type {VolUser, OrgUser, OrgType, Listing, Skill};
