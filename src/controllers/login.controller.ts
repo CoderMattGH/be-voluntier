@@ -27,16 +27,14 @@ export function loginUser(req: Request, res: Response, next: NextFunction) {
 
           res.status(200).send();
         } else {
-          logger.debug(`Incorrect username or password!`);
-
-          throw new Error("Incorrect username or password!");
+          throw new Error("Invalid username or password!");
         }
       })
       .catch((err) => {
         logger.debug(`ERR: ${err}`);
+        logger.debug(`Invalid username or password!`);
 
-        // TODO: next middleware
-        res.status(500).send();
+        next({status: 401, msg: "Invalid username or password!"});
       });
 }
 
@@ -56,6 +54,6 @@ export function logoutUser(req: Request, res: Response, next: NextFunction) {
   } else {
     logger.debug("User was not logged in!");
 
-    res.status(500).send();
+    next({status: 400, msg: "User not logged in!"});
   }
 }
