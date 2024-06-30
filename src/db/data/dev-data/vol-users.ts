@@ -8,7 +8,7 @@ export const volUsers: VolUser[] = [
     vol_email: "mattydemail@email.com",
     vol_contact_tel: "98239238928392",
     vol_bio: "HELLO I AM MATT :o",
-    vol_hours: 10000
+    vol_hours: 1000
   },
   {
     vol_first_name: "Alice",
@@ -17,7 +17,7 @@ export const volUsers: VolUser[] = [
     vol_password: "anotherpassword",
     vol_contact_tel: "1234567890",
     vol_bio: "Passionate about volunteering and helping the community.",
-    vol_hours: 8000
+    vol_hours: 80
   },
   {
     vol_first_name: "John",
@@ -26,7 +26,7 @@ export const volUsers: VolUser[] = [
     vol_password: "password",
     vol_contact_tel: "0987654321",
     vol_bio: "Love to contribute to social causes and meet new people.",
-    vol_hours: 6000
+    vol_hours: 6
   },
   {
     vol_first_name: "Emma",
@@ -35,7 +35,7 @@ export const volUsers: VolUser[] = [
     vol_password: "mybadpassword123",
     vol_contact_tel: "1122334455",
     vol_bio: "Dedicated volunteer with a passion for education and literacy.",
-    vol_hours: 7500
+    vol_hours: 200
   },
   {
     vol_first_name: "Michael",
@@ -44,7 +44,7 @@ export const volUsers: VolUser[] = [
     vol_password: "mybadpassword432",
     vol_contact_tel: "6677889900",
     vol_bio: "Experienced in organizing community events and activities.",
-    vol_hours: 9200
+    vol_hours: 15
   },
   {
     vol_first_name: "Sophie",
@@ -53,7 +53,7 @@ export const volUsers: VolUser[] = [
     vol_password: "mybadpassword22",
     vol_contact_tel: "4455667788",
     vol_bio: "Enjoy helping others and making a positive impact.",
-    vol_hours: 5500
+    vol_hours: 30
   },
   {
     vol_first_name: "James",
@@ -62,7 +62,7 @@ export const volUsers: VolUser[] = [
     vol_password: "mybadpassword11",
     vol_contact_tel: "9988776655",
     vol_bio: "Interested in environmental conservation and wildlife protection.",
-    vol_hours: 8900
+    vol_hours: 800
   },
   {
     vol_first_name: "Olivia",
@@ -71,7 +71,7 @@ export const volUsers: VolUser[] = [
     vol_password: "12345678",
     vol_contact_tel: "5566778899",
     vol_bio: "Passionate about health and wellness programs.",
-    vol_hours: 7200
+    vol_hours: 400
   },
   {
     vol_first_name: "David",
@@ -80,7 +80,7 @@ export const volUsers: VolUser[] = [
     vol_password: "mybadpassword",
     vol_contact_tel: "2233445566",
     vol_bio: "Love working with children and supporting youth initiatives.",
-    vol_hours: 6500
+    vol_hours: 80
   },
   {
     vol_first_name: "Isabella",
@@ -89,6 +89,6 @@ export const volUsers: VolUser[] = [
     vol_password: "mybadpassword",
     vol_contact_tel: "3322114455",
     vol_bio: "Enjoy fundraising and community outreach programs.",
-    vol_hours: 7800
+    vol_hours: 140
   }
 ];
