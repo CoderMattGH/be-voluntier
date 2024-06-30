@@ -1,5 +1,7 @@
+import {logger} from '../../logger';
+
 import format from 'pg-format';
-import {db} from '../connection';
+import {db} from '../';
 
 import {VolUser} from '../data/types';
 
@@ -7,16 +9,20 @@ import * as authUtils from '../../auth/auth-utils';
 const {hashPassword} = authUtils;
 
 function setupSessionTable() {
-  console.log("Setting up user session table!");
+  logger.debug("Setting up session table!");
 
   return db
-      .query(
-        `CREATE TABLE "session" (
-          "sid" varchar NOT NULL COLLATE "default",
-          "sess" json NOT NULL,
-          "expire" timestamp(6) NOT NULL
-        )
-        WITH (OIDS=FALSE);`)
+      .query(`DROP TABLE IF EXISTS session;`)
+      .then(() => {
+        return db
+          .query(
+            `CREATE TABLE "session" (
+              "sid" varchar NOT NULL COLLATE "default",
+              "sess" json NOT NULL,
+              "expire" timestamp(6) NOT NULL
+            )
+            WITH (OIDS=FALSE);`)
+      })
       .then(() => {
         return db.query(
             `ALTER TABLE "session" ADD CONSTRAINT "session_pkey" PRIMARY KEY ("sid") 
@@ -29,13 +35,11 @@ function setupSessionTable() {
 }
 
 export function seed(volUsers: VolUser[]) {
-  console.log("Seeding database!");
+  logger.debug("Setting up vol_user table!");
   
   return db
       .query(`DROP TABLE IF EXISTS vol_user;`)
       .then(() => {
-        console.log("Creating vol_user table!");
-
         return db
           .query(
             `CREATE TABLE vol_user (
@@ -53,8 +57,6 @@ export function seed(volUsers: VolUser[]) {
           );
       })
       .then(() => {
-        console.log("Populating vol_user table!");
-
         const insertVolUsersQueryStr = format(
           `INSERT INTO vol_user (
             vol_first_name,
@@ -82,8 +84,5 @@ export function seed(volUsers: VolUser[]) {
       })
       .then(() => {
         return setupSessionTable();
-      })
-      .then(() => {
-        console.log("Database successfully seeded!");
       });
 }

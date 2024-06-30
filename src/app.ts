@@ -1,3 +1,6 @@
+import './env-parser';
+import {logger} from './logger';
+
 import express from 'express';
 import cors from 'cors';
 import session from 'express-session';
@@ -21,7 +24,7 @@ app.use("/api", apiRouter);
 
 // TODO: OK to delete.  Just for testing
 app.get('/', (req, res, next) => {
-  console.log("GET / Endpoint OK!");
+  logger.info("GET / Endpoint OK!");
 
   res.status(200).send();
 });

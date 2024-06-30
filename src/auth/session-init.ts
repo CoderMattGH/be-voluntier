@@ -1,6 +1,8 @@
+import {logger} from '../logger';
+
 import {Express} from "express";
 import pgSession from 'connect-pg-simple';
-import {db} from "../db/connection";
+import {db} from "../db";
 
 // Role: volunteer, organiser, admin.
 // TODO: Change role to Enum from String
@@ -20,6 +22,8 @@ declare module "express-session" {
 // TODO: Change from session: any
 // TODO: Change and private secret
 export function sessionInit(app: Express, session: any) {
+  logger.info("Initialising user session!");
+
   const pgOptions = {pool: db, tableName: 'session'};
   const sessionConfig = {
     store: new (pgSession(session))(pgOptions),

@@ -1,7 +1,8 @@
-import { app } from './app';
+import {logger} from "./logger";
+import {app} from './app';
 
 const port = 9090;
 
 app.listen(port, () => {
-  console.log(`Listening on port ${port}!`);
+  logger.info(`App listening on port ${port}!`);
 });
