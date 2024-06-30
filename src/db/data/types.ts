@@ -43,7 +43,7 @@ type Listing = {
 };
 
 // List <-> Skill junction table
-export type ListSkillJunc = {
+type ListSkillJunc = {
   list_skill_id?: number,
   list_id: number,
   skill_id: number
@@ -54,7 +54,12 @@ type Skill = {
   skill_name: string
 };
 
-
+// Vol_User <-> Skill junction table
+type VolUserSkillJunc = {
+  vol_user_skill_id?: number,
+  vol_id: number,
+  skill_id: number
+};
 
 type Badge = {
   badge_id?: number,
@@ -78,4 +83,5 @@ type Application = {
   full_conf: boolean
 };
 
-export type {VolUser, OrgUser, OrgType, Listing, Skill, Badge, Application, VolUserBadgeJunc};
+export type {VolUser, OrgUser, OrgType, Listing, Skill, Badge, Application, VolUserBadgeJunc,
+    ListSkillJunc, VolUserSkillJunc};

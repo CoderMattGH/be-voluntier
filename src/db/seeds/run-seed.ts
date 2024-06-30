@@ -11,12 +11,13 @@ import {badges} from '../data/dev-data/badge';
 import {applications} from '../data/dev-data/applications';
 import {listSkillJuncs} from '../data/dev-data/list-skill-junc';
 import {volUserBadgeJuncs} from '../data/dev-data/vol-user-badge-junc';
+import {volUserSkillJuncs} from '../data/dev-data/vol-user-skill-junc';
 
 function runSeed() {
   logger.info("Seeding database!");
 
   seed(volUsers, orgUsers, listings, skills, orgTypes, badges, applications, listSkillJuncs,
-      volUserBadgeJuncs)
+      volUserBadgeJuncs, volUserSkillJuncs)
     .then(() => {
       logger.info("Seeding successful!");
     })
