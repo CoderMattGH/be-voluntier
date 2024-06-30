@@ -7,7 +7,6 @@ import session from "express-session";
 
 import { apiRouter } from "./routes/api-router";
 import { sessionInit } from "./auth/session-init";
-import * as loginController from "./controllers/login.controller";
 
 import { CustomReqError } from "./types";
 

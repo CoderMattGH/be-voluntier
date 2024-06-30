@@ -6,8 +6,6 @@ import {volUsers} from '../data/dev-data/vol_users';
 import {listings} from '../data/dev-data/listings';
 import {skills} from '../data/dev-data/skills';
 
-import type {VolUser, Listing, Skill} from '../data/types';
-
 function runSeed() {
   logger.info("Seeding database!");
 
