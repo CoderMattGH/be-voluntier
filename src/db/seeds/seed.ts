@@ -3,13 +3,16 @@ import format from 'pg-format';
 import {db} from '../';
 import {hashPassword} from '../../auth/auth-utils';
 
-import type {VolUser, OrgUser, Listing, Skill, OrgType} from '../data/types';
+import type {VolUser, OrgUser, Listing, Skill, OrgType, Badge} from '../data/types';
 
 export function seed(volUsers: VolUser[], orgUsers: OrgUser[], listings: Listing[], skills: Skill[],
-    orgTypes: OrgType[]) {
+    orgTypes: OrgType[], badges: Badge[]) {
   logger.debug("Starting db seed!");
   
   return setupSkillsTable(skills)
+      .then(() => {
+        return setupBadgesTable(badges);
+      })
       .then(() => {
         return setupOrgTypesTable(orgTypes);
       })
@@ -165,6 +168,40 @@ function setupOrgTypesTable(orgTypes: OrgType[]) {
           orgTypes.map((orgType) => {
             return [
               orgType.type_title
+            ];
+          })
+        );
+
+        return db.query(queryStr);
+      });
+}
+
+function setupBadgesTable(badges: Badge[]) {
+  logger.debug("Setting up badges table!");
+
+  return db.query(`DROP TABLE IF EXISTS badges`)
+      .then(() => {
+        return db.query(
+          `CREATE TABLE badges (
+            badge_id SERIAL PRIMARY KEY,
+            badge_name VARCHAR(100),
+            badge_img_path VARCHAR(200),
+            badge_points INT
+          );`
+        );
+      })
+      .then(() => {
+        const queryStr = format(
+          `INSERT INTO badges(
+            badge_name,
+            badge_img_path,
+            badge_points
+          ) VALUES %L;`,
+          badges.map((badge) => {
+            return [
+              badge.badge_name,
+              badge.badge_img_path,
+              badge.badge_points
             ];
           })
         );
