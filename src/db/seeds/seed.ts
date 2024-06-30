@@ -3,10 +3,10 @@ import format from 'pg-format';
 import {db} from '../';
 import {hashPassword} from '../../auth/auth-utils';
 
-import type {VolUser, OrgUser, Listing, Skill, OrgType, Badge} from '../data/types';
+import type {VolUser, OrgUser, Listing, Skill, OrgType, Badge, Application} from '../data/types';
 
 export function seed(volUsers: VolUser[], orgUsers: OrgUser[], listings: Listing[], skills: Skill[],
-    orgTypes: OrgType[], badges: Badge[]) {
+    orgTypes: OrgType[], badges: Badge[], applications: Application[]) {
   logger.debug("Starting db seed!");
   
   return setupSkillsTable(skills)
@@ -24,6 +24,9 @@ export function seed(volUsers: VolUser[], orgUsers: OrgUser[], listings: Listing
       })
       .then(() => {
         return setupOrgUsersTable(orgUsers);
+      })
+      .then(() => {
+        return setupApplicationsTable(applications);
       })
       .then(() => {
         return setupSessionTable();
@@ -60,12 +63,12 @@ function setupSessionTable() {
 }
 
 function setupVolUsersTable(volUsers: VolUser[]) {
-  logger.debug("Setting up vol_user table!");
+  logger.debug("Setting up vol_users table!");
   
-  return db.query(`DROP TABLE IF EXISTS vol_user;`)
+  return db.query(`DROP TABLE IF EXISTS vol_users;`)
       .then(() => {
         return db.query(
-          `CREATE TABLE vol_user (
+          `CREATE TABLE vol_users (
             vol_id SERIAL PRIMARY KEY,
             vol_email VARCHAR(200) NOT NULL,
             vol_password VARCHAR(100) NOT NULL,
@@ -81,7 +84,7 @@ function setupVolUsersTable(volUsers: VolUser[]) {
       })
       .then(() => {
         const queryStr = format(
-          `INSERT INTO vol_user (
+          `INSERT INTO vol_users (
             vol_first_name,
             vol_last_name,
             vol_email,
@@ -287,6 +290,43 @@ function setupSkillsTable(skills: Skill[]) {
           ) VALUES %L;`,
           skills.map((skill) => {
             return [skill.skill_name];
+          })
+        );
+
+        return db.query(queryStr);
+      });
+}
+
+function setupApplicationsTable(applications: Application[]) {
+  logger.debug("Setting up applications table!");
+
+  return db.query(`DROP TABLE IF EXISTS applications`)
+      .then(() => {
+        return db.query(
+          `CREATE TABLE applications (
+            app_id SERIAL PRIMARY KEY,
+            vol_id INT REFERENCES vol_users(vol_id) NOT NULL,
+            listing_id INT REFERENCES listings(list_id) NOT NULL,
+            prov_confirm BOOL NOT NULL,
+            full_conf BOOL NOT NULL
+          );`
+        );
+      })
+      .then(() => {
+        const queryStr = format(
+          `INSERT INTO applications (
+            vol_id,
+            listing_id,
+            prov_confirm,
+            full_conf 
+          ) VALUES %L;`,
+          applications.map((application) => {
+            return [
+              application.vol_id,
+              application.listing_id,
+              application.prov_confirm,
+              application.full_conf
+            ];
           })
         );
 
