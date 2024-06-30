@@ -48,12 +48,16 @@ Download a ready-made one @ https://github.com/CoderMattGH/voluntier-docs/tree/m
 
     `npm run setup-dbs`
 
-2. Seed the databases:
+2. Compile the project:
+
+    `npm run build`
+
+3. Seed the databases:
 
     `npm run seed`
 
 
-### Finally
+### Compiling and running
 
 1. Compile the project:
 
