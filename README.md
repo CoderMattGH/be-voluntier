@@ -52,7 +52,7 @@ Download a ready-made one @ https://github.com/CoderMattGH/voluntier-docs/tree/m
 
     `npm run build`
 
-3. Seed the databases:
+3. Seed the database:
 
     `npm run seed`
 
