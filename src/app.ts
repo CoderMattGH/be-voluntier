@@ -15,13 +15,12 @@ const app = express();
 sessionInit(app, session);
 app.use(cors(corsConfig));
 app.use(express.json());
+
 app.use("/api", Router);
 
 // TODO: OK to delete.  Just for testing
 app.get('/', (req, res, next) => {
   console.log("GET / Endpoint OK!");
-  console.log(req.sessionID);
-  console.log(req.session);
 
   res.status(200).send();
 });
@@ -29,5 +28,7 @@ app.get('/', (req, res, next) => {
 // TODO: Move once routes setup
 app.post('/api/login', loginController.loginUser);
 app.get('/api/logout', loginController.logoutUser);
+
+// TODO: Error handling middleware
 
 export default app;
