@@ -27,4 +27,9 @@ type Listing = {
     list_skills: string[];
 };
 
-export type {VolUser, Listing};
+type Skill = {
+  skill_id?: number,
+  skill_name: string
+};
+
+export type {VolUser, Listing, Skill};
