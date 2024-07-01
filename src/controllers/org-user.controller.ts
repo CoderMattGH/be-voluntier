@@ -1,8 +1,7 @@
 import { logger } from "../logger";
-import * as orgUserModel from "../models/org-user.model";
 import { Request, Response, NextFunction } from "express";
-
-import * as constants from "../constants";
+import { checkUserCredentials } from "../auth/auth-utils";
+import * as orgUserModel from "../models/org-user.model";
 
 export function getOrgUserById(
   req: Request,
@@ -21,19 +20,10 @@ export function getOrgUserById(
 
   const userIdNum = Number(user_id);
 
-  // Check is user is logged in
-  if (!req.session.user) {
-    next({ status: 401, msg: constants.ERR_MSG_NOT_LOGGED_IN });
-
-    return;
-  }
-
-  // Check user credentials
-  if (
-    req.session.user.id !== userIdNum ||
-    req.session.user.role !== "organiser"
-  ) {
-    next({ status: 403, msg: constants.ERR_MSG_PERMISSION_DENIED });
+  // Authorise user
+  const authObj = checkUserCredentials(req, userIdNum, "organiser");
+  if (!authObj.authorised) {
+    next(authObj.respObj);
 
     return;
   }
