@@ -4,8 +4,6 @@ import * as volUserModel from "../models/vol-user.model";
 import * as authUtils from "../auth/auth-utils";
 import { Request, Response, NextFunction } from "express";
 
-// TODO: Organiser and Admin roles
-// TODO: Validation
 export function loginUser(req: Request, res: Response, next: NextFunction) {
   logger.debug(`In loginUser() in login.controller`);
 
@@ -22,6 +20,18 @@ export function loginUser(req: Request, res: Response, next: NextFunction) {
   // Validate role
   if (!role || !availRoles.includes(role.toLowerCase())) {
     next({ status: 400, msg: "Invalid role provided!" });
+
+    return;
+  }
+
+  // Check user is not already logged in
+  if (req.session.user) {
+    next({
+      status: 400,
+      msg: "User is already logged in!",
+    });
+
+    return;
   }
 
   volUserModel
@@ -39,7 +49,7 @@ export function loginUser(req: Request, res: Response, next: NextFunction) {
 
         res.status(200).send({ msg: "Login successful!" });
       } else {
-        throw new Error("Invalid username or password!");
+        next({ status: 401, msg: "Invalid username or password!" });
       }
     })
     .catch((err) => {

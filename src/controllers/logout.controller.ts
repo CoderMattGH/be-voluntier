@@ -2,8 +2,6 @@ import { logger } from "../logger";
 
 import { Request, Response, NextFunction } from "express";
 
-// TODO: Error handling
-// TODO: Validation
 export function logoutUser(req: Request, res: Response, next: NextFunction) {
   logger.debug(`In logoutUser() in login.controller`);
   logger.info(`Logging out user: ${req.session.user}`);

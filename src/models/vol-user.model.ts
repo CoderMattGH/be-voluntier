@@ -8,7 +8,7 @@ export function selectVolUserByEmail(email: string) {
 
   email = email.trim();
 
-  const queryStr = `SELECT * FROM vol_user WHERE vol_user.vol_email ILIKE $1;`;
+  const queryStr = `SELECT * FROM vol_users WHERE vol_users.vol_email ILIKE $1;`;
 
   return db.query(queryStr, [email]).then((result) => {
     const { rows } = result;
