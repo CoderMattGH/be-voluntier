@@ -2,6 +2,20 @@
   "GET /api": {
     "description": "Serves up a JSON representation of all the available endpoints of the API"
   },
+  "POST /api/login": {
+    "description": "Allows the volunter/organisation user to login",
+    "requestBody": {
+      "email": "useremail@email.com",
+      "password": "userpassword",
+      "role": "'volunteer' or 'organiser'"
+    },
+    "exampleResponse": {
+      "msg": "Login successful!"
+    }
+  },
+  "DELETE /api/logout": {
+    "description": "Allows the volunteer/organisation user to logout. Returns an empty body with 200 OK if successful"
+  },
   "GET /api/listings": {
     "description": "Serves up an array of all the visible volunteer listings",
     "queries": [
