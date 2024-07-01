@@ -278,6 +278,7 @@ function setupBadgesTable(badges: Badge[]) {
 }
 
 // TODO: Listings cascades and deletes applications
+// TODO: Images
 function setupListingsTable(listings: Listing[]) {
   logger.debug("Setting up listings table!");
 
@@ -292,7 +293,7 @@ function setupListingsTable(listings: Listing[]) {
       list_time TIME NOT NULL,
       list_duration INT NOT NULL,
       list_description TEXT NOT NULL,
-      list_img VARCHAR(200),
+      list_img BYTEA,
       list_visible BOOL,
       list_org INT REFERENCES org_users(org_id) NOT NULL
     );`)
