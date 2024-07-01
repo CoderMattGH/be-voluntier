@@ -11,8 +11,18 @@ export function loginUser(req: Request, res: Response, next: NextFunction) {
 
   const email = req.body.email;
   const password = req.body.password;
+  const role = req.body.role;
 
-  logger.info(`Trying to login user where email:${email} password:${password}`);
+  logger.info(
+    `Trying to login user where email:${email} password:${password} role:${role}`
+  );
+
+  const availRoles = ["volunteer", "organiser"];
+
+  // Validate role
+  if (!role || !availRoles.includes(role.toLowerCase())) {
+    next({ status: 400, msg: "Invalid role provided!" });
+  }
 
   volUserModel
     .selectVolUserByEmail(email)
@@ -24,10 +34,10 @@ export function loginUser(req: Request, res: Response, next: NextFunction) {
         req.session.user = {
           id: volUser.vol_id,
           email: volUser.vol_email,
-          role: "volunteer",
+          role: role,
         };
 
-        res.status(200).send();
+        res.status(200).send({ msg: "Login successful!" });
       } else {
         throw new Error("Invalid username or password!");
       }
