@@ -10,26 +10,33 @@ export function getListings(req: Request, res: Response, next: NextFunction) {
   if (req.query.visible && req.query.visible === "false") {
     visible = false;
   }
-  
+
   // Set sort by
   let sortBy;
   if (req.query.sort_by) {
-    sortBy = (req.query.sort_by).toString();
+    sortBy = req.query.sort_by.toString();
   }
 
   // Set order
   let order;
   if (req.query.order) {
-    order = (req.query.order).toString();
+    order = req.query.order.toString();
   }
 
-  listingsModel.selectListings(visible, sortBy, order)
-      .then((listings) => {
-        res.status(200).send(listings);
-      })
-      .catch((err) => {
-        next(err);
-      });
+  // Set search
+  let search;
+  if (req.query.search) {
+    search = req.query.search.toString();
+  }
+
+  listingsModel
+    .selectListings(visible, sortBy, order, search)
+    .then((listings) => {
+      res.status(200).send(listings);
+    })
+    .catch((err) => {
+      next(err);
+    });
 }
 
 export function getListing(req: Request, res: Response, next: NextFunction) {
