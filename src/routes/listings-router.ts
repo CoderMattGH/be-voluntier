@@ -7,4 +7,5 @@ import {
 
 export const listingsRouter = Router();
 
-listingsRouter.route("/").get(getListings).get(getListing).post(postListing);
+listingsRouter.route("/").get(getListings).post(postListing);
+listingsRouter.route("/:listing_id").get(getListing);
