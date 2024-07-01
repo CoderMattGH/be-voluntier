@@ -49,5 +49,17 @@
         "org_avatar": null
       }
     }
+  },
+  "GET /api/applications/:app_id": {
+    "description": "Serves up an object containing details on the application whose id matches id passed as parametric endpoint",
+    "exampleResponse": {
+      "applications": {
+        "app_id": 1,
+        "vol_id": 1,
+        "listing_id": 3,
+        "prov_confirm": false,
+        "full_conf": false
+      }
+    }
   }
 }
