@@ -1,6 +1,7 @@
 import { logger } from "../logger";
 
 import * as volUserModel from "../models/vol-user.model";
+import * as orgUserModel from "../models/org-user.model";
 import * as authUtils from "../auth/auth-utils";
 import { Request, Response, NextFunction } from "express";
 
@@ -9,7 +10,7 @@ export function loginUser(req: Request, res: Response, next: NextFunction) {
 
   const email = req.body.email;
   const password = req.body.password;
-  const role = req.body.role;
+  let role = req.body.role;
 
   logger.info(
     `Trying to login user where email:${email} password:${password} role:${role}`
@@ -34,28 +35,52 @@ export function loginUser(req: Request, res: Response, next: NextFunction) {
     return;
   }
 
-  volUserModel
-    .selectVolUserByEmail(email)
-    .then((volUser) => {
-      if (authUtils.checkPassword(password, volUser.vol_password)) {
-        logger.debug(`Username and password are OK!`);
+  role = role.toLowerCase();
 
-        // Attach user object to session
-        req.session.user = {
-          id: volUser.vol_id,
-          email: volUser.vol_email,
-          role: role,
-        };
+  const invalidError = { status: 401, msg: "Invalid username or password!" };
 
-        res.status(200).send({ msg: "Login successful!" });
-      } else {
-        next({ status: 401, msg: "Invalid username or password!" });
+  let modelPromise;
+  if (role === "volunteer") {
+    modelPromise = volUserModel.selectVolUserByEmail(email).then((volUser) => {
+      if (!authUtils.checkPassword(password, volUser.vol_password)) {
+        return Promise.reject(invalidError);
       }
+
+      return {
+        id: volUser.vol_id,
+        email: volUser.vol_email,
+        role: role,
+      };
+    });
+  } else {
+    modelPromise = orgUserModel.selectOrgUserByEmail(email).then((orgUser) => {
+      if (!authUtils.checkPassword(password, orgUser.org_password)) {
+        return Promise.reject(invalidError);
+      }
+
+      return {
+        id: orgUser.org_id,
+        email: orgUser.org_email,
+        role: role,
+      };
+    });
+  }
+
+  modelPromise
+    .then((userObj) => {
+      logger.debug(`Username and password are OK!`);
+      // Attach user object to session
+      req.session.user = {
+        id: userObj.id,
+        email: userObj.email,
+        role: role,
+      };
+
+      res.status(200).send({ msg: "Login successful!" });
     })
     .catch((err) => {
       logger.debug(`ERR: ${err}`);
-      logger.debug(`Invalid username or password!`);
-
-      next({ status: 401, msg: "Invalid username or password!" });
+      logger.debug(`Login error!`);
+      next(err);
     });
 }
