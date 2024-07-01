@@ -467,6 +467,8 @@ function setupVolUserBadgeJuncTable(volUserBadgeJuncs: VolUserBadgeJunc[]) {
           return [obj.vol_id, obj.badge_id];
         })
       );
+
+      return db.query(queryStr);
     });
 }
 
@@ -491,5 +493,7 @@ function setupVolUserSkillJuncTable(volUserSkillJuncs: VolUserSkillJunc[]) {
           return [obj.vol_id, obj.skill_id];
         })
       );
+
+      return db.query(queryStr);
     });
 }
