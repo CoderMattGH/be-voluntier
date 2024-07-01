@@ -40,16 +40,13 @@ app.use(
       err.code === "2201W"
     ) {
       res.status(400).send({ msg: "Bad request!" });
-    }
-    else if (err.code === "23503") {
+    } else if (err.code === "23503") {
       // Violates Foreign Key constraint
       res.status(404).send({ msg: "Resource not found!" });
-    }
-    else if (err.code === "23505") {
+    } else if (err.code === "23505") {
       // Duplicate Primary Key found
       res.status(409).send({ msg: "Resource already exists!" });
-    }
-    else {
+    } else {
       next(err);
     }
   }
@@ -65,7 +62,10 @@ app.use(
   ): void => {
     logger.debug(`In misc. error handler!`);
 
-    if (err.status && err.msg) res.status(err.status).send({ msg: err.msg });
-    else next(err);
+    if (err.status && err.msg) {
+      res.status(err.status).send({ msg: err.msg });
+    } else {
+      next(err);
+    }
   }
 );
