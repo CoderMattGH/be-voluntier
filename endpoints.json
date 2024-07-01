@@ -7,7 +7,7 @@
     "requestBody": {
       "email": "useremail@email.com",
       "password": "userpassword",
-      "role": "'volunteer' or 'organiser'"
+      "role": "'volunteer' or 'organisation'"
     },
     "exampleResponse": {
       "msg": "Login successful!"
@@ -98,11 +98,13 @@
     }
   },
   "GET /api/applications/:app_id": {
-    "description": "Serves up an object containing details on the application whose id matches id passed as parametric endpoint",
+    "authRequired": true,
+    "description": "Serves up an object containing details on the application whose id matches id passed as parametric endpoint.  Only viewable by the organisation or volunter user",
     "exampleResponse": {
       "application": {
         "app_id": 1,
         "vol_id": 1,
+        "org_id": 2,
         "listing_id": 3,
         "prov_confirm": false,
         "full_conf": false
