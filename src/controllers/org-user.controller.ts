@@ -21,7 +21,7 @@ export function getOrgUserById(
   const userIdNum = Number(user_id);
 
   // Authorise user
-  const authObj = checkUserCredentials(req, userIdNum, "organiser");
+  const authObj = checkUserCredentials(req, userIdNum, "organisation");
   if (!authObj.authorised) {
     next(authObj.respObj);
 
