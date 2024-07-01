@@ -1,17 +1,35 @@
-import {logger} from '../../logger';
-import format from 'pg-format';
-import {db} from '../';
-import {hashPassword} from '../../auth/auth-utils';
+import { logger } from "../../logger";
+import format from "pg-format";
+import { db } from "../";
+import { hashPassword } from "../../auth/auth-utils";
 
-import type {VolUser, OrgUser, Listing, Skill, OrgType, Badge, Application, ListSkillJunc, VolUserBadgeJunc, VolUserSkillJunc} 
-    from '../data/types';
+import type {
+  VolUser,
+  OrgUser,
+  Listing,
+  Skill,
+  OrgType,
+  Badge,
+  Application,
+  ListSkillJunc,
+  VolUserBadgeJunc,
+  VolUserSkillJunc,
+} from "../data/types";
 
-export function seed(volUsers: VolUser[], orgUsers: OrgUser[], listings: Listing[], skills: Skill[],
-    orgTypes: OrgType[], badges: Badge[], applications: Application[], 
-    listSkillJuncs: ListSkillJunc[], volUserBadgeJuncs: VolUserBadgeJunc[], 
-    volUserSkillJuncs: VolUserSkillJunc[]) {
+export function seed(
+  volUsers: VolUser[],
+  orgUsers: OrgUser[],
+  listings: Listing[],
+  skills: Skill[],
+  orgTypes: OrgType[],
+  badges: Badge[],
+  applications: Application[],
+  listSkillJuncs: ListSkillJunc[],
+  volUserBadgeJuncs: VolUserBadgeJunc[],
+  volUserSkillJuncs: VolUserSkillJunc[]
+) {
   logger.debug("Starting db seed!");
-  
+
   return dropTables()
     .then(() => {
       logger.info("Creating tables!");
@@ -26,7 +44,7 @@ export function seed(volUsers: VolUser[], orgUsers: OrgUser[], listings: Listing
     })
     .then(() => {
       return setupOrgUsersTable(orgUsers);
-    })    
+    })
     .then(() => {
       return setupListingsTable(listings);
     })
@@ -51,16 +69,17 @@ export function seed(volUsers: VolUser[], orgUsers: OrgUser[], listings: Listing
     .finally(() => {
       logger.info("Finished creating tables!");
       logger.info("Closing connection to database!");
-      
+
       return db.end();
-    });      
+    });
 }
 
 function dropTables() {
   logger.info(`Dropping tables!`);
 
   logger.debug(`Dropping session table!`);
-  return db.query(`DROP TABLE IF EXISTS session;`)
+  return db
+    .query(`DROP TABLE IF EXISTS session;`)
     .then(() => {
       logger.debug(`Dropping list_skill_junc table!`);
 
@@ -100,7 +119,7 @@ function dropTables() {
       logger.debug(`Dropping org_types table!`);
 
       return db.query(`DROP TABLE IF EXISTS org_types`);
-    })    
+    })
     .then(() => {
       logger.debug(`Dropping skills table!`);
 
@@ -110,38 +129,43 @@ function dropTables() {
       logger.debug(`Dropping vol_users table!`);
 
       return db.query(`DROP TABLE IF EXISTS vol_users;`);
-    })    
+    })
     .then(() => {
       logger.info(`Finished dropping tables!`);
-    });    
+    });
 }
 
 function setupSessionTable() {
   logger.debug("Setting up session table!");
 
-  return db.query(
-    `CREATE TABLE "session" (
+  return db
+    .query(
+      `CREATE TABLE "session" (
       "sid" varchar NOT NULL COLLATE "default",
       "sess" json NOT NULL,
       "expire" timestamp(6) NOT NULL
     )
-    WITH (OIDS=FALSE);`)
-      .then(() => {
-        return db.query(
-            `ALTER TABLE "session" ADD CONSTRAINT "session_pkey" PRIMARY KEY ("sid") 
-                NOT DEFERRABLE INITIALLY IMMEDIATE;`);
-      })
-      .then(() => {
-        return db.query(
-            `CREATE INDEX "IDX_session_expire" ON "session" ("expire");`);
-      });
+    WITH (OIDS=FALSE);`
+    )
+    .then(() => {
+      return db.query(
+        `ALTER TABLE "session" ADD CONSTRAINT "session_pkey" PRIMARY KEY ("sid") 
+                NOT DEFERRABLE INITIALLY IMMEDIATE;`
+      );
+    })
+    .then(() => {
+      return db.query(
+        `CREATE INDEX "IDX_session_expire" ON "session" ("expire");`
+      );
+    });
 }
 
 function setupVolUsersTable(volUsers: VolUser[]) {
   logger.debug("Setting up vol_users table!");
-  
-  return db.query(
-    `CREATE TABLE vol_users (
+
+  return db
+    .query(
+      `CREATE TABLE vol_users (
       vol_id SERIAL PRIMARY KEY,
       vol_email VARCHAR(200) NOT NULL,
       vol_password VARCHAR(100) NOT NULL,
@@ -153,10 +177,10 @@ function setupVolUsersTable(volUsers: VolUser[]) {
       vol_hours INT,
       vol_badges INT
     );`
-  )
-  .then(() => {
-    const queryStr = format(
-      `INSERT INTO vol_users (
+    )
+    .then(() => {
+      const queryStr = format(
+        `INSERT INTO vol_users (
         vol_first_name,
         vol_last_name,
         vol_email,
@@ -165,43 +189,47 @@ function setupVolUsersTable(volUsers: VolUser[]) {
         vol_bio,
         vol_hours
       ) VALUES %L;`,
-      volUsers.map((volUser) => {
-        return [
-          volUser.vol_first_name,
-          volUser.vol_last_name,
-          volUser.vol_email,
-          hashPassword(volUser.vol_password),
-          volUser.vol_contact_tel,
-          volUser.vol_bio,
-          volUser.vol_hours
-        ];
-      })
-    );
+        volUsers.map((volUser) => {
+          return [
+            volUser.vol_first_name,
+            volUser.vol_last_name,
+            volUser.vol_email,
+            hashPassword(volUser.vol_password),
+            volUser.vol_contact_tel,
+            volUser.vol_bio,
+            volUser.vol_hours,
+          ];
+        })
+      );
 
-    return db.query(queryStr);
-  });  
+      return db.query(queryStr);
+    });
 }
 
 // TODO: Delete cascades and removes listings
 function setupOrgUsersTable(orgUsers: OrgUser[]) {
   logger.debug(`Setting up org_users table!`);
 
-  return db.query(
-    `CREATE TABLE org_users (
+  return db
+    .query(
+      `CREATE TABLE org_users (
       org_id SERIAL PRIMARY KEY,
       org_name VARCHAR(100) NOT NULL,
       org_email VARCHAR(100) NOT NULL,
+      org_password VARCHAR(100) NOT NULL,
       org_type INT REFERENCES org_types(type_id) NOT NULL,
       org_contact_tel VARCHAR(100),
       org_bio TEXT,
       org_avatar BYTEA,
       org_verified BOOLEAN
-    );`)
+    );`
+    )
     .then(() => {
       const queryStr = format(
         `INSERT INTO org_users (
           org_name,
           org_email,
+          org_password,
           org_type,
           org_contact_tel,
           org_bio,
@@ -211,10 +239,11 @@ function setupOrgUsersTable(orgUsers: OrgUser[]) {
           return [
             orgUser.org_name,
             orgUser.org_email,
+            hashPassword(orgUser.org_password),
             orgUser.org_type,
             orgUser.org_contact_tel,
             orgUser.org_bio,
-            orgUser.org_verified
+            orgUser.org_verified,
           ];
         })
       );
@@ -226,20 +255,20 @@ function setupOrgUsersTable(orgUsers: OrgUser[]) {
 function setupOrgTypesTable(orgTypes: OrgType[]) {
   logger.debug("Setting up org_types table!");
 
-  return db.query(
-    `CREATE TABLE org_types (
+  return db
+    .query(
+      `CREATE TABLE org_types (
       type_id SERIAL PRIMARY KEY,
       type_title VARCHAR(100)
-    );`)
+    );`
+    )
     .then(() => {
       const queryStr = format(
         `INSERT INTO org_types(
           type_title
         ) VALUES %L;`,
         orgTypes.map((orgType) => {
-          return [
-            orgType.type_title
-          ];
+          return [orgType.type_title];
         })
       );
 
@@ -250,13 +279,15 @@ function setupOrgTypesTable(orgTypes: OrgType[]) {
 function setupBadgesTable(badges: Badge[]) {
   logger.debug("Setting up badges table!");
 
-  return db.query(
-    `CREATE TABLE badges (
+  return db
+    .query(
+      `CREATE TABLE badges (
       badge_id SERIAL PRIMARY KEY,
       badge_name VARCHAR(100),
       badge_img_path VARCHAR(200),
       badge_points INT
-    );`)
+    );`
+    )
     .then(() => {
       const queryStr = format(
         `INSERT INTO badges(
@@ -265,11 +296,7 @@ function setupBadgesTable(badges: Badge[]) {
           badge_points
         ) VALUES %L;`,
         badges.map((badge) => {
-          return [
-            badge.badge_name,
-            badge.badge_img_path,
-            badge.badge_points
-          ];
+          return [badge.badge_name, badge.badge_img_path, badge.badge_points];
         })
       );
 
@@ -282,8 +309,9 @@ function setupBadgesTable(badges: Badge[]) {
 function setupListingsTable(listings: Listing[]) {
   logger.debug("Setting up listings table!");
 
-  return db.query(
-    `CREATE TABLE listings (
+  return db
+    .query(
+      `CREATE TABLE listings (
       list_id SERIAL PRIMARY KEY,
       list_title VARCHAR(200) NOT NULL,
       list_location VARCHAR(100) NOT NULL,
@@ -296,7 +324,8 @@ function setupListingsTable(listings: Listing[]) {
       list_img BYTEA,
       list_visible BOOL,
       list_org INT REFERENCES org_users(org_id) NOT NULL
-    );`)
+    );`
+    )
     .then(() => {
       const queryStr = format(
         `INSERT INTO listings (
@@ -322,23 +351,25 @@ function setupListingsTable(listings: Listing[]) {
             listing.list_duration,
             listing.list_description,
             listing.list_visible,
-            listing.list_org
+            listing.list_org,
           ];
         })
       );
 
       return db.query(queryStr);
-    })
+    });
 }
 
 function setupSkillsTable(skills: Skill[]) {
   logger.debug("Setting up skills table!");
 
-  return db.query(
-    `CREATE TABLE skills (
+  return db
+    .query(
+      `CREATE TABLE skills (
       skill_id SERIAL PRIMARY KEY,
       skill_name VARCHAR(100) NOT NULL
-    );`)
+    );`
+    )
     .then(() => {
       const queryStr = format(
         `INSERT INTO skills (
@@ -346,10 +377,7 @@ function setupSkillsTable(skills: Skill[]) {
           skill_name
         ) VALUES %L;`,
         skills.map((skill) => {
-          return [
-            skill.skill_id,
-            skill.skill_name
-          ];
+          return [skill.skill_id, skill.skill_name];
         })
       );
 
@@ -360,14 +388,16 @@ function setupSkillsTable(skills: Skill[]) {
 function setupApplicationsTable(applications: Application[]) {
   logger.debug("Setting up applications table!");
 
-  return db.query(
-    `CREATE TABLE applications (
+  return db
+    .query(
+      `CREATE TABLE applications (
       app_id SERIAL PRIMARY KEY,
       vol_id INT REFERENCES vol_users(vol_id) NOT NULL,
       listing_id INT REFERENCES listings(list_id) NOT NULL,
       prov_confirm BOOL NOT NULL,
       full_conf BOOL NOT NULL
-    );`)
+    );`
+    )
     .then(() => {
       const queryStr = format(
         `INSERT INTO applications (
@@ -381,7 +411,7 @@ function setupApplicationsTable(applications: Application[]) {
             application.vol_id,
             application.listing_id,
             application.prov_confirm,
-            application.full_conf
+            application.full_conf,
           ];
         })
       );
@@ -393,12 +423,14 @@ function setupApplicationsTable(applications: Application[]) {
 function setupListSkillJuncTable(listSkillJuncs: ListSkillJunc[]) {
   logger.debug("Setting up list_skill_junc table!");
 
-  return db.query(
-    `CREATE TABLE list_skill_junc (
+  return db
+    .query(
+      `CREATE TABLE list_skill_junc (
       list_skill_id SERIAL PRIMARY KEY,
       list_id INT REFERENCES listings(list_id),
       skill_id INT REFERENCES skills(skill_id)
-    );`)
+    );`
+    )
     .then(() => {
       const queryStr = format(
         `INSERT INTO list_skill_junc (
@@ -406,10 +438,7 @@ function setupListSkillJuncTable(listSkillJuncs: ListSkillJunc[]) {
           skill_id
         ) VALUES %L;`,
         listSkillJuncs.map((obj) => {
-          return [
-            obj.list_id,
-            obj.skill_id          
-          ];
+          return [obj.list_id, obj.skill_id];
         })
       );
 
@@ -420,12 +449,14 @@ function setupListSkillJuncTable(listSkillJuncs: ListSkillJunc[]) {
 function setupVolUserBadgeJuncTable(volUserBadgeJuncs: VolUserBadgeJunc[]) {
   logger.debug("Setting up vol_user_badge_junc table!");
 
-  return db.query(
-    `CREATE TABLE vol_user_badge_junc (
+  return db
+    .query(
+      `CREATE TABLE vol_user_badge_junc (
       vol_user_badge_id SERIAL PRIMARY KEY,
       vol_id INT REFERENCES vol_users(vol_id),
       badge_id INT REFERENCES badges(badge_id)
-    );`)
+    );`
+    )
     .then(() => {
       const queryStr = format(
         `INSERT INTO vol_user_badge_junc (
@@ -433,24 +464,23 @@ function setupVolUserBadgeJuncTable(volUserBadgeJuncs: VolUserBadgeJunc[]) {
           badge_id
         ) VALUES %L;`,
         volUserBadgeJuncs.map((obj) => {
-          return [
-            obj.vol_id,
-            obj.badge_id
-          ];
+          return [obj.vol_id, obj.badge_id];
         })
-      )
+      );
     });
 }
 
 function setupVolUserSkillJuncTable(volUserSkillJuncs: VolUserSkillJunc[]) {
   logger.debug("Setting up vol_user_skill_junc table!");
 
-  return db.query(
-    `CREATE TABLE vol_user_skill_junc (
+  return db
+    .query(
+      `CREATE TABLE vol_user_skill_junc (
       vol_user_skill_id SERIAL PRIMARY KEY,
       vol_id INT REFERENCES vol_users(vol_id),
       skill_id INT REFERENCES skills(skill_id)
-    )`)
+    )`
+    )
     .then(() => {
       const queryStr = format(
         `INSERT INTO vol_user_skill_junc (
@@ -458,11 +488,8 @@ function setupVolUserSkillJuncTable(volUserSkillJuncs: VolUserSkillJunc[]) {
           skill_id
         ) VALUES %L;`,
         volUserSkillJuncs.map((obj) => {
-          return [
-            obj.vol_id,
-            obj.skill_id
-          ];
+          return [obj.vol_id, obj.skill_id];
         })
       );
     });
-};
+}
