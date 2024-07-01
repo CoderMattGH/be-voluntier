@@ -5,19 +5,31 @@ import * as listingsModel from "../models/listings.model";
 export function getListings(req: Request, res: Response, next: NextFunction) {
   logger.debug(`In getListings() in listings.controller`);
 
-  console.log(req.query);
+  // Set visible query
+  let visible;
+  if (req.query.visible && req.query.visible === "false") {
+    visible = false;
+  }
+  
+  // Set sort by
+  let sortBy;
+  if (req.query.sort_by) {
+    sortBy = (req.query.sort_by).toString();
+  }
 
-  let visible = true;
-  if (req.query.visible && req.query.visible === "false") visible = false;
+  // Set order
+  let order;
+  if (req.query.order) {
+    order = (req.query.order).toString();
+  }
 
-  listingsModel
-    .selectListings(visible)
-    .then((articles) => {
-      res.status(200).send(articles);
-    })
-    .catch((err) => {
-      next(err);
-    });
+  listingsModel.selectListings(visible, sortBy, order)
+      .then((listings) => {
+        res.status(200).send(listings);
+      })
+      .catch((err) => {
+        next(err);
+      });
 }
 
 export function getListing(req: Request, res: Response, next: NextFunction) {

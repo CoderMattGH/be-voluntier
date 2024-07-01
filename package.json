@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc --build --clean && tsc",
     "test": "jest --verbose --rootDir=dist",
-    "start": "node dist/listen.js",
+    "start": "npm run build && node dist/listen.js",
     "seed": "node dist/db/seeds/run-seed.js",
     "setup-dbs": "psql -f ./db_setup/setup.sql",
     "seed-prod": "NODE_ENV=production npm run seed"
