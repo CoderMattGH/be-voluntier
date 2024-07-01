@@ -29,7 +29,7 @@ export function loginUser(req: Request, res: Response, next: NextFunction) {
   if (req.session.user) {
     next({
       status: 400,
-      msg: "User is already logged in!",
+      msg: "A user is already logged in!",
     });
 
     return;
