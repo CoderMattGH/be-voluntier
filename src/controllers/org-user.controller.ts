@@ -31,6 +31,9 @@ export function getOrgUserById(
   orgUserModel
     .selectOrgUserById(userIdNum.toString())
     .then((org_user) => {
+      // Remove password from results
+      delete org_user.org_password;
+
       res.status(200).send({ org_user: org_user });
     })
     .catch((err) => {
