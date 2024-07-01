@@ -100,7 +100,7 @@
   "GET /api/applications/:app_id": {
     "description": "Serves up an object containing details on the application whose id matches id passed as parametric endpoint",
     "exampleResponse": {
-      "applications": {
+      "application": {
         "app_id": 1,
         "vol_id": 1,
         "listing_id": 3,
