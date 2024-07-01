@@ -13,7 +13,7 @@ export function selectOrgUserByEmail(email: string) {
     const { rows } = result;
 
     if (!rows.length) {
-      throw new Error("ORG_USER_NOT_FOUND");
+      return Promise.reject({ status: 404, msg: "org_user not found!" });
     }
 
     return rows[0];
@@ -30,7 +30,7 @@ export function selectOrgUserById(user_id: string) {
     const { rows } = result;
 
     if (!rows.length) {
-      throw new Error("ORG_USER_NOT_FOUND");
+      return Promise.reject({ status: 404, msg: "org_user not found!" });
     }
 
     return rows[0];
