@@ -4,9 +4,13 @@ import { Request, Response, NextFunction } from "express";
 
 export function logoutUser(req: Request, res: Response, next: NextFunction) {
   logger.debug(`In logoutUser() in login.controller`);
-  logger.info(`Logging out user: ${req.session.user}`);
+  logger.info(`Trying to log out user!`);
 
   if (req.session.user) {
+    logger.info(
+      `Logging out user: [${req.session.user.id}, ${req.session.user.email}, ${req.session.user.role}]`
+    );
+
     req.session.destroy(() => {
       logger.debug("User session destroyed!");
 
