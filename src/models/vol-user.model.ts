@@ -25,7 +25,7 @@ export function selectVolUserById(user_id: string) {
   logger.debug("In selectVolUserById() in vol-user.model");
   logger.info(`Selecting user by Id: ${user_id}`);
 
-  const queryStr = `SELECT * FROM vol_user WHERE vol_user.vol_id = $1;`;
+  const queryStr = `SELECT * FROM vol_users WHERE vol_user.vol_id = $1;`;
 
   return db.query(queryStr, [user_id]).then((result) => {
     const { rows } = result;
