@@ -19,3 +19,21 @@ export function getApplications(
       next(err);
     });
 }
+
+export function getApplication(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  logger.debug(`In getApplication() in applications.controller`);
+  const { app_id } = req.params;
+
+  applicationsModel
+    .selectApplication(app_id)
+    .then((application) => {
+      res.status(200).send(application);
+    })
+    .catch((err) => {
+      next(err);
+    });
+}

@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { getApplications } from "../controllers/applications.controller";
+import { getApplication } from "../controllers/applications.controller";
 
 export const applicationsRouter = Router();
 
-applicationsRouter.route("/").get(getApplications);
+applicationsRouter.route("/:app_id").get(getApplication);
