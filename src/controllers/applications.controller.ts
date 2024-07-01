@@ -1,6 +1,7 @@
 import { logger } from "../logger";
 import { Request, Response, NextFunction } from "express";
 import * as applicationsModel from "../models/applications.model";
+import { checkUserCredentials } from "../auth/auth-utils";
 
 export function getApplications(
   req: Request,
@@ -13,7 +14,7 @@ export function getApplications(
   applicationsModel
     .selectApplicationsByVolId(user_id)
     .then((applications) => {
-      res.status(200).send(applications);
+      res.status(200).send({ applications: applications });
     })
     .catch((err) => {
       next(err);
@@ -28,10 +29,39 @@ export function getApplication(
   logger.debug(`In getApplication() in applications.controller`);
   const { app_id } = req.params;
 
+  if (Number.isNaN(app_id)) {
+    next({ status: 400, msg: "app_id is not a number!" });
+
+    return;
+  }
+
   applicationsModel
     .selectApplication(app_id)
     .then((application) => {
-      res.status(200).send(application);
+      let appIdNum = Number(app_id);
+
+      // Check if volunteer has access
+      let volAuthObj = checkUserCredentials(
+        req,
+        application.vol_id,
+        "volunteer"
+      );
+
+      // Check if organisation has access
+      let orgAuthObj = checkUserCredentials(
+        req,
+        application.org_id,
+        "organisation"
+      );
+
+      // If neither has authorisation, then reject
+      if (!(orgAuthObj.authorised || volAuthObj.authorised)) {
+        next(orgAuthObj.respObj);
+
+        return;
+      }
+
+      res.status(200).send({ application: application });
     })
     .catch((err) => {
       next(err);

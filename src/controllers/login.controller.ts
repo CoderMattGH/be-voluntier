@@ -16,7 +16,7 @@ export function loginUser(req: Request, res: Response, next: NextFunction) {
     `Trying to login user where email:${email} password:${password} role:${role}`
   );
 
-  const availRoles = ["volunteer", "organiser"];
+  const availRoles = ["volunteer", "organisation"];
 
   // Validate role
   if (!role || !availRoles.includes(role.toLowerCase())) {

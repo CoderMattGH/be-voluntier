@@ -14,7 +14,7 @@ export function selectApplicationsByVolId(user_id: string) {
       return Promise.reject({ status: 404, msg: "No applications found!" });
     }
 
-    return { applications: rows };
+    return rows;
   });
 }
 
@@ -22,7 +22,9 @@ export function selectApplication(app_id: string) {
   logger.debug(`In selectApplication() in applications.model`);
 
   let queryStr = `
-  SELECT * FROM applications
+  SELECT app_id, vol_id, listings.list_org AS org_id, listing_id, prov_confirm, full_conf 
+  FROM applications 
+  JOIN listings ON applications.listing_id = listings.list_id
   WHERE applications.app_id = $1
   `;
 
@@ -31,6 +33,6 @@ export function selectApplication(app_id: string) {
       return Promise.reject({ status: 404, msg: "No application found!" });
     }
 
-    return { applications: rows[0] };
+    return rows[0];
   });
 }

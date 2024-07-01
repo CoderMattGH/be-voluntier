@@ -4,7 +4,7 @@ import { Express } from "express";
 import pgSession from "connect-pg-simple";
 import { db } from "../db";
 
-// Role: volunteer, organiser, admin.
+// Role: volunteer, organisation, admin.
 type UserSession = {
   id: number;
   email: string;
