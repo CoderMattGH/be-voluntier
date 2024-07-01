@@ -7,6 +7,7 @@
     "queries": [
       "sort_by [duration, date]",
       "order [asc, desc]",
+      "search [string]",
       "visible [true/false]"
     ],
     "exampleResponse": {
