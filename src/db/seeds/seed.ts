@@ -16,18 +16,31 @@ import type {
   VolUserSkillJunc,
 } from "../data/types";
 
-export function seed(
-  volUsers: VolUser[],
-  orgUsers: OrgUser[],
-  listings: Listing[],
-  skills: Skill[],
-  orgTypes: OrgType[],
-  badges: Badge[],
-  applications: Application[],
-  listSkillJuncs: ListSkillJunc[],
-  volUserBadgeJuncs: VolUserBadgeJunc[],
-  volUserSkillJuncs: VolUserSkillJunc[]
-) {
+type SeedData = {
+  volUsers: VolUser[];
+  orgUsers: OrgUser[];
+  listings: Listing[];
+  skills: Skill[];
+  orgTypes: OrgType[];
+  badges: Badge[];
+  applications: Application[];
+  listSkillJuncs: ListSkillJunc[];
+  volUserBadgeJuncs: VolUserBadgeJunc[];
+  volUserSkillJuncs: VolUserSkillJunc[];
+};
+
+export function seed({
+  volUsers,
+  orgUsers,
+  listings,
+  skills,
+  orgTypes,
+  badges,
+  applications,
+  listSkillJuncs,
+  volUserBadgeJuncs,
+  volUserSkillJuncs,
+}: SeedData) {
   logger.debug("Starting db seed!");
 
   return dropTables()
@@ -69,8 +82,6 @@ export function seed(
     .finally(() => {
       logger.info("Finished creating tables!");
       logger.info("Closing connection to database!");
-
-      return db.end();
     });
 }
 
