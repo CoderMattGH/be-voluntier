@@ -14,6 +14,8 @@ import type {
   ListSkillJunc,
   VolUserBadgeJunc,
   VolUserSkillJunc,
+  FavouriteOrg,
+  FavouriteListing,
 } from "../data/types";
 
 type SeedData = {
@@ -27,6 +29,8 @@ type SeedData = {
   listSkillJuncs: ListSkillJunc[];
   volUserBadgeJuncs: VolUserBadgeJunc[];
   volUserSkillJuncs: VolUserSkillJunc[];
+  favouriteOrgs: FavouriteOrg[];
+  favouriteListings: FavouriteListing[];
 };
 
 export function seed({
@@ -40,6 +44,8 @@ export function seed({
   listSkillJuncs,
   volUserBadgeJuncs,
   volUserSkillJuncs,
+  favouriteOrgs,
+  favouriteListings,
 }: SeedData) {
   logger.debug("Starting db seed!");
 
@@ -77,6 +83,12 @@ export function seed({
       return setupVolUserSkillJuncTable(volUserSkillJuncs);
     })
     .then(() => {
+      return setupFavouriteOrgsTable(favouriteOrgs);
+    })
+    .then(() => {
+      return setupFavouriteListingsTable(favouriteListings);
+    })
+    .then(() => {
       return setupSessionTable();
     })
     .finally(() => {
@@ -102,9 +114,19 @@ function dropTables() {
       return db.query(`DROP TABLE IF EXISTS vol_user_badge_junc;`);
     })
     .then(() => {
+      logger.debug(`Dropping favourite-orgs table!`);
+
+      return db.query(`DROP TABLE IF EXISTS favourite_orgs;`);
+    })
+    .then(() => {
+      logger.debug(`Dropping favourite-listings table!`);
+
+      return db.query(`DROP TABLE IF EXISTS favourite_listings;`);
+    })
+    .then(() => {
       logger.debug(`Dropping vol_user_skill_junc table!`);
 
-      return db.query(`DROP TABLE IF EXISTS vol_user_skill_junc`);
+      return db.query(`DROP TABLE IF EXISTS vol_user_skill_junc;`);
     })
     .then(() => {
       logger.debug(`Dropping badges table!`);
@@ -491,7 +513,7 @@ function setupVolUserSkillJuncTable(volUserSkillJuncs: VolUserSkillJunc[]) {
       vol_user_skill_id SERIAL PRIMARY KEY,
       vol_id INT REFERENCES vol_users(vol_id),
       skill_id INT REFERENCES skills(skill_id)
-    )`
+    );`
     )
     .then(() => {
       const queryStr = format(
@@ -501,6 +523,58 @@ function setupVolUserSkillJuncTable(volUserSkillJuncs: VolUserSkillJunc[]) {
         ) VALUES %L;`,
         volUserSkillJuncs.map((obj) => {
           return [obj.vol_id, obj.skill_id];
+        })
+      );
+
+      return db.query(queryStr);
+    });
+}
+
+function setupFavouriteOrgsTable(favouriteOrgs: FavouriteOrg[]) {
+  logger.debug("Setting up favourite-orgs table!");
+
+  return db
+    .query(
+      `CREATE TABLE favourite_orgs (
+      fav_orgs_id SERIAL PRIMARY KEY,
+      vol_id INT REFERENCES vol_users(vol_id),
+      org_id INT REFERENCES org_users(org_id)
+    );`
+    )
+    .then(() => {
+      const queryStr = format(
+        `INSERT INTO favourite_orgs (
+        vol_id,
+        org_id
+      ) VALUES %L;`,
+        favouriteOrgs.map((obj) => {
+          return [obj.vol_id, obj.org_id];
+        })
+      );
+
+      return db.query(queryStr);
+    });
+}
+
+function setupFavouriteListingsTable(favouriteListings: FavouriteListing[]) {
+  logger.debug("Setting up favourite-listings table!");
+
+  return db
+    .query(
+      `CREATE TABLE favourite_listings (
+      fav_orgs_id SERIAL PRIMARY KEY,
+      vol_id INT REFERENCES vol_users(vol_id),
+      list_id INT REFERENCES listings(list_id)
+    );`
+    )
+    .then(() => {
+      const queryStr = format(
+        `INSERT INTO favourite_listings (
+        vol_id,
+        list_id
+      ) VALUES %L;`,
+        favouriteListings.map((obj) => {
+          return [obj.vol_id, obj.list_id];
         })
       );
 
