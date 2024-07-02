@@ -4,7 +4,6 @@
   "description": "be-voluntier",
   "main": "dist/listen.js",
   "scripts": {
-    "sql-output": "psql -f playground/playground.sql > playground/playground.txt",
     "build": "tsc --build --clean && tsc",
     "prepare": "husky",
     "setup-dbs": "psql -f ./db_setup/setup.sql",
