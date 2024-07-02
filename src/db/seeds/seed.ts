@@ -185,8 +185,7 @@ function setupVolUsersTable(volUsers: VolUser[]) {
       vol_contact_tel VARCHAR(50),
       vol_avatar BYTEA,
       vol_bio TEXT,
-      vol_hours INT,
-      vol_badges INT
+      vol_hours INT
     );`
     )
     .then(() => {
