@@ -62,11 +62,13 @@ export function loginUser(req: Request, res: Response, next: NextFunction) {
         return Promise.reject(invalidError);
       }
 
-      return {
+      const sessObj = {
         id: volUser.vol_id,
         email: volUser.vol_email,
         role: role,
       };
+
+      return { user: volUser, sessObj };
     });
   } else {
     modelPromise = orgUserModel.selectOrgUserByEmail(email).then((orgUser) => {
@@ -74,25 +76,33 @@ export function loginUser(req: Request, res: Response, next: NextFunction) {
         return Promise.reject(invalidError);
       }
 
-      return {
+      const sessObj = {
         id: orgUser.org_id,
         email: orgUser.org_email,
         role: role,
       };
+
+      return { user: orgUser, sessObj };
     });
   }
-
   modelPromise
     .then((userObj) => {
       logger.debug(`Email and password are OK!`);
-      // Attach user object to session
+
+      const { sessObj } = userObj;
       req.session.user = {
-        id: userObj.id,
-        email: userObj.email,
+        id: sessObj.id,
+        email: sessObj.email,
         role: role,
       };
 
-      res.status(200).send({ msg: "Login successful!" });
+      const user = userObj.user;
+
+      delete user.vol_password;
+      delete user.org_password;
+      user.role = role;
+
+      res.status(200).send({ user: userObj.user });
     })
     .catch((err) => {
       logger.debug(`ERR: ${err}`);
