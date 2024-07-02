@@ -4,6 +4,7 @@
   "description": "be-voluntier",
   "main": "dist/listen.js",
   "scripts": {
+    "sql-output": "psql -f playground.sql > playground.txt",
     "build": "tsc --build --clean && tsc",
     "test": "jest --verbose --rootDir=dist --runInBand",
     "start": "npm run build && node dist/listen.js",
