@@ -1,6 +1,8 @@
 import { Router } from "express";
-import { getBadges } from "../controllers/badges.controller";
+import { getBadges, getBadgesByUserId } from "../controllers/badges.controller";
 
 export const badgesRouter = Router();
 
-badgesRouter.route("/:user_id").get(getBadges);
+badgesRouter.route("/").get(getBadges);
+
+badgesRouter.route("/:user_id").get(getBadgesByUserId);
