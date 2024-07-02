@@ -1,6 +1,6 @@
 import { logger } from "../../logger";
 import format from "pg-format";
-import { db } from "../";
+import { db } from "../../db";
 import { hashPassword } from "../../auth/auth-utils";
 
 import type {
