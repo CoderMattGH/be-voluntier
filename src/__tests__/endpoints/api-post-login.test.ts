@@ -9,9 +9,8 @@ beforeEach(() => seed(testData));
 
 afterAll(() => db.end());
 
-// TODO: Change tests
 describe("POST /api/login", () => {
-  test("Logs in the user", () => {
+  test("Logs in the volunteer and returns a volunteer object", () => {
     const loginObj = {
       email: "mattydemail@email.com",
       password: "mybadpassword",
@@ -25,7 +24,44 @@ describe("POST /api/login", () => {
       .then(({ body }) => {
         const { user } = body;
 
-        // expect(body).toBe("Login successful!");
+        expect(user).toMatchObject({
+          vol_id: expect.any(Number),
+          vol_email: expect.any(String),
+          vol_first_name: expect.any(String),
+          vol_last_name: expect.any(String),
+          vol_bio: expect.any(String),
+          vol_hours: expect.any(Number),
+          role: expect.any(String),
+        });
+
+        expect(user.vol_avatar).toBeDefined();
+      });
+  });
+
+  test("Logs in the organisation and returns a organisation object", () => {
+    const loginObj = {
+      email: "oxfam@email.com",
+      password: "mybadpassword",
+      role: "organisation",
+    };
+
+    return request(app)
+      .post("/api/login")
+      .send(loginObj)
+      .expect(200)
+      .then(({ body }) => {
+        const { user } = body;
+
+        expect(user).toMatchObject({
+          org_id: expect.any(Number),
+          org_email: expect.any(String),
+          org_type: expect.any(Number),
+          org_bio: expect.any(String),
+          org_verified: expect.any(Boolean),
+          role: expect.any(String),
+        });
+
+        expect(user.org_avatar).toBeDefined();
       });
   });
 

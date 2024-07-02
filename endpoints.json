@@ -9,8 +9,31 @@
       "password": "userpassword",
       "role": "'volunteer' or 'organisation'"
     },
-    "exampleResponse": {
-      "msg": "Login successful!"
+    "exampleResponseForVolunteerLogin": {
+      "user": {
+        "vol_id": 1,
+        "vol_email": "mattydemail@email.com",
+        "vol_first_name": "Matt",
+        "vol_last_name": "Dixon",
+        "vol_contact_tel": "98239238928392",
+        "vol_avatar": null,
+        "vol_bio": "HELLO I AM MATT :o",
+        "vol_hours": 1000,
+        "role": "volunteer"
+      }
+    },
+    "exampleResponseForOrganisationLogin": {
+      "user": {
+        "org_id": 1,
+        "org_name": "Oxfam",
+        "org_email": "oxfam@email.com",
+        "org_type": 2,
+        "org_contact_tel": "923892238923",
+        "org_bio": "Oxfam is a British-founded confederation of 21 independent non-governmental organizations (NGOs).",
+        "org_avatar": null,
+        "org_verified": true,
+        "role": "organisation"
+      }
     }
   },
   "DELETE /api/logout": {
