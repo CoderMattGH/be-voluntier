@@ -43,8 +43,6 @@ export function getListing(req: Request, res: Response, next: NextFunction) {
   const { listing_id } = req.params;
   logger.debug(`In getListing() in listings.controller`);
 
-  console.log(req.query);
-
   let visible = true;
   if (req.query.visible && req.query.visible === "false") visible = false;
 
