@@ -32,7 +32,13 @@ export function getListings(req: Request, res: Response, next: NextFunction) {
   listingsModel
     .selectListings(visible, sortBy, order, search)
     .then((listings) => {
-      res.status(200).send(listings);
+      if (!listings.length) {
+        next({ status: 404, msg: "No listings found!" });
+
+        return;
+      }
+
+      res.status(200).send({ listings });
     })
     .catch((err) => {
       next(err);
