@@ -1,11 +1,12 @@
 import * as authUtils from "../../auth/auth-utils";
-const {hashPassword, checkPassword} = authUtils;
+const { hashPassword, checkPassword } = authUtils;
 
 describe("hashPassword()", () => {
   test("Hashes an empty string", () => {
     const actual = hashPassword("");
-    
-    const expected = "$2a$10$mjBiK50OQB2g.s.QXSV8zuYevknA5dC0cQg1pINrYpJL5Ji0GhhUO";
+
+    const expected =
+      "$2a$10$mjBiK50OQB2g.s.QXSV8zuYevknA5dC0cQg1pINrYpJL5Ji0GhhUO";
 
     expect(actual).toBe(expected);
   });
@@ -13,7 +14,8 @@ describe("hashPassword()", () => {
   test("Hashes a password string", () => {
     const actual = hashPassword("mypassword");
 
-    const expected = "$2a$10$mjBiK50OQB2g.s.QXSV8zuLm2nHnJcFGHjzlGxE3KZOjLvRNtF80a";
+    const expected =
+      "$2a$10$mjBiK50OQB2g.s.QXSV8zuLm2nHnJcFGHjzlGxE3KZOjLvRNtF80a";
 
     expect(actual).toBe(expected);
   });

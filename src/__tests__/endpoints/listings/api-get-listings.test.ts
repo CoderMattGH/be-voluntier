@@ -1,10 +1,10 @@
 import request from "supertest";
 import "jest-sorted";
 
-import { app } from "../../app";
-import { db } from "../../db";
-import { seed } from "../../db/seeds/seed";
-import { testData } from "../../db/data/test-data/";
+import { app } from "../../../app";
+import { db } from "../../../db";
+import { seed } from "../../../db/seeds/seed";
+import { testData } from "../../../db/data/test-data";
 
 beforeEach(() => seed(testData));
 
@@ -21,8 +21,8 @@ type listing = {
   list_description: string;
   list_org: number;
   org_name: string;
-  org_avatar: string;
-  list_img: string;
+  org_avatar: string | null;
+  list_img: string | null;
 };
 
 describe("GET /api/listings", () => {
@@ -35,7 +35,6 @@ describe("GET /api/listings", () => {
 
         expect(listings.length).toBe(8);
 
-        // TODO: org_avatar and list_img
         listings.forEach((listing: listing) => {
           expect(listing).toMatchObject({
             list_id: expect.any(Number),
@@ -50,6 +49,9 @@ describe("GET /api/listings", () => {
 
           expect(() => new Date(listing.list_date)).not.toThrow(Error);
           expect(() => new Date(listing.list_time)).not.toThrow(Error);
+          // TODO: Change when sorted image formats
+          expect(listing.org_avatar).toBeDefined();
+          expect(listing.list_img).toBeDefined();
         });
       });
   });
@@ -179,6 +181,15 @@ describe("GET /api/listings", () => {
       .then(({ body }) => {
         const listings = body.listings;
         expect(listings.length).toBe(8);
+      });
+  });
+
+  test("Returns a 404 when no results", () => {
+    return request(app)
+      .get("/api/listings?search=youwillnotfindanythinghere")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("No listings found!");
       });
   });
 });

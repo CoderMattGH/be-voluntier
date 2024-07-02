@@ -1,10 +1,10 @@
 import request from "supertest";
 import "jest-sorted";
 
-import { app } from "../../app";
-import { db } from "../../db";
-import { seed } from "../../db/seeds/seed";
-import { testData } from "../../db/data/test-data/";
+import { app } from "../../../app";
+import { db } from "../../../db";
+import { seed } from "../../../db/seeds/seed";
+import { testData } from "../../../db/data/test-data/";
 
 beforeEach(() => seed(testData));
 
