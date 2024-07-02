@@ -85,6 +85,7 @@ export function loginUser(req: Request, res: Response, next: NextFunction) {
       return { user: orgUser, sessObj };
     });
   }
+  
   modelPromise
     .then((userObj) => {
       logger.debug(`Email and password are OK!`);
