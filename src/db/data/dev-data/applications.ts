@@ -1,6 +1,5 @@
 import type { Application } from "../types";
 
-// TODO: Seeding Check skills are OK
 export const applications: Application[] = [
   {
     vol_id: 1,
