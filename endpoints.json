@@ -170,5 +170,28 @@
         }
       ]
     }
+  },
+  "GET /api/skills": {
+    "description": "Serves up an array of all skills that a volunteer might need to take part in a volunteering opportunity",
+    "exampleResponse": {
+      "skills": [
+        "Physical Work",
+        "Teamwork",
+        "Gardening",
+        "Running",
+        "Fundraising",
+        "Community Engagement",
+        "Organization",
+        "Animal Care",
+        "Patience",
+        "Sales",
+        "Cooking",
+        "Mentoring",
+        "Sports",
+        "Art",
+        "Teaching",
+        "First Aid"
+      ]
+    }
   }
 }

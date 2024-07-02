@@ -8,6 +8,7 @@ import { badgesRouter } from "./badges-router";
 import { leaderboardRouter } from "./leaderboard-router";
 import { orgUserRouter } from "./org-user-router";
 import { volUserRouter } from "./vol-user-router";
+import { skillsRouter } from "./skills-router";
 
 export const apiRouter = Router();
 
@@ -21,3 +22,4 @@ apiRouter.use("/badges", badgesRouter);
 apiRouter.use("/leaderboard", leaderboardRouter);
 apiRouter.use("/org", orgUserRouter);
 apiRouter.use("/vol", volUserRouter);
+apiRouter.use("/skills", skillsRouter);
