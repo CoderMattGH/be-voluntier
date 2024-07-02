@@ -151,5 +151,24 @@
         }
       ]
     }
+  },
+  "GET /api/leaderboard": {
+    "description": "Serves up an array of objects that represents the top 10 users by badge points, with each object containing basic information on the user alongside number of points. Limited to 10 users, and sorted by points descending",
+    "exampleResponse": {
+      "leaderboard": [
+        {
+          "vol_first_name": "Matt",
+          "vol_last_name": "Dixon",
+          "vol_avatar": null,
+          "points": "10400"
+        },
+        {
+          "vol_first_name": "Sophie",
+          "vol_last_name": "Davis",
+          "vol_avatar": null,
+          "points": "9500"
+        }
+      ]
+    }
   }
 }
