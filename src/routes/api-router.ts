@@ -9,6 +9,7 @@ import { leaderboardRouter } from "./leaderboard-router";
 import { orgUserRouter } from "./org-user-router";
 import { volUserRouter } from "./vol-user-router";
 import { skillsRouter } from "./skills-router";
+import { orgTypesRouter } from "./org-types-router";
 
 export const apiRouter = Router();
 
@@ -23,3 +24,4 @@ apiRouter.use("/leaderboard", leaderboardRouter);
 apiRouter.use("/org", orgUserRouter);
 apiRouter.use("/vol", volUserRouter);
 apiRouter.use("/skills", skillsRouter);
+apiRouter.use("/org-types", orgTypesRouter);
