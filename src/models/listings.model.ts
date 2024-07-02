@@ -1,6 +1,7 @@
 import { logger } from "../logger";
 import { db } from "../db";
 
+// TODO: Implement better search
 export function selectListings(
   visible = true,
   sortBy = "date",
@@ -41,11 +42,7 @@ export function selectListings(
   queryStr += `, listings.list_id ASC`;
 
   return db.query(queryStr, [visible, `%${search}%`]).then(({ rows }) => {
-    if (!rows) {
-      return Promise.reject({ status: 404, msg: "No listings found!" });
-    }
-
-    return { listings: rows };
+    return rows;
   });
 }
 
@@ -61,7 +58,7 @@ export function selectListing(visible = true, listing_id: string) {
         AND listings.list_id = $2;`;
 
   return db.query(queryStr, [visible, listing_id]).then(({ rows }) => {
-    if (rows.length === 0) {
+    if (!rows.length) {
       return Promise.reject({ status: 404, msg: "No listing found!" });
     }
 

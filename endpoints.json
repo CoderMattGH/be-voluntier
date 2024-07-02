@@ -234,5 +234,51 @@
         "Religious and Faith-Based"
       ]
     }
+  },
+  "GET /api/favourites/:vol_user_id/orgs": {
+    "description": "Serves up an array of all the volunteer user's favourite organisations",
+    "authRequired": true,
+    "exampleResponse": {
+      "favourite_orgs": [
+        {
+          "fav_orgs_id": 3,
+          "vol_id": 1,
+          "org_id": 2,
+          "org_name": "Red Cross",
+          "org_avatar": null
+        },
+        {
+          "fav_orgs_id": 1,
+          "vol_id": 1,
+          "org_id": 2,
+          "org_name": "Red Cross",
+          "org_avatar": null
+        }
+      ]
+    }
+  },
+  "GET /api/favourites/:vol_user_id/listings": {
+    "description": "Serves up an array of all the volunteer user's favourite listings",
+    "authRequired": true,
+    "exampleResponse": {
+      "favourite_listings": [
+        {
+          "fav_lists_id": 1,
+          "vol_id": 1,
+          "list_id": 1,
+          "list_title": "Community Garden Cleanup",
+          "list_description": "Join us for a morning of community gardening in the heart of the city. We will be cleaning up the garden, planting new flowers, and making the area beautiful for everyone to enjoy.",
+          "list_img": null
+        },
+        {
+          "fav_lists_id": 2,
+          "vol_id": 1,
+          "list_id": 2,
+          "list_title": "Beach Cleanup Event",
+          "list_description": "Help us clean up the beach and protect marine life. We will provide all the necessary equipment. All you need to bring is your enthusiasm and love for the environment.",
+          "list_img": null
+        }
+      ]
+    }
   }
 }

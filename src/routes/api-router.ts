@@ -1,16 +1,16 @@
 import { Router } from "express";
 import { getEndpoints } from "../controllers/api.controller";
-import { loginRouter } from "./login-router";
-import { logoutRouter } from "./logout-router";
-import { listingsRouter } from "./listings-router";
-import { applicationsRouter } from "./applications-router";
-import { badgesRouter } from "./badges-router";
-import { leaderboardRouter } from "./leaderboard-router";
-import { orgUserRouter } from "./org-user-router";
-import { volUserRouter } from "./vol-user-router";
-import { skillsRouter } from "./skills-router";
-import { orgTypesRouter } from "./org-types-router";
-import { favouritesRouter } from "./favourites-router";
+import { loginRouter } from "../routes/login-router";
+import { logoutRouter } from "../routes/logout-router";
+import { listingsRouter } from "../routes/listings-router";
+import { applicationsRouter } from "../routes/applications-router";
+import { badgesRouter } from "../routes/badges-router";
+import { leaderboardRouter } from "../routes/leaderboard-router";
+import { orgUserRouter } from "../routes/org-user-router";
+import { volUserRouter } from "../routes/vol-user-router";
+import { skillsRouter } from "../routes/skills-router";
+import { orgTypesRouter } from "../routes/org-types-router";
+import { favouritesRouter } from "../routes/favourites-router";
 
 export const apiRouter = Router();
 

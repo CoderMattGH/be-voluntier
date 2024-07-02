@@ -1,4 +1,4 @@
-import type { FavouriteOrg } from "../types";
+import type { FavouriteOrg } from "../../../db/data/types";
 
 export const favouriteOrgs: FavouriteOrg[] = [
   {

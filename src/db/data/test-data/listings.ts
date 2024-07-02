@@ -1,4 +1,4 @@
-import type { Listing } from "../types";
+import type { Listing } from "../../../db/data/types";
 
 import { mockImg1 } from "./list_img_data";
 

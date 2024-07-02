@@ -1,4 +1,4 @@
-import type { FavouriteListing } from "../types";
+import type { FavouriteListing } from "../../../db/data/types";
 
 export const favouriteListings: FavouriteListing[] = [
   {

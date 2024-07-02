@@ -1,31 +1,13 @@
 import request from "supertest";
 
-import { app } from "../../app";
-import { db } from "../../db";
-import { seed } from "../../db/seeds/seed";
-import { testData } from "../../db/data/test-data/";
+import { app } from "../../../app";
+import { db } from "../../../db";
+import { seed } from "../../../db/seeds/seed";
+import { testData } from "../../../db/data/test-data/";
 
 beforeEach(() => seed(testData));
 
 afterAll(() => db.end());
-
-// use type Listing below when object is returned with img and avatar not null
-
-// type Listing = {
-//   list_id: number;
-//   list_title: string;
-//   list_location: string;
-//   list_longitude: number;
-//   list_latitude: number;
-//   list_date: Date;
-//   list_time: Date;
-//   list_duration: number;
-//   list_description: string;
-//   list_org: number;
-//   org_name: string;
-//   org_avatar: string;
-//   list_img: string;
-// };
 
 describe("GET /api/listings/:listing_id", () => {
   test("Returns the correct listing object", () => {
@@ -34,8 +16,6 @@ describe("GET /api/listings/:listing_id", () => {
       .expect(200)
       .then(({ body }) => {
         const listing = body.listing;
-
-        // TODO: org_avatar and list_img
 
         expect(listing).toMatchObject({
           list_id: expect.any(Number),
@@ -51,6 +31,9 @@ describe("GET /api/listings/:listing_id", () => {
 
         expect(() => new Date(listing.list_date)).not.toThrow(Error);
         expect(() => new Date(listing.list_time)).not.toThrow(Error);
+        // TODO: Change when sorted image formats
+        expect(listing.org_avatar).toBeDefined();
+        expect(listing.list_img).toBeDefined();
       });
   });
   test("Returns a 400 bad request error when supplied an invalid parametric endpoint", () => {

@@ -1,15 +1,15 @@
-import { volUsers } from "./vol-users";
-import { orgUsers } from "./org-users";
-import { listings } from "./listings";
-import { skills } from "./skills";
-import { orgTypes } from "./org-types";
-import { badges } from "./badge";
-import { applications } from "./applications";
-import { listSkillJuncs } from "./list-skill-junc";
-import { volUserBadgeJuncs } from "./vol-user-badge-junc";
-import { volUserSkillJuncs } from "./vol-user-skill-junc";
-import { favouriteOrgs } from "./favourite-orgs";
-import { favouriteListings } from "./favourite-listings";
+import { volUsers } from "../../../db/data/test-data/vol-users";
+import { orgUsers } from "../../../db/data/test-data/org-users";
+import { listings } from "../../../db/data/test-data/listings";
+import { skills } from "../../../db/data/test-data/skills";
+import { orgTypes } from "../../../db/data/test-data/org-types";
+import { badges } from "../../../db/data/test-data/badge";
+import { applications } from "../../../db/data/test-data/applications";
+import { listSkillJuncs } from "../../../db/data/test-data/list-skill-junc";
+import { volUserBadgeJuncs } from "../../../db/data/test-data/vol-user-badge-junc";
+import { volUserSkillJuncs } from "../../../db/data/test-data/vol-user-skill-junc";
+import { favouriteOrgs } from "../../../db/data/test-data/favourite-orgs";
+import { favouriteListings } from "../../../db/data/test-data/favourite-listings";
 
 export const testData = {
   volUsers,

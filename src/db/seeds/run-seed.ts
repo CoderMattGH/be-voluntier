@@ -1,23 +1,23 @@
 import { ENV } from "../../env-parser";
 import { logger } from "../../logger";
 
-import { db } from "../";
-import { seed } from "./seed";
-import { devData } from "../data/dev-data/";
-import { testData } from "../data/test-data/";
+import { db } from "../../db";
+import { seed } from "../../db/seeds/seed";
+import { testData } from "../../db/data/test-data/";
 
 function runSeed() {
   logger.info("Seeding database!");
 
   let seedData;
+  // TODO: Make dev data
   if (ENV === "test") {
     logger.info(`Loading test data!`);
 
     seedData = testData;
   } else {
-    logger.info(`Loading dev data!`);
+    logger.info(`Loading test data!`);
 
-    seedData = devData;
+    seedData = testData;
   }
 
   seed(seedData)

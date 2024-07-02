@@ -1,4 +1,4 @@
-import { VolUser } from "../types";
+import { VolUser } from "../../../db/data/types";
 
 export const volUsers: VolUser[] = [
   {
