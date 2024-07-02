@@ -1,12 +1,12 @@
-import {ENV} from '../env-parser';
+import { ENV } from "../env-parser";
 
-import {Pool} from 'pg';
+import { Pool } from "pg";
 
 if (!process.env.PGDATABASE && !process.env.DATABASE_URL) {
   throw new Error("PGDATABASE or DATABASE_URL not set!");
 }
 
-type Config = { connectionString?: string, max?: number };
+type Config = { connectionString?: string; max?: number };
 
 let config: Config = {};
 if (ENV === "production") {
