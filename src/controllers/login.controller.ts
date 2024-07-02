@@ -97,8 +97,7 @@ export function loginUser(req: Request, res: Response, next: NextFunction) {
         role: role,
       };
 
-      const user = userObj.user;
-
+      const {user} = userObj;
       delete user.vol_password;
       delete user.org_password;
       user.role = role;
