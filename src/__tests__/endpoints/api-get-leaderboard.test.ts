@@ -31,7 +31,7 @@ describe("GET /api/leaderboard", () => {
           expect(leaderboardEntry).toMatchObject({
             vol_first_name: expect.any(String),
             vol_last_name: expect.any(String),
-            vol_avatar: expect.any(null),
+            vol_avatar: null,
             points: expect.any(String),
           });
         });
@@ -42,7 +42,10 @@ describe("GET /api/leaderboard", () => {
       .get("/api/leaderboard")
       .expect(200)
       .then(({ body }) => {
-        const leaderboard = body.leaderboard;
+        const leaderboard = body.leaderboard.map((entry: leaderboardEntry) => ({
+          ...entry,
+          points: parseInt(entry.points, 10),
+        }));
 
         expect(leaderboard).toHaveLength(10);
         expect(leaderboard).toBeSorted({ key: "points", descending: true });
