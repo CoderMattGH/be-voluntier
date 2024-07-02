@@ -84,6 +84,18 @@ type Application = {
   full_conf: boolean;
 };
 
+type FavouriteOrg = {
+  fav_org_id?: number;
+  vol_id: number;
+  org_id: number;
+};
+
+type FavouriteListing = {
+  fav_org_id?: number;
+  vol_id: number;
+  list_id: number;
+};
+
 export type {
   VolUser,
   OrgUser,
@@ -95,4 +107,6 @@ export type {
   VolUserBadgeJunc,
   ListSkillJunc,
   VolUserSkillJunc,
+  FavouriteOrg,
+  FavouriteListing,
 };
