@@ -1,4 +1,4 @@
-import type { Badge } from "../types";
+import type { Badge } from "../../../db/data/types";
 
 export const badges: Badge[] = [
   {

@@ -1,4 +1,4 @@
-import { ListSkillJunc } from "../types";
+import { ListSkillJunc } from "../../../db/data/types";
 
 export const listSkillJuncs: ListSkillJunc[] = [
   {

@@ -1,4 +1,4 @@
-import { VolUserSkillJunc } from "../types";
+import { VolUserSkillJunc } from "../../../db/data/types";
 
 export const volUserSkillJuncs: VolUserSkillJunc[] = [
   {

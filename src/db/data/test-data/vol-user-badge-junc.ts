@@ -1,4 +1,4 @@
-import type { VolUserBadgeJunc } from "../types";
+import type { VolUserBadgeJunc } from "../../../db/data/types";
 
 export const volUserBadgeJuncs: VolUserBadgeJunc[] = [
   {

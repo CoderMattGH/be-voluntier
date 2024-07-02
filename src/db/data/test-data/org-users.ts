@@ -1,4 +1,4 @@
-import type { OrgUser } from "../types";
+import type { OrgUser } from "../../../db/data/types";
 
 export const orgUsers: OrgUser[] = [
   {
