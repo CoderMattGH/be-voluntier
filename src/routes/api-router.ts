@@ -10,6 +10,7 @@ import { orgUserRouter } from "./org-user-router";
 import { volUserRouter } from "./vol-user-router";
 import { skillsRouter } from "./skills-router";
 import { orgTypesRouter } from "./org-types-router";
+import { favouritesRouter } from "./favourites-router";
 
 export const apiRouter = Router();
 
@@ -25,3 +26,4 @@ apiRouter.use("/org", orgUserRouter);
 apiRouter.use("/vol", volUserRouter);
 apiRouter.use("/skills", skillsRouter);
 apiRouter.use("/org-types", orgTypesRouter);
+apiRouter.use("/favourites", favouritesRouter);
