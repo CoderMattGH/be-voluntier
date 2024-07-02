@@ -67,12 +67,6 @@ Download a ready-made one @ https://github.com/CoderMattGH/voluntier-docs/tree/m
 
     `npm start`
 
-**OR**
-
-1. Compile and then run if successful:
-
-    `./COMP_RUN.sh`
-
 ## Testing
 
 `npm test`
