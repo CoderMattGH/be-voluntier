@@ -41,14 +41,14 @@ export function getApplication(
       let appIdNum = Number(app_id);
 
       // Check if volunteer has access
-      let volAuthObj = checkUserCredentials(
+      const volAuthObj = checkUserCredentials(
         req,
         application.vol_id,
         "volunteer"
       );
 
       // Check if organisation has access
-      let orgAuthObj = checkUserCredentials(
+      const orgAuthObj = checkUserCredentials(
         req,
         application.org_id,
         "organisation"

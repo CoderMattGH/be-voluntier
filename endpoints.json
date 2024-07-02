@@ -110,5 +110,46 @@
         "full_conf": false
       }
     }
+  },
+  "GET /api/badges": {
+    "description": "Serves up an array of all the different badge types",
+    "exampleResponse": {
+      "badges": [
+        {
+          "badge_id": 1,
+          "badge_name": "1 Hour",
+          "badge_img_path": "./images/badges/01.png",
+          "badge_points": 100
+        },
+        {
+          "badge_id": 2,
+          "badge_name": "10 Hours",
+          "badge_img_path": "./images/badges/02.png",
+          "badge_points": 300
+        }
+      ]
+    }
+  },
+  "GET /api/badges/:vol_user_id": {
+    "authRequired": "true",
+    "description": "Serves up an array of the specified volunteer user's badges.  Must be logged in as specified user",
+    "exampleResponse": {
+      "badges": [
+        {
+          "badge_id": 1,
+          "vol_id": 1,
+          "badge_name": "1 Hour",
+          "badge_img_path": "./images/badges/01.png",
+          "badge_points": 100
+        },
+        {
+          "badge_id": 2,
+          "vol_id": 1,
+          "badge_name": "10 Hours",
+          "badge_img_path": "./images/badges/02.png",
+          "badge_points": 300
+        }
+      ]
+    }
   }
 }
