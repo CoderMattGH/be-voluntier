@@ -69,4 +69,8 @@ Download a ready-made one @ https://github.com/CoderMattGH/voluntier-docs/tree/m
 
 ## Testing
 
+On first time, run `npm run prepare` to initialise `husky`.
+
+Then:
+
 `npm test`
