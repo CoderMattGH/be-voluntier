@@ -1,8 +1,8 @@
 import { logger } from "../logger";
-
 import * as volUserModel from "../models/vol-user.model";
 import * as orgUserModel from "../models/org-user.model";
 import * as authUtils from "../auth/auth-utils";
+import * as loginValidator from "../validators/login.validator";
 import { Request, Response, NextFunction } from "express";
 
 export function loginUser(req: Request, res: Response, next: NextFunction) {
@@ -15,6 +15,22 @@ export function loginUser(req: Request, res: Response, next: NextFunction) {
   logger.info(
     `Trying to login user where email:${email} password:${password} role:${role}`
   );
+
+  // Validate login email
+  const emailValObj = loginValidator.validateLoginEmail(email);
+  if (!emailValObj.valid) {
+    next({ status: 400, msg: emailValObj.msg });
+
+    return;
+  }
+
+  // Validate password
+  const passValObj = loginValidator.validateLoginPassword(password);
+  if (!passValObj.valid) {
+    next({ status: 400, msg: passValObj.msg });
+
+    return;
+  }
 
   const availRoles = ["volunteer", "organisation"];
 
@@ -37,7 +53,7 @@ export function loginUser(req: Request, res: Response, next: NextFunction) {
 
   role = role.toLowerCase();
 
-  const invalidError = { status: 401, msg: "Invalid username or password!" };
+  const invalidError = { status: 401, msg: "Invalid email or password!" };
 
   let modelPromise;
   if (role === "volunteer") {
@@ -68,7 +84,7 @@ export function loginUser(req: Request, res: Response, next: NextFunction) {
 
   modelPromise
     .then((userObj) => {
-      logger.debug(`Username and password are OK!`);
+      logger.debug(`Email and password are OK!`);
       // Attach user object to session
       req.session.user = {
         id: userObj.id,
