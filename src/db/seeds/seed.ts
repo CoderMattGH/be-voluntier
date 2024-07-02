@@ -562,7 +562,7 @@ function setupFavouriteListingsTable(favouriteListings: FavouriteListing[]) {
   return db
     .query(
       `CREATE TABLE favourite_listings (
-      fav_orgs_id SERIAL PRIMARY KEY,
+      fav_lists_id SERIAL PRIMARY KEY,
       vol_id INT REFERENCES vol_users(vol_id),
       list_id INT REFERENCES listings(list_id)
     );`
