@@ -5,11 +5,12 @@
   "main": "dist/listen.js",
   "scripts": {
     "build": "tsc --build --clean && tsc",
+    "prepare": "husky",
+    "setup-dbs": "psql -f ./db_setup/setup.sql",
     "test": "jest --verbose --rootDir=dist --runInBand",
     "start": "npm run build && node dist/listen.js",
     "server-start": "node dist/listen.js",
     "seed": "node dist/db/seeds/run-seed.js",
-    "setup-dbs": "psql -f ./db_setup/setup.sql",
     "seed-prod": "NODE_ENV=production npm run seed"
   },
   "keywords": [],
