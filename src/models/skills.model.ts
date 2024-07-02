@@ -7,8 +7,6 @@ export function selectSkills() {
   let queryStr = "SELECT skills.skill_name FROM skills";
 
   return db.query(queryStr).then(({ rows }) => {
-    console.log(rows);
-
     if (!rows) {
       return Promise.reject({ status: 404, msg: "No skills found!" });
     }
