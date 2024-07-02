@@ -193,5 +193,23 @@
         "First Aid"
       ]
     }
+  },
+  "GET /api/org-types": {
+    "description": "Serves up an array of all types of charity organisations",
+    "exampleResponse": {
+      "orgTypes": [
+        "Health and Medical",
+        "Humanitarian and Disaster Relief",
+        "Environmental and Conservation",
+        "Educational",
+        "Animal Welfare",
+        "Community Development",
+        "Social Justice and Advocacy",
+        "Arts and Culture",
+        "Senior and Elderly",
+        "Sports and Recreation",
+        "Religious and Faith-Based"
+      ]
+    }
   }
 }
