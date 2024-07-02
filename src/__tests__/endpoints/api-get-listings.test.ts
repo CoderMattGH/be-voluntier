@@ -150,7 +150,7 @@ describe("GET /api/listings", () => {
       });
   });
 
-  test.only("Returns listings by search term with one word", () => {
+  test("Returns listings by search term with one word", () => {
     return request(app)
       .get("/api/listings?search=Cleanup")
       .expect(200)
@@ -160,7 +160,7 @@ describe("GET /api/listings", () => {
       });
   });
 
-  test.only("Returns listings by search term with one word by date descending order", () => {
+  test("Returns listings by search term with one word by date descending order", () => {
     return request(app)
       .get("/api/listings?search=Cleanup&order=desc")
       .expect(200)
@@ -172,7 +172,7 @@ describe("GET /api/listings", () => {
       });
   });
 
-  test.only("Empty search string returns all results", () => {
+  test("Empty search string returns all results", () => {
     return request(app)
       .get("/api/listings?search=")
       .expect(200)
