@@ -8,17 +8,15 @@ export function getOrgUserById(
   res: Response,
   next: NextFunction
 ) {
-  const { user_id } = req.params;
   logger.debug(`In getOrgUserById() in org-user.controller`);
 
   // Validate user_id
-  if (Number.isNaN(user_id)) {
+  const userIdNum = Number(req.params.user_id);
+  if (Number.isNaN(userIdNum)) {
     next({ status: 400, msg: "user_id is not a number!" });
 
     return;
   }
-
-  const userIdNum = Number(user_id);
 
   // Authorise user
   const authObj = checkUserCredentials(req, userIdNum, "organisation");

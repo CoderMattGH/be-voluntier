@@ -49,7 +49,6 @@ export function getFavouriteListings(
   logger.debug(`In getFavouriteListings() in favourites.controller`);
 
   const userIdNum = Number(req.params.user_id);
-
   if (Number.isNaN(userIdNum)) {
     next({ status: 400, msg: "user_id is not a number!" });
 

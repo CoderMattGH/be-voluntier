@@ -27,19 +27,17 @@ export function getApplication(
   next: NextFunction
 ) {
   logger.debug(`In getApplication() in applications.controller`);
-  const { app_id } = req.params;
 
-  if (Number.isNaN(app_id)) {
+  const appIdNum = Number(req.params.app_id);
+  if (Number.isNaN(appIdNum)) {
     next({ status: 400, msg: "app_id is not a number!" });
 
     return;
   }
 
   applicationsModel
-    .selectApplication(app_id)
+    .selectApplication(appIdNum.toString())
     .then((application) => {
-      let appIdNum = Number(app_id);
-
       // Check if volunteer has access
       const volAuthObj = checkUserCredentials(
         req,
