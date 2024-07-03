@@ -96,6 +96,11 @@ type FavouriteListing = {
   list_id: number;
 };
 
+type Image = {
+  img_id?: number;
+  img_b64_data: string;
+};
+
 export type {
   VolUser,
   OrgUser,
@@ -109,4 +114,5 @@ export type {
   VolUserSkillJunc,
   FavouriteOrg,
   FavouriteListing,
+  Image,
 };

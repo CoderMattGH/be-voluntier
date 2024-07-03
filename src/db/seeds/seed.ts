@@ -16,6 +16,7 @@ import type {
   VolUserSkillJunc,
   FavouriteOrg,
   FavouriteListing,
+  Image,
 } from "../data/types";
 
 type SeedData = {
@@ -31,6 +32,7 @@ type SeedData = {
   volUserSkillJuncs: VolUserSkillJunc[];
   favouriteOrgs: FavouriteOrg[];
   favouriteListings: FavouriteListing[];
+  images: Image[];
 };
 
 export function seed({
@@ -46,6 +48,7 @@ export function seed({
   volUserSkillJuncs,
   favouriteOrgs,
   favouriteListings,
+  images,
 }: SeedData) {
   logger.debug("Starting db seed!");
 
@@ -89,6 +92,9 @@ export function seed({
       return setupFavouriteListingsTable(favouriteListings);
     })
     .then(() => {
+      return setupImagesTable(images);
+    })
+    .then(() => {
       return setupSessionTable();
     })
     .finally(() => {
@@ -107,6 +113,11 @@ function dropTables() {
       logger.debug(`Dropping list_skill_junc table!`);
 
       return db.query(`DROP TABLE IF EXISTS list_skill_junc;`);
+    })
+    .then(() => {
+      logger.debug(`Dropping images table!`);
+
+      return db.query(`DROP TABLE IF EXISTS images;`);
     })
     .then(() => {
       logger.debug(`Dropping vol_user_badge_junc table!`);
@@ -575,6 +586,35 @@ function setupFavouriteListingsTable(favouriteListings: FavouriteListing[]) {
       ) VALUES %L;`,
         favouriteListings.map((obj) => {
           return [obj.vol_id, obj.list_id];
+        })
+      );
+
+      return db.query(queryStr);
+    });
+}
+
+function setupImagesTable(images: Image[]) {
+  logger.debug("Setting up images table!");
+
+  // 500KB b64 string size
+  return db
+    .query(
+      `CREATE TABLE images (
+      img_id SERIAL PRIMARY KEY,
+      img_b64_data TEXT,
+      CONSTRAINT img_length_check CHECK (octet_length(img_b64_data) <= 512000)
+    );`
+    )
+    .then(() => {
+      // Skip populate if empty
+      if (!images.length) {
+        return;
+      }
+
+      const queryStr = format(
+        `INSERT INTO images (img_id, img_b64_data) VALUES %L;`,
+        images.map((img) => {
+          return [img.img_b64_data];
         })
       );
 

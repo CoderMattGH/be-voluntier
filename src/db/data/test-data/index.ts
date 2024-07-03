@@ -10,6 +10,7 @@ import { volUserBadgeJuncs } from "../../../db/data/test-data/vol-user-badge-jun
 import { volUserSkillJuncs } from "../../../db/data/test-data/vol-user-skill-junc";
 import { favouriteOrgs } from "../../../db/data/test-data/favourite-orgs";
 import { favouriteListings } from "../../../db/data/test-data/favourite-listings";
+import { images } from "../../../db/data/test-data/images";
 
 export const testData = {
   volUsers,
@@ -24,4 +25,5 @@ export const testData = {
   volUserSkillJuncs,
   favouriteOrgs,
   favouriteListings,
+  images,
 };
