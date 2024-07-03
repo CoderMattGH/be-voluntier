@@ -1,6 +1,10 @@
 import * as constants from "../constants";
 
 export const validateRegisterEmail = (email: string) => {
+  if (!email) {
+    return { valid: false, msg: "Email cannot be empty!" };
+  }
+
   if (!email.trim().length) {
     return { valid: false, msg: "Email cannot be empty!" };
   }
@@ -31,6 +35,10 @@ export const validateRegisterEmail = (email: string) => {
 };
 
 export function validateFirstLastName(name: string) {
+  if (!name) {
+    return { valid: false, msg: "Name cannot be empty!" };
+  }
+
   if (!name.trim().length) {
     return { valid: false, msg: "Name cannot be empty!" };
   }
@@ -59,6 +67,10 @@ export function validateFirstLastName(name: string) {
 }
 
 export function validateContactTel(contactTel: string) {
+  if (!contactTel) {
+    return { valid: false, msg: "Contact Telephone cannot be empty!" };
+  }
+
   if (!contactTel.trim().length) {
     return { valid: false, msg: "Contact Telephone cannot be empty!" };
   }
@@ -93,6 +105,8 @@ export function validateContactTel(contactTel: string) {
 
 // Validate base64 image string
 export function validateImage(image: string) {
+  if (!image) return { valid: false, msg: "Image cannot be empty!" };
+
   if (!image.trim().length) {
     return { valid: false, msg: "Image data cannot be empty!" };
   }
@@ -122,6 +136,10 @@ export function validateImage(image: string) {
 
 // Validate bio
 export function validateBio(bio: string) {
+  if (!bio) {
+    return { valid: false, msg: "Bio cannot be empty!" };
+  }
+
   if (!bio.trim().length) {
     return { valid: false, msg: "Bio cannot be empty!" };
   }
@@ -148,6 +166,10 @@ export function validateBio(bio: string) {
 
 // Validate password
 export function validatePassword(password: string) {
+  if (!password) {
+    return { valid: false, msg: "Password cannot be empty!" };
+  }
+
   if (!password.trim().length) {
     return { valid: false, msg: "Password cannot be empty!" };
   }

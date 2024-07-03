@@ -43,7 +43,8 @@ export function getVolUserById(
 export function postVolUser(req: Request, res: Response, next: NextFunction) {
   logger.debug(`In postVolUser() in vol-user.controller`);
 
-  const {
+  // Be careful, can be undefined!
+  let {
     email,
     password,
     first_name,
@@ -54,7 +55,7 @@ export function postVolUser(req: Request, res: Response, next: NextFunction) {
   } = req.body;
 
   logger.debug(
-    `Trying to register use where emai: ${email} password: ${password} ` +
+    `Trying to register use where email: ${email} password: ${password} ` +
       `first_name: ${first_name} contact_tel: ${contact_tel}`
   );
 

@@ -74,7 +74,7 @@ export function createVolUser(
   }
 
   // If telephone is empty string set to NULL
-  if (contactTel !== null && !contactTel.trim().length) {
+  if (!contactTel || !contactTel.trim().length) {
     contactTel = null;
   }
 
@@ -87,7 +87,7 @@ export function createVolUser(
   }
 
   // If avatarImage is empty string set to NULL
-  if (avatarImg !== null && !avatarImg.trim().length) {
+  if (!avatarImg || !avatarImg.trim().length) {
     avatarImg = null;
   }
 
@@ -100,7 +100,7 @@ export function createVolUser(
   }
 
   // If bio is empty string set to NULL
-  if (bio !== null && !bio.trim().length) {
+  if (!bio || !bio.trim().length) {
     bio = null;
   }
 
