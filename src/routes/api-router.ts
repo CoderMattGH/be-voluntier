@@ -11,6 +11,7 @@ import { volUserRouter } from "../routes/vol-user-router";
 import { skillsRouter } from "../routes/skills-router";
 import { orgTypesRouter } from "../routes/org-types-router";
 import { favouritesRouter } from "../routes/favourites-router";
+import { imageRouter } from "./images-router";
 
 export const apiRouter = Router();
 
@@ -27,3 +28,4 @@ apiRouter.use("/vol", volUserRouter);
 apiRouter.use("/skills", skillsRouter);
 apiRouter.use("/org-types", orgTypesRouter);
 apiRouter.use("/favourites", favouritesRouter);
+apiRouter.use("/images", imageRouter);
