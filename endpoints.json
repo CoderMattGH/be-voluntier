@@ -280,5 +280,14 @@
         }
       ]
     }
+  },
+  "GET /api/images/:img_id": {
+    "description": "Returns a json object with image data in b64 format for the corresponding img_id",
+    "exampleResponse": {
+      "image": {
+        "img_id": "1",
+        "img_b64_data": "data:image/jpeg;base64,/9j/4AAQSkZJRg..."
+      }
+    }
   }
 }
