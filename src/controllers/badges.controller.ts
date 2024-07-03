@@ -22,15 +22,13 @@ export function getBadgesByUserId(
   next: NextFunction
 ) {
   logger.debug(`In getBadgesByUserId() in badges.controller`);
-  const { user_id } = req.params;
 
-  if (Number.isNaN(user_id)) {
+  const userIdNum = Number(req.params.user_id);
+  if (Number.isNaN(userIdNum)) {
     next({ status: 400, msg: "user_id is not a number!" });
 
     return;
   }
-
-  let userIdNum = Number(user_id);
 
   // Check authorisation
   const volAuthObj = checkUserCredentials(req, userIdNum, "volunteer");
@@ -41,7 +39,7 @@ export function getBadgesByUserId(
   }
 
   badgesModel
-    .selectBadgesByUserId(user_id)
+    .selectBadgesByUserId(userIdNum.toString())
     .then((badges) => {
       res.status(200).send({ badges });
     })
