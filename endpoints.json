@@ -16,7 +16,7 @@
         "vol_first_name": "Matt",
         "vol_last_name": "Dixon",
         "vol_contact_tel": "98239238928392",
-        "vol_avatar": null,
+        "vol_avatar_img_id": null,
         "vol_bio": "HELLO I AM MATT :o",
         "vol_hours": 1000,
         "role": "volunteer"
@@ -30,7 +30,7 @@
         "org_type": 2,
         "org_contact_tel": "923892238923",
         "org_bio": "Oxfam is a British-founded confederation of 21 independent non-governmental organizations (NGOs).",
-        "org_avatar": null,
+        "org_avatar_img_id": null,
         "org_verified": true,
         "role": "organisation"
       }
@@ -50,7 +50,7 @@
         "org_type": 2,
         "org_contact_tel": "923892238923",
         "org_bio": "Oxfam is a British-founded confederation of 21 independent non-governmental organizations (NGOs).",
-        "org_avatar": null,
+        "org_avatar_img_id": null,
         "org_verified": true
       }
     }
@@ -65,7 +65,7 @@
         "vol_first_name": "Matt",
         "vol_last_name": "Dixon",
         "vol_contact_tel": "98239238928392",
-        "vol_avatar": null,
+        "vol_avatar_img_id": null,
         "vol_bio": "HELLO I AM MATT :o",
         "vol_hours": 1000,
         "vol_badges": null
@@ -92,10 +92,10 @@
           "list_time": "09:00:00",
           "list_duration": 4,
           "list_description": "Description text...",
-          "list_img": null,
+          "list_img_id": null,
           "list_org": 1,
           "org_name": "Oxfam",
-          "org_avatar": null
+          "org_avatar_img_id": null
         }
       ]
     }
@@ -113,10 +113,10 @@
         "list_time": "09:00:00",
         "list_duration": 4,
         "list_description": "Description text...",
-        "list_img": null,
+        "list_img_id": null,
         "list_org": 1,
         "org_name": "Oxfam",
-        "org_avatar": null
+        "org_avatar_img_id": 2
       }
     }
   },
@@ -182,13 +182,13 @@
         {
           "vol_first_name": "Matt",
           "vol_last_name": "Dixon",
-          "vol_avatar": null,
+          "vol_avatar_img_id": null,
           "points": "10400"
         },
         {
           "vol_first_name": "Sophie",
           "vol_last_name": "Davis",
-          "vol_avatar": null,
+          "vol_avatar_img_id": 2,
           "points": "9500"
         }
       ]
@@ -245,14 +245,14 @@
           "vol_id": 1,
           "org_id": 2,
           "org_name": "Red Cross",
-          "org_avatar": null
+          "org_avatar_img_id": null
         },
         {
           "fav_orgs_id": 1,
           "vol_id": 1,
           "org_id": 2,
           "org_name": "Red Cross",
-          "org_avatar": null
+          "org_avatar_img_id": 3
         }
       ]
     }
@@ -268,7 +268,7 @@
           "list_id": 1,
           "list_title": "Community Garden Cleanup",
           "list_description": "Join us for a morning of community gardening in the heart of the city. We will be cleaning up the garden, planting new flowers, and making the area beautiful for everyone to enjoy.",
-          "list_img": null
+          "list_img_id": null
         },
         {
           "fav_lists_id": 2,
@@ -276,7 +276,7 @@
           "list_id": 2,
           "list_title": "Beach Cleanup Event",
           "list_description": "Help us clean up the beach and protect marine life. We will provide all the necessary equipment. All you need to bring is your enthusiasm and love for the environment.",
-          "list_img": null
+          "list_img_id": null
         }
       ]
     }

@@ -5,7 +5,7 @@ type VolUser = {
   vol_email: string;
   vol_password: string;
   vol_contact_tel?: string;
-  vol_avatar?: Blob;
+  vol_avatar_img_id?: number;
   vol_bio?: string;
   vol_hours?: number;
   vol_badges?: number;
@@ -19,7 +19,7 @@ type OrgUser = {
   org_contact_tel?: string;
   org_type: number;
   org_bio?: string;
-  org_avatar?: Blob;
+  org_avatar_img_id?: number;
   org_verified: boolean;
 };
 
@@ -38,7 +38,7 @@ type Listing = {
   list_time: string;
   list_duration: number;
   list_description: string;
-  list_img: string;
+  list_img_id?: number;
   list_visible: boolean;
   list_org: number;
 };

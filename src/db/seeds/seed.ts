@@ -216,7 +216,7 @@ function setupVolUsersTable(volUsers: VolUser[]) {
       vol_first_name VARCHAR(100) NOT NULL,
       vol_last_name VARCHAR(100) NOT NULL,
       vol_contact_tel VARCHAR(50),
-      vol_avatar BYTEA,
+      vol_avatar_img_id INT,
       vol_bio TEXT,
       vol_hours INT
     );`
@@ -263,7 +263,7 @@ function setupOrgUsersTable(orgUsers: OrgUser[]) {
       org_type INT REFERENCES org_types(type_id) NOT NULL,
       org_contact_tel VARCHAR(100),
       org_bio TEXT,
-      org_avatar BYTEA,
+      org_avatar_img_id INT,
       org_verified BOOLEAN
     );`
     )
@@ -364,7 +364,7 @@ function setupListingsTable(listings: Listing[]) {
       list_time TIME NOT NULL,
       list_duration INT NOT NULL,
       list_description TEXT NOT NULL,
-      list_img BYTEA,
+      list_img_id INT,
       list_visible BOOL,
       list_org INT REFERENCES org_users(org_id) NOT NULL
     );`
