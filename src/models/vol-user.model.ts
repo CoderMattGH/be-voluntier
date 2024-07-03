@@ -78,6 +78,8 @@ export function createVolUser(
   // If telephone is empty string set to NULL
   if (!contactTel || !contactTel.trim().length) {
     contactTel = null;
+  } else {
+    contactTel = contactTel.trim();
   }
 
   // Validate telephone (NULLABLE)
@@ -120,13 +122,6 @@ export function createVolUser(
     return Promise.reject({ status: 400, msg: passValObj.msg });
   }
 
-  const queryStr =
-    `INSERT INTO vol_users (vol_email, vol_password, vol_first_name, vol_last_name, ` +
-    `vol_contact_tel, vol_bio, vol_avatar_img_id) 
-    VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *;`;
-
-  logger.debug(`QueryStr: ${queryStr}`);
-
   return doesUserAccountExist(email)
     .then((emailAlreadyExists) => {
       if (emailAlreadyExists) {
@@ -148,6 +143,11 @@ export function createVolUser(
         logger.debug(`Avatar image was created with img_id: ${imgId.img_id}!`);
       }
 
+      const queryStr =
+        `INSERT INTO vol_users (vol_email, vol_password, vol_first_name, vol_last_name, ` +
+        `vol_contact_tel, vol_bio, vol_avatar_img_id, vol_hours) 
+        VALUES ($1, $2, $3, $4, $5, $6, $7, 0) RETURNING *;`;
+
       return db.query(queryStr, [
         email,
         hashPassword(password),
@@ -155,7 +155,7 @@ export function createVolUser(
         lastName,
         contactTel,
         bio,
-        imgId,
+        imgId ? imgId.img_id : null,
       ]);
     })
     .then(({ rows }) => {
@@ -171,10 +171,11 @@ export function createVolUser(
 
 function doesUserAccountExist(email: string) {
   return db
-    .query("SELECT vol_email FROM vol_users WHERE vol_email = $1;", [email])
+    .query(
+      "SELECT vol_email, org_email FROM vol_users, org_users WHERE vol_email = $1 OR org_email = $1;",
+      [email]
+    )
     .then(({ rows }) => {
-      console.log(rows);
-
       if (rows.length) {
         return true;
       } else {

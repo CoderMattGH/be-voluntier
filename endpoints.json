@@ -73,7 +73,7 @@
     }
   },
   "POST /api/vol": {
-    "description:": "Registers a volunteer user",
+    "description": "Registers a volunteer user",
     "requestBody": {
       "email": "a-valid-unusedemail@email.com",
       "password": "mypassword",

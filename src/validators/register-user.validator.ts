@@ -57,7 +57,7 @@ export function validateFirstLastName(name: string | undefined) {
     return { valid: false, msg: str };
   }
 
-  // Name can only contain alpha-numeric characters
+  // Name can not contains numbers or symbols
   const namePattern = constants.VAL_NAME_PATTERN;
   if (!namePattern.test(name)) {
     return { valid: false, msg: "Name is not valid!" };
@@ -103,7 +103,6 @@ export function validateContactTel(contactTel: string | undefined) {
   return { valid: true };
 }
 
-// Validate bio
 export function validateBio(bio: string | undefined) {
   if (!bio) {
     return { valid: false, msg: "Bio cannot be empty!" };
@@ -126,14 +125,13 @@ export function validateBio(bio: string | undefined) {
   ) {
     const str =
       `Bio must be between ${constants.MIN_BIO_SIZE} and ${constants.MAX_BIO_SIZE} ` +
-      `in length!`;
+      `characters in length!`;
     return { valid: false, msg: str };
   }
 
   return { valid: true };
 }
 
-// Validate password
 export function validatePassword(password: string | undefined) {
   if (!password) {
     return { valid: false, msg: "Password cannot be empty!" };
@@ -147,6 +145,20 @@ export function validatePassword(password: string | undefined) {
     return {
       valid: false,
       msg: "Password cannot start or end with spaces!",
+    };
+  }
+
+  if (
+    password.length < constants.MIN_PASSWD_LENGTH ||
+    password.length > constants.MAX_PASSWD_LENGTH
+  ) {
+    const str =
+      `Password must be between ${constants.MIN_PASSWD_LENGTH} and ` +
+      `${constants.MAX_PASSWD_LENGTH} characters in length!`;
+
+    return {
+      valid: false,
+      msg: str,
     };
   }
 

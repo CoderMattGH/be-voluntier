@@ -71,7 +71,6 @@ export function postVolUser(req: Request, res: Response, next: NextFunction) {
     )
     .then((userObj) => {
       logger.info(`Successfully registered user ${email}!`);
-      console.log(userObj);
 
       // Remove password from response.
       delete userObj.vol_password;

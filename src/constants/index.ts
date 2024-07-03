@@ -20,12 +20,13 @@ export const VAL_NAME_PATTERN = /^[a-zA-Z]+$/;
 
 export const MIN_CONT_TEL_LENGTH = 5;
 export const MAX_CONT_TEL_LENGTH = 50;
-export const CONT_TEL_PATTERN = /^[0-9]+/;
+export const CONT_TEL_PATTERN = /^[0-9]+$/;
 
 // NOTE: Base64 is approx. 33% bigger than raw binary data!
 export const MIN_IMG_SIZE = 1024 * 10; // 10KB
 export const MAX_IMG_SIZE = 1024 * 500; // 500KB
-export const VAL_IMG_PATTERN = /^(data:image\/jpeg;base64,)[^\s]+$/;
+// TODO: More robust validation!
+export const VAL_IMG_PATTERN = /^(data:image\/)[^\s]+$/;
 
 export const MIN_BIO_SIZE = 1;
 export const MAX_BIO_SIZE = 700;
