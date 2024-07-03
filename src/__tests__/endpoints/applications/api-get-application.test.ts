@@ -1,4 +1,5 @@
 import request from "supertest";
+import "jest-extended";
 
 import { app } from "../../../app";
 import { db } from "../../../db";
@@ -45,12 +46,13 @@ describe("GET /api/applications/:app_id", () => {
               list_latitude: expect.any(Number),
               list_description: expect.any(String),
               org_name: expect.any(String),
+              list_img_id: expect.toSatisfy(
+                (value) => typeof value === "number" || value === null
+              ),
             });
 
             expect(() => new Date(application.list_date)).not.toThrow(Error);
             expect(() => new Date(application.list_time)).not.toThrow(Error);
-            // TODO: Change when sorted image formats
-            expect(application.list_img).toBeDefined();
           });
       });
   });
@@ -88,12 +90,13 @@ describe("GET /api/applications/:app_id", () => {
               list_latitude: expect.any(Number),
               list_description: expect.any(String),
               org_name: expect.any(String),
+              list_img_id: expect.toSatisfy(
+                (value) => typeof value === "number" || value === null
+              ),
             });
 
             expect(() => new Date(application.list_date)).not.toThrow(Error);
             expect(() => new Date(application.list_time)).not.toThrow(Error);
-            // TODO: Change when sorted image formats
-            expect(application.list_img).toBeDefined();
           });
       });
   });
