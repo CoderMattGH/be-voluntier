@@ -1,6 +1,6 @@
 import * as constants from "../constants";
 
-export const validateRegisterEmail = (email: string) => {
+export const validateRegisterEmail = (email: string | undefined) => {
   if (!email) {
     return { valid: false, msg: "Email cannot be empty!" };
   }
@@ -34,7 +34,7 @@ export const validateRegisterEmail = (email: string) => {
   return { valid: true };
 };
 
-export function validateFirstLastName(name: string) {
+export function validateFirstLastName(name: string | undefined) {
   if (!name) {
     return { valid: false, msg: "Name cannot be empty!" };
   }
@@ -66,7 +66,7 @@ export function validateFirstLastName(name: string) {
   return { valid: true };
 }
 
-export function validateContactTel(contactTel: string) {
+export function validateContactTel(contactTel: string | undefined) {
   if (!contactTel) {
     return { valid: false, msg: "Contact Telephone cannot be empty!" };
   }
@@ -103,39 +103,8 @@ export function validateContactTel(contactTel: string) {
   return { valid: true };
 }
 
-// Validate base64 image string
-export function validateImage(image: string) {
-  if (!image) return { valid: false, msg: "Image cannot be empty!" };
-
-  if (!image.trim().length) {
-    return { valid: false, msg: "Image data cannot be empty!" };
-  }
-
-  if (image.trim().length !== image.trim().length) {
-    return {
-      valid: false,
-      msg: "Image data cannot start or end with spaces!",
-    };
-  }
-
-  if (image.length > constants.MAX_IMG_SIZE) {
-    return { valid: false, msg: "Image file size is too large!" };
-  }
-
-  if (image.length < constants.MIN_IMG_SIZE) {
-    return { valid: false, msg: "Image file size is too small or not valid!" };
-  }
-
-  const imagePattern = constants.VAL_IMG_PATTERN;
-  if (!imagePattern.test(image)) {
-    return { valid: false, msg: "Image is not in the correct format!" };
-  }
-
-  return { valid: true };
-}
-
 // Validate bio
-export function validateBio(bio: string) {
+export function validateBio(bio: string | undefined) {
   if (!bio) {
     return { valid: false, msg: "Bio cannot be empty!" };
   }
@@ -165,7 +134,7 @@ export function validateBio(bio: string) {
 }
 
 // Validate password
-export function validatePassword(password: string) {
+export function validatePassword(password: string | undefined) {
   if (!password) {
     return { valid: false, msg: "Password cannot be empty!" };
   }

@@ -2,7 +2,9 @@ import { logger } from "../logger";
 import { db } from "../db";
 
 import * as registerUserValidator from "../validators/register-user.validator";
+import * as imageValidator from "../validators/image.validator";
 import { hashPassword } from "../auth/auth-utils";
+import * as imagesModel from "../models/images.model";
 
 export function selectVolUserByEmail(email: string) {
   logger.debug("In selectVolUserByEmail() in vol-user.model");
@@ -93,7 +95,7 @@ export function createVolUser(
 
   // Validate image (NULLABLE)
   if (avatarImg !== null) {
-    const avatarValObj = registerUserValidator.validateImage(avatarImg);
+    const avatarValObj = imageValidator.validateImage(avatarImg);
     if (!avatarValObj.valid) {
       return Promise.reject({ status: 400, msg: avatarValObj.msg });
     }
@@ -118,9 +120,6 @@ export function createVolUser(
     return Promise.reject({ status: 400, msg: passValObj.msg });
   }
 
-  // If image is set put image in  db!;
-  let imgId = null;
-
   const queryStr =
     `INSERT INTO vol_users (vol_email, vol_password, vol_first_name, vol_last_name, ` +
     `vol_contact_tel, vol_bio, vol_avatar_img_id) 
@@ -128,23 +127,58 @@ export function createVolUser(
 
   logger.debug(`QueryStr: ${queryStr}`);
 
-  return db
-    .query(queryStr, [
-      email,
-      hashPassword(password),
-      firstName,
-      lastName,
-      contactTel,
-      bio,
-      imgId,
-    ])
-    .then(({ rows }) => {
-      console.log(rows);
+  return doesUserAccountExist(email)
+    .then((emailAlreadyExists) => {
+      if (emailAlreadyExists) {
+        return Promise.reject({ status: 400, msg: "Email already exists!" });
+      }
 
+      // Add avatar if attached
+      let avatarPromise;
+      if (avatarImg !== null) {
+        avatarPromise = imagesModel.createImage(avatarImg);
+      } else {
+        avatarPromise = Promise.resolve(null);
+      }
+
+      return avatarPromise;
+    })
+    .then((imgId) => {
+      if (imgId !== null) {
+        logger.debug(`Avatar image was created with img_id: ${imgId.img_id}!`);
+      }
+
+      return db.query(queryStr, [
+        email,
+        hashPassword(password),
+        firstName,
+        lastName,
+        contactTel,
+        bio,
+        imgId,
+      ]);
+    })
+    .then(({ rows }) => {
       if (!rows.length) {
         throw new Error("An unknown error occurred!");
       }
 
+      logger.info(`${email} volunteer successfully registered!`);
+
       return rows[0];
+    });
+}
+
+function doesUserAccountExist(email: string) {
+  return db
+    .query("SELECT vol_email FROM vol_users WHERE vol_email = $1;", [email])
+    .then(({ rows }) => {
+      console.log(rows);
+
+      if (rows.length) {
+        return true;
+      } else {
+        return false;
+      }
     });
 }
