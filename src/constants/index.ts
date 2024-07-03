@@ -10,6 +10,10 @@ export const ERR_MSG_NOT_LOGGED_IN =
 /**
  * Validation
  */
+export const MIN_PASSWD_LENGTH = 5;
+export const MAX_PASSWD_LENGTH = 20;
+export const VAL_PASSWD_PATTERN = /^[^\s]+$/;
+
 export const MIN_NAME_LENGTH = 2;
 export const MAX_NAME_LENGTH = 50;
 export const VAL_NAME_PATTERN = /^[a-zA-Z]+$/;

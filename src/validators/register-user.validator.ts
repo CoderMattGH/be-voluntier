@@ -147,3 +147,25 @@ export function validateBio(bio: string) {
 }
 
 // Validate password
+export function validatePassword(password: string) {
+  if (!password.trim().length) {
+    return { valid: false, msg: "Password cannot be empty!" };
+  }
+
+  if (password.trim().length !== password.trim().length) {
+    return {
+      valid: false,
+      msg: "Password cannot start or end with spaces!",
+    };
+  }
+
+  const passwordPattern = constants.VAL_PASSWD_PATTERN;
+  if (!passwordPattern.test(password)) {
+    return {
+      valid: false,
+      msg: "Password must not contain whitespace characters!",
+    };
+  }
+
+  return { valid: true };
+}

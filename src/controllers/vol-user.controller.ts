@@ -38,3 +38,48 @@ export function getVolUserById(
       next(err);
     });
 }
+
+// Register user
+export function postVolUser(req: Request, res: Response, next: NextFunction) {
+  logger.debug(`In postVolUser() in vol-user.controller`);
+
+  const {
+    email,
+    password,
+    first_name,
+    last_name,
+    contact_tel,
+    avatar_img_b64,
+    bio,
+  } = req.body;
+
+  logger.debug(
+    `Trying to register use where emai: ${email} password: ${password} ` +
+      `first_name: ${first_name} contact_tel: ${contact_tel}`
+  );
+
+  volUserModel
+    .createVolUser(
+      email,
+      password,
+      first_name,
+      last_name,
+      contact_tel,
+      avatar_img_b64,
+      bio
+    )
+    .then((userObj) => {
+      logger.info(`Successfully registered user ${email}!`);
+      console.log(userObj);
+
+      // Remove password from response.
+      delete userObj.vol_password;
+
+      res.status(200).send({ user: userObj });
+
+      return;
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
