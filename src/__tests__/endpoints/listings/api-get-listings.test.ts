@@ -13,6 +13,7 @@ afterAll(() => db.end());
 type listing = {
   list_id: number;
   list_title: string;
+  list_location: string;
   list_longitude: number;
   list_latitude: number;
   list_date: Date;
@@ -39,6 +40,7 @@ describe("GET /api/listings", () => {
           expect(listing).toMatchObject({
             list_id: expect.any(Number),
             list_title: expect.any(String),
+            list_location: expect.any(String),
             list_longitude: expect.any(Number),
             list_latitude: expect.any(Number),
             list_duration: expect.any(Number),
