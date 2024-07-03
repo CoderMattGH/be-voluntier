@@ -3,24 +3,6 @@ import { Request, Response, NextFunction } from "express";
 import * as applicationsModel from "../models/applications.model";
 import { checkUserCredentials } from "../auth/auth-utils";
 
-export function getApplications(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  logger.debug(`In getApplications() in applications.controller`);
-  const { user_id } = req.params;
-
-  applicationsModel
-    .selectApplicationsByVolId(user_id)
-    .then((applications) => {
-      res.status(200).send({ applications: applications });
-    })
-    .catch((err) => {
-      next(err);
-    });
-}
-
 export function getApplication(
   req: Request,
   res: Response,
@@ -60,6 +42,38 @@ export function getApplication(
       }
 
       res.status(200).send({ application: application });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+export function getApplicationsByVolId(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  logger.debug(`In getApplicationsByVolId() in applications.controller`);
+
+  const volIdNum = Number(req.params.vol_user_id);
+  if (Number.isNaN(volIdNum)) {
+    next({ status: 400, msg: "vol_user_id is not a number!" });
+
+    return;
+  }
+
+  applicationsModel
+    .selectApplicationsByVolId(volIdNum.toString())
+    .then((applications) => {
+      const volAuthObj = checkUserCredentials(req, volIdNum, "volunteer");
+
+      if (!volAuthObj.authorised) {
+        next(volAuthObj.respObj);
+
+        return;
+      }
+
+      res.status(200).send({ applications: applications });
     })
     .catch((err) => {
       next(err);
