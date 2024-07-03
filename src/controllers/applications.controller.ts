@@ -79,3 +79,38 @@ export function getApplicationsByVolId(
       next(err);
     });
 }
+
+export function getApplicationsByOrgId(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  logger.debug(`In getApplicationsByOrgId() in applications.controller`);
+
+  const orgIdNum = Number(req.params.org_user_id);
+  if (Number.isNaN(orgIdNum)) {
+    next({ status: 400, msg: "org_user_id is not a number!" });
+
+    return;
+  }
+
+  let listingQuery;
+  if (req.query.listing_id) listingQuery = req.query.listing_id.toString();
+
+  applicationsModel
+    .selectApplicationsByOrgId(orgIdNum.toString(), listingQuery)
+    .then((applications) => {
+      const orgAuthObj = checkUserCredentials(req, orgIdNum, "organisation");
+
+      if (!orgAuthObj.authorised) {
+        next(orgAuthObj.respObj);
+
+        return;
+      }
+
+      res.status(200).send({ applications: applications });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
