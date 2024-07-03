@@ -13,7 +13,7 @@ afterAll(() => db.end());
 type leaderboardEntry = {
   vol_first_name: string;
   vol_last_name: string;
-  vol_avatar: null;
+  vol_avatar_img_id: null;
   points: string;
 };
 
@@ -31,9 +31,10 @@ describe("GET /api/leaderboard", () => {
           expect(leaderboardEntry).toMatchObject({
             vol_first_name: expect.any(String),
             vol_last_name: expect.any(String),
-            vol_avatar: null,
             points: expect.any(String),
           });
+
+          expect(leaderboardEntry.vol_avatar_img_id).toBeDefined();
         });
       });
   });

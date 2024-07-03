@@ -22,8 +22,8 @@ type listing = {
   list_description: string;
   list_org: number;
   org_name: string;
-  org_avatar: string | null;
-  list_img: string | null;
+  org_avatar_img_id: string | null;
+  list_img_id: string | null;
 };
 
 describe("GET /api/listings", () => {
@@ -52,8 +52,8 @@ describe("GET /api/listings", () => {
           expect(() => new Date(listing.list_date)).not.toThrow(Error);
           expect(() => new Date(listing.list_time)).not.toThrow(Error);
           // TODO: Change when sorted image formats
-          expect(listing.org_avatar).toBeDefined();
-          expect(listing.list_img).toBeDefined();
+          expect(listing.org_avatar_img_id).toBeDefined();
+          expect(listing.list_img_id).toBeDefined();
         });
       });
   });

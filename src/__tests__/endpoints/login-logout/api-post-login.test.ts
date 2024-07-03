@@ -34,7 +34,7 @@ describe("POST /api/login", () => {
           role: expect.any(String),
         });
 
-        expect(user.vol_avatar).toBeDefined();
+        expect(user.vol_avatar_img_id).toBeDefined();
       });
   });
 
@@ -61,7 +61,7 @@ describe("POST /api/login", () => {
           role: expect.any(String),
         });
 
-        expect(user.org_avatar).toBeDefined();
+        expect(user.org_avatar_img_id).toBeDefined();
       });
   });
 

@@ -16,7 +16,7 @@ type FavListing = {
   list_id: number;
   list_title: string;
   list_description: string;
-  list_img?: string;
+  list_img_id?: string;
 };
 
 describe("GET /api/favourites/:vol_id/listings", () => {
@@ -53,7 +53,7 @@ describe("GET /api/favourites/:vol_id/listings", () => {
                 list_description: expect.any(String),
               });
 
-              expect(listing.list_img).toBeDefined();
+              expect(listing.list_img_id).toBeDefined();
             });
           });
       });
@@ -150,7 +150,7 @@ type FavOrg = {
   vol_id: Number;
   org_id: Number;
   org_name: String;
-  org_avatar?: String;
+  org_avatar_img_id?: String;
 };
 
 describe("GET /api/favourites/:vol_id/orgs", () => {
@@ -186,7 +186,7 @@ describe("GET /api/favourites/:vol_id/orgs", () => {
                 org_name: expect.any(String),
               });
 
-              expect(listing.org_avatar).toBeDefined();
+              expect(listing.org_avatar_img_id).toBeDefined();
             });
           });
       });

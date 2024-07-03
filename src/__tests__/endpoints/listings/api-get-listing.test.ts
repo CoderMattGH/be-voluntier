@@ -31,9 +31,9 @@ describe("GET /api/listings/:listing_id", () => {
 
         expect(() => new Date(listing.list_date)).not.toThrow(Error);
         expect(() => new Date(listing.list_time)).not.toThrow(Error);
-        // TODO: Change when sorted image formats
-        expect(listing.org_avatar).toBeDefined();
-        expect(listing.list_img).toBeDefined();
+
+        expect(listing.org_avatar_img_id).toBeDefined();
+        expect(listing.list_img_id).toBeDefined();
       });
   });
   test("Returns a 400 bad request error when supplied an invalid parametric endpoint", () => {

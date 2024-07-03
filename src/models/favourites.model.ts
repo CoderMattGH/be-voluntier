@@ -7,8 +7,8 @@ export function selectFavOrganisationsByUserId(userId: number) {
   logger.info(`Selecting favourite organisations for user_id: ${userId}`);
 
   const queryStr = `SELECT fav_orgs_id, vol_id, favourite_orgs.org_id, org_users.org_name, 
-  org_users.org_avatar 
-  FROM favourite_orgs 
+  org_users.org_avatar_img_id
+  FROM favourite_orgs
   JOIN org_users ON favourite_orgs.org_id = org_users.org_id 
   WHERE vol_id = $1;`;
 
@@ -23,7 +23,7 @@ export function selectFavListingsByUserId(userId: number) {
   logger.info(`Selecting favourite listings for user_id: ${userId}`);
 
   const queryStr = `SELECT fav_lists_id, vol_id, favourite_listings.list_id, listings.list_title,
-  listings.list_description, listings.list_img  
+  listings.list_description, listings.list_img_id  
   FROM favourite_listings 
   JOIN listings ON favourite_listings.list_id = listings.list_id
   WHERE vol_id = $1;`;

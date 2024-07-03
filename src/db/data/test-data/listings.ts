@@ -1,7 +1,5 @@
 import type { Listing } from "../../../db/data/types";
 
-import { mockImg1 } from "./list_img_data";
-
 export const listings: Listing[] = [
   {
     list_title: "Community Garden Cleanup",
@@ -13,7 +11,6 @@ export const listings: Listing[] = [
     list_duration: 4,
     list_description:
       "Join us for a morning of community gardening in the heart of the city. We will be cleaning up the garden, planting new flowers, and making the area beautiful for everyone to enjoy.",
-    list_img: mockImg1,
     list_visible: true,
     list_org: 1,
   },
@@ -27,7 +24,6 @@ export const listings: Listing[] = [
     list_duration: 3,
     list_description:
       "Help us clean up the beach and protect marine life. We will provide all the necessary equipment. All you need to bring is your enthusiasm and love for the environment.",
-    list_img: mockImg1,
     list_visible: true,
     list_org: 4,
   },
@@ -41,7 +37,6 @@ export const listings: Listing[] = [
     list_duration: 2,
     list_description:
       "Join our charity fun run to raise funds for local schools. Whether you're a seasoned runner or a beginner, everyone is welcome to participate.",
-    list_img: mockImg1,
     list_visible: true,
     list_org: 2,
   },
@@ -55,7 +50,6 @@ export const listings: Listing[] = [
     list_duration: 5,
     list_description:
       "Assist in organizing and distributing food at our local food bank. Your help will make a significant difference in the lives of those in need.",
-    list_img: mockImg1,
     list_visible: true,
     list_org: 2,
   },
@@ -69,7 +63,6 @@ export const listings: Listing[] = [
     list_duration: 3,
     list_description:
       "Join us in cleaning up the local park. We'll be picking up litter, removing graffiti, and ensuring the park is safe and welcoming for all visitors.",
-    list_img: mockImg1,
     list_visible: true,
     list_org: 4,
   },
@@ -83,7 +76,6 @@ export const listings: Listing[] = [
     list_duration: 4,
     list_description:
       "Help care for animals at our shelter. Duties include feeding, cleaning, and playing with the animals to ensure they receive the attention they need.",
-    list_img: mockImg1,
     list_visible: false,
     list_org: 3,
   },
@@ -97,7 +89,6 @@ export const listings: Listing[] = [
     list_duration: 6,
     list_description:
       "Assist in setting up and running our library book sale. This event helps raise funds for new books and library programs.",
-    list_img: mockImg1,
     list_visible: true,
     list_org: 5,
   },
@@ -111,7 +102,6 @@ export const listings: Listing[] = [
     list_duration: 3,
     list_description:
       "Volunteer to serve dinner at our homeless shelter. Your kindness will provide a warm meal and a friendly face to those in need.",
-    list_img: mockImg1,
     list_visible: true,
     list_org: 7,
   },
@@ -125,7 +115,6 @@ export const listings: Listing[] = [
     list_duration: 2,
     list_description:
       "Coach a youth sports team and help kids develop their skills and confidence. This is a great opportunity to make a positive impact on young lives.",
-    list_img: mockImg1,
     list_visible: true,
     list_org: 8,
   },
@@ -139,7 +128,6 @@ export const listings: Listing[] = [
     list_duration: 3,
     list_description:
       "Facilitate an art workshop for seniors. This event provides an opportunity for creative expression and social interaction for elderly community members.",
-    list_img: mockImg1,
     list_visible: false,
     list_org: 4,
   },
