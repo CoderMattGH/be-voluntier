@@ -72,6 +72,30 @@
       }
     }
   },
+  "POST /api/vol": {
+    "description": "Registers a volunteer user",
+    "requestBody": {
+      "email": "a-valid-unusedemail@email.com",
+      "password": "mypassword",
+      "first_name": "Bobby",
+      "last_name": "Person",
+      "contact_tel": "82938923 [not-required]",
+      "bio": "A bio [not-required]",
+      "avatar_img_b64": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAA [not-required]"
+    },
+    "exampleResponse": {
+      "user": {
+        "vol_id": 11,
+        "vol_email": "a-valid-unusedemail@email.com",
+        "vol_first_name": "Bobby",
+        "vol_last_name": "Person",
+        "vol_contact_tel": "2233322",
+        "vol_avatar_img_id": 1,
+        "vol_bio": "A bio ",
+        "vol_hours": 0
+      }
+    }
+  },
   "GET /api/listings": {
     "description": "Serves up an array of all the visible volunteer listings",
     "queries": [
