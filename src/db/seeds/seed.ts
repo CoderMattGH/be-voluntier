@@ -612,7 +612,7 @@ function setupImagesTable(images: Image[]) {
       }
 
       const queryStr = format(
-        `INSERT INTO images (img_id, img_b64_data) VALUES %L;`,
+        `INSERT INTO images (img_b64_data) VALUES %L;`,
         images.map((img) => {
           return [img.img_b64_data];
         })
