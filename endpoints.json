@@ -181,6 +181,19 @@
       }
     }
   },
+  "DELETE /api/applications/:app_id": {
+    "authRequired": true,
+    "description": "Allows the relevant volunteer user or organisation user to withdraw an application",
+    "exampleResponse": {
+      "application": {
+        "app_id": 7,
+        "vol_id": 1,
+        "listing_id": 4,
+        "prov_confirm": false,
+        "full_conf": false
+      }
+    }
+  },
   "GET /api/applications/vol/:vol_user_id": {
     "authRequired": true,
     "description": "Serves up an array of objects, containing details on the applications whose vol id matches vol user id passed as parametric endpoint.  Only viewable by the  volunter user",

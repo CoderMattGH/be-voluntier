@@ -9,7 +9,7 @@ export function selectApplication(appIdNum: string) {
   let queryStr = `
   SELECT app_id, vol_id, listings.list_org AS org_id, listing_id, prov_confirm, full_conf, list_title,
   list_location, list_longitude, list_latitude, list_date, list_time, list_description, 
-  list_img_id, org_users.org_name 
+  list_img_id, org_users.org_name, org_users.org_id 
   FROM applications 
   JOIN listings ON applications.listing_id = listings.list_id
   JOIN org_users ON listings.list_org = org_users.org_id
@@ -123,7 +123,7 @@ export function createApplication(volId: number, listingId: number) {
         });
       }
 
-      let queryStr = `INSERT INTO applications (vol_id, listing_id, prov_confirm, full_conf) 
+      const queryStr = `INSERT INTO applications (vol_id, listing_id, prov_confirm, full_conf) 
       VALUES($1, $2, false, false) RETURNING *;`;
 
       return db.query(queryStr, [volId, listingId]);
@@ -140,6 +140,26 @@ export function createApplication(volId: number, listingId: number) {
 
       return rows[0];
     });
+}
+
+export function deleteApplicationByAppId(appId: number) {
+  logger.info(`In deleteApplicationByAppId in applications.model`);
+  logger.debug(`Trying to delete application where appId: ${appId}`);
+
+  const queryStr = `DELETE FROM applications WHERE app_id = $1 RETURNING *;`;
+
+  return db.query(queryStr, [appId]).then(({ rows }) => {
+    if (!rows.length) {
+      return Promise.reject({
+        status: 400,
+        msg: "Application does not exist!",
+      });
+    }
+
+    logger.info(`Application with app_id:${appId} successfully deleted!`);
+
+    return rows[0];
+  });
 }
 
 function doesAppExistWListIdAndVolId(volId: number, listId: number) {
