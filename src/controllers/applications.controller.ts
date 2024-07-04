@@ -156,3 +156,51 @@ export function postApplication(
       next(err);
     });
 }
+
+// Delete application
+export function deleteApplication(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  logger.debug(`In deleteApplication() in applications.controller`);
+
+  // Validate app_id is a number
+  const appIdNum = Number(req.params.app_id);
+  if (Number.isNaN(appIdNum)) {
+    next({ status: 400, msg: "app_id is not a number!" });
+
+    return;
+  }
+
+  const appPromise = applicationsModel.selectApplication(appIdNum.toString());
+
+  // Verify application is owned by user
+  appPromise
+    .then((application) => {
+      const authObj = checkUserCredentials(
+        req,
+        application.vol_id,
+        "volunteer"
+      );
+      if (!authObj.authorised) {
+        next(authObj.respObj);
+
+        return;
+      }
+
+      return applicationsModel
+        .deleteApplicationByAppId(appIdNum)
+        .then((application) => {
+          logger.debug("Application successfully deleted!");
+
+          res.status(200).send({ application });
+        });
+    })
+    .catch((err) => {
+      console.log(err);
+      next(err);
+
+      return;
+    });
+}
