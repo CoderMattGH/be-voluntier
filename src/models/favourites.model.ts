@@ -32,3 +32,18 @@ export function selectFavListingsByUserId(userId: number) {
     return rows;
   });
 }
+
+export function postFavouriteToListing(userIdNum: number, listIdNum: number) {
+  logger.debug(`In postFavouriteToListing() in favourites.model`);
+
+  return db
+    .query(
+      `INSERT INTO favourite_listings (vol_id, list_id)
+       VALUES ($1, $2)
+       RETURNING *`,
+      [userIdNum, listIdNum]
+    )
+    .then(({ rows }) => {
+      return rows[0];
+    });
+}
