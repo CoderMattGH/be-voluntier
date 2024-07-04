@@ -178,7 +178,7 @@
   },
   "GET /api/applications/": {
     "authRequired": true,
-    "description": "Allows users to fetch applications",
+    "description": "Allows users to fetch applications.",
     "queries": ["list_id"],
     "exampleResponse": {
       "application": {
@@ -270,7 +270,7 @@
   },
   "GET /api/applications/vol/:vol_user_id": {
     "authRequired": true,
-    "description": "Serves up an array of objects, containing details on the applications whose vol id matches vol user id passed as parametric endpoint.  Only viewable by the  volunter user.",
+    "description": "Serves up an array of application for the :vol_user_id.  Only viewable by the specified volunter user.",
     "exampleResponse": {
       "applications": [
         {
