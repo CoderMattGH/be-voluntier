@@ -125,7 +125,7 @@
     }
   },
   "POST /api/listings": {
-    "description": "Posts a new listing to the listings table. Skills are optional (can be an empty array), but any skills will populate the list-skills junc table. Optional to have an image string in b64 format. Must be an org user to use this endpoint.",
+    "description": "Posts a new listing to the listings table. Must be an org user to use this endpoint.",
     "requestBody": {
       "list_title": "Example Listing",
       "list_location": "123 Main St, City, Country",
@@ -135,8 +135,8 @@
       "list_description": "This is a sample description of the listing.",
       "list_latitude": 37.7749,
       "list_longitude": -122.4194,
-      "img_b64_data": "exampleB64ImageData",
-      "list_skills": ["Patience", "Sales"],
+      "img_b64_data [OPTIONAL]": "exampleB64ImageData",
+      "list_skills [OPTIONAL]": ["Patience", "Sales"],
       "list_visible": true
     },
     "exampleResponse": {
