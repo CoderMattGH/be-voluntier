@@ -273,3 +273,77 @@ export function patchApplicationWithProvConfirm(
       next(err);
     });
 }
+
+// TODO: Refactor
+export function patchApplicationWithFullConfirm(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  logger.debug(`In patchApplicationWithFullConf in applications.controller`);
+
+  // Validate app_id is a number
+  const appIdNum = Number(req.params.app_id);
+  if (Number.isNaN(appIdNum)) {
+    next({ status: 400, msg: "app_id is not a number!" });
+
+    return;
+  }
+
+  // Validate accept boolean
+  const { confirm: confirmFull } = req.body;
+  if (confirmFull === undefined || typeof confirmFull !== "boolean") {
+    next({ status: 400, msg: "confirm must be a boolean!" });
+
+    return;
+  }
+
+  const appPromise = applicationsModel.selectApplication(appIdNum.toString());
+
+  appPromise
+    .then((application) => {
+      // Validate that organisation user owns application listing
+      const orgAuthObj = checkUserCredentials(
+        req,
+        application.org_id,
+        "organisation"
+      );
+
+      if (!orgAuthObj.authorised) {
+        return Promise.reject(orgAuthObj.respObj);
+      }
+
+      logger.debug(
+        `Authorised organisation user with org_id ${application.org_id} with app_id: ${appIdNum}`
+      );
+
+      // If application has not yet been fully provisionally confirmed, then reject
+      if (!application.prov_confirm) {
+        return Promise.reject({
+          status: 400,
+          msg: `Application has not yet been provisionally confirmed!`,
+        });
+      }
+
+      // If application has already been fully confirmed, then reject
+      if (application.full_conf) {
+        return Promise.reject({
+          status: 400,
+          msg: `Application has already been fully confirmed!`,
+        });
+      }
+
+      return applicationsModel.updateApplicationFullConfirmById(
+        appIdNum,
+        confirmFull
+      );
+    })
+    .then((application) => {
+      res.status(200).send({ application });
+
+      return;
+    })
+    .catch((err) => {
+      next(err);
+    });
+}

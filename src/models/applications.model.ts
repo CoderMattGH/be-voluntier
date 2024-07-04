@@ -187,6 +187,32 @@ export function updateApplicationProvConfirmById(
   });
 }
 
+// TODO: Refactor
+export function updateApplicationFullConfirmById(
+  appId: number,
+  confirm: boolean
+) {
+  logger.info(`In provConfirmApplicationById in applications.model`);
+  logger.debug(
+    `Trying to provisionally confirm application where appId: ${appId}`
+  );
+
+  const queryStr = `UPDATE applications SET full_conf = $1 
+  WHERE app_id = $2 RETURNING *;`;
+
+  return db.query(queryStr, [confirm, appId]).then(({ rows }) => {
+    if (!rows.length) {
+      return Promise.reject({ status: 404, msg: "Application not found!" });
+    }
+
+    logger.info(
+      `Successfully updated application with app_id:${appId} full_conf: ${confirm}`
+    );
+
+    return rows[0];
+  });
+}
+
 function doesAppExistWListIdAndVolId(volId: number, listId: number) {
   const queryStr =
     "SELECT app_id FROM applications WHERE vol_id = $1 AND listing_id = $2;";
