@@ -78,3 +78,33 @@ export function getFavouriteListings(
       next(err);
     });
 }
+
+export function postFavouriteListings(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  logger.debug(`In postFavouriteListings() in favourites.controller`);
+
+  const listIdNum = Number(req.params.list_id);
+
+  if (Number.isNaN(listIdNum)) {
+    next({ status: 400, msg: "list_id is not a number" });
+    return;
+  }
+
+  const userIdNum = Number(req.body.user_id);
+  if (Number.isNaN(userIdNum)) {
+    next({ status: 400, msg: "user_id is not a number!" });
+    return;
+  }
+
+  favouritesModel
+    .postFavouriteToListing(userIdNum, listIdNum)
+    .then((favourites) => {
+      res.status(201).send(favourites);
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
