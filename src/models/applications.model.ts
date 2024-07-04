@@ -9,7 +9,7 @@ export function selectApplication(appIdNum: string) {
   let queryStr = `
   SELECT app_id, vol_id, listings.list_org AS org_id, listing_id, prov_confirm, full_conf, list_title,
   list_location, list_longitude, list_latitude, list_date, list_time, list_description, 
-  list_img_id, org_users.org_name 
+  list_img_id, org_users.org_name, org_users.org_id 
   FROM applications 
   JOIN listings ON applications.listing_id = listings.list_id
   JOIN org_users ON listings.list_org = org_users.org_id

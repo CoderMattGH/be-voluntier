@@ -175,16 +175,23 @@ export function deleteApplication(
 
   const appPromise = applicationsModel.selectApplication(appIdNum.toString());
 
-  // Verify application is owned by user
   appPromise
     .then((application) => {
-      const authObj = checkUserCredentials(
+      // Verify application is owned by user or org
+      const volAuthObj = checkUserCredentials(
         req,
         application.vol_id,
         "volunteer"
       );
-      if (!authObj.authorised) {
-        next(authObj.respObj);
+
+      const orgAuthObj = checkUserCredentials(
+        req,
+        application.org_id,
+        "organisation"
+      );
+
+      if (!volAuthObj.authorised && !orgAuthObj.authorised) {
+        next(volAuthObj.respObj);
 
         return;
       }
@@ -198,7 +205,6 @@ export function deleteApplication(
         });
     })
     .catch((err) => {
-      console.log(err);
       next(err);
 
       return;
