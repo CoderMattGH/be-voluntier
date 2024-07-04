@@ -126,7 +126,7 @@
   },
   "POST /api/listings": {
     "description": "Posts a new listing to the listings table. Skills are optional (can be an empty array), but any skills will populate the list-skills junc table. Optional to have an image string in b64 format. Must be an org user to use this endpoint.",
-    "exampleBody": {
+    "requestBody": {
       "list_title": "Example Listing",
       "list_location": "123 Main St, City, Country",
       "list_date": "2024-07-05",
@@ -237,6 +237,20 @@
         "listing_id": 1,
         "prov_confirm": true,
         "full_conf": false
+      }
+    }
+  },
+  "PATCH /api/applications/:app_id/confirm": {
+    "authRequired": true,
+    "description": "Allows an organisation user to FULLY confirm an application.  Application must already be provisionally accepted.",
+    "requestBody": { "confirm": "true" },
+    "exampleResponse": {
+      "application": {
+        "app_id": 6,
+        "vol_id": 5,
+        "listing_id": 1,
+        "prov_confirm": true,
+        "full_conf": true
       }
     }
   },
