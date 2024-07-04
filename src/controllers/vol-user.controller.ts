@@ -59,6 +59,16 @@ export function postVolUser(req: Request, res: Response, next: NextFunction) {
       `first_name: ${first_name} contact_tel: ${contact_tel}`
   );
 
+  // Make sure user is not logged in
+  if (req.session.user) {
+    next({
+      status: 400,
+      msg: "You must be logged out to register!",
+    });
+
+    return;
+  }
+
   volUserModel
     .createVolUser(
       email,
