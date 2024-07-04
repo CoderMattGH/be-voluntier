@@ -23,11 +23,12 @@ declare module "express-session" {
 export function sessionInit(app: Express, session: any) {
   logger.info("Initialising user session!");
 
+  // TODO: Set secure to true based on https?
   const pgOptions = { pool: db, tableName: "session" };
   const sessionConfig = {
     store: new (pgSession(session))(pgOptions),
     secret: "keyboard-cat",
-    cookie: { secure: false },
+    cookie: { secure: false, httpOnly: false },
     resave: true,
     saveUninitialized: false,
   };
