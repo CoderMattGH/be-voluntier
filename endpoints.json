@@ -296,7 +296,7 @@
   "GET /api/applications/org/:org_user_id": {
     "authRequired": true,
     "description": "Serves up an array of objects containing applications for :org_user_id. Optional query to allow filtering by listing_id. Only viewable by the org user",
-    "queries": ["listing_id"]
+    "queries": ["listing_id"],
     "exampleResponse": {
       "applications": [
         {
