@@ -157,7 +157,7 @@
     }
   },
   "GET /api/listings/:listing_id": {
-    "description": "Serves up an object containing details on the volunteer whose id matches id passed as parametric endpoint",
+    "description": "Serves up a listing specified by the listing_id",
     "exampleResponse": {
       "listing": {
         "list_id": 1,
