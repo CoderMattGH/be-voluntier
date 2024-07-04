@@ -1,9 +1,9 @@
 {
   "GET /api": {
-    "description": "Serves up a JSON representation of all the available API endpoints"
+    "description": "Serves up a JSON representation of all the available API endpoints."
   },
   "POST /api/login": {
-    "description": "Allows the volunter/organisation user to login",
+    "description": "Allows the volunter/organisation user to login.",
     "requestBody": {
       "email": "useremail@email.com",
       "password": "userpassword",
@@ -37,11 +37,11 @@
     }
   },
   "DELETE /api/logout": {
-    "description": "Allows the volunteer/organisation user to logout. Returns an empty body with 200 OK if successful"
+    "description": "Allows the volunteer/organisation user to logout. Returns an empty body with 200 OK if successful."
   },
   "GET /api/org/:org_user_id": {
     "authRequired": true,
-    "description": "Serves an organisation user object for the specified :org_user_id. Must be logged in and have the same :org_user_id",
+    "description": "Serves an organisation user object for the specified :org_user_id. Must be logged in and have the same :org_user_id.",
     "exampleResponse": {
       "org_user": {
         "org_id": 1,
@@ -57,7 +57,7 @@
   },
   "GET /api/vol/:vol_user_id": {
     "authRequired": true,
-    "description": "Serves a volunteer user object for the specified :vol_user_id. Must be logged in and have the same :vol_user_id",
+    "description": "Serves a volunteer user object for the specified :vol_user_id. Must be logged in and have the same :vol_user_id.",
     "exampleResponse": {
       "vol_user": {
         "vol_id": 1,
@@ -73,7 +73,7 @@
     }
   },
   "POST /api/vol": {
-    "description": "Registers a volunteer user",
+    "description": "Registers a volunteer user.",
     "requestBody": {
       "email": "a-valid-unusedemail@email.com",
       "password": "mypassword",
@@ -97,7 +97,7 @@
     }
   },
   "GET /api/listings": {
-    "description": "Serves up an array of all the visible volunteer listings",
+    "description": "Serves up an array of all the visible volunteer listings.",
     "queries": [
       "sort_by [duration, date]",
       "order [asc, desc]",
@@ -157,7 +157,7 @@
     }
   },
   "GET /api/listings/:listing_id": {
-    "description": "Serves up a listing specified by the :listing_id",
+    "description": "Serves up a listing specified by the :listing_id.",
     "exampleResponse": {
       "listing": {
         "list_id": 1,
@@ -192,7 +192,7 @@
   },
   "POST /api/applications/": {
     "authRequired": true,
-    "description": "Allows the volunteer user to apply for a listing",
+    "description": "Allows the volunteer user to apply for a listing.",
     "requestBody": { "listing_id": "number", "vol_user_id": "number" },
     "exampleResponse": {
       "application": {
@@ -206,7 +206,7 @@
   },
   "GET /api/applications/:app_id": {
     "authRequired": true,
-    "description": "Serves up an object containing details on the application whose id matches :app_id.  Only viewable by the organisation or volunter user",
+    "description": "Serves up an object containing details on the application whose id matches :app_id.  Only viewable by the organisation or volunter user.",
     "exampleResponse": {
       "application": {
         "app_id": 1,
@@ -229,7 +229,7 @@
   },
   "DELETE /api/applications/:app_id": {
     "authRequired": true,
-    "description": "Allows the relevant volunteer user or organisation user to withdraw an application",
+    "description": "Allows the relevant volunteer user or organisation user to withdraw an application.",
     "exampleResponse": {
       "application": {
         "app_id": 7,
@@ -242,7 +242,7 @@
   },
   "PATCH /api/applications/:app_id": {
     "authRequired": true,
-    "description": "Allows an organisation user to PROVISIONALLY confirm an application",
+    "description": "Allows an organisation user to PROVISIONALLY confirm an application.",
     "requestBody": { "accept": "true/false [boolean]" },
     "exampleResponse": {
       "application": {
@@ -270,7 +270,7 @@
   },
   "GET /api/applications/vol/:vol_user_id": {
     "authRequired": true,
-    "description": "Serves up an array of objects, containing details on the applications whose vol id matches vol user id passed as parametric endpoint.  Only viewable by the  volunter user",
+    "description": "Serves up an array of objects, containing details on the applications whose vol id matches vol user id passed as parametric endpoint.  Only viewable by the  volunter user.",
     "exampleResponse": {
       "applications": [
         {
@@ -295,7 +295,7 @@
   },
   "GET /api/applications/org/:org_user_id": {
     "authRequired": true,
-    "description": "Serves up an array of objects containing applications for :org_user_id. Optional query to allow filtering by listing_id. Only viewable by the org user",
+    "description": "Serves up an array of objects containing applications for :org_user_id. Optional query to allow filtering by listing_id. Only viewable by the org user.",
     "queries": ["listing_id"],
     "exampleResponse": {
       "applications": [
@@ -345,7 +345,7 @@
     }
   },
   "GET /api/badges": {
-    "description": "Serves up an array of all the different badge types",
+    "description": "Serves up an array of all the different badge types.",
     "exampleResponse": {
       "badges": [
         {
@@ -365,7 +365,7 @@
   },
   "GET /api/badges/:vol_user_id": {
     "authRequired": "true",
-    "description": "Serves up an array of the specified volunteer user's badges.  Must be logged in as specified user",
+    "description": "Serves up an array of the specified volunteer user's badges.  Must be logged in as specified user.",
     "exampleResponse": {
       "badges": [
         {
@@ -386,7 +386,7 @@
     }
   },
   "GET /api/leaderboard": {
-    "description": "Serves up an array of the top 10 users by badge points, with each object.  Limited to 10 users, and sorted by points descending",
+    "description": "Serves up an array of the top 10 users by badge points, with each object.  Limited to 10 users, and sorted by points descending.",
     "exampleResponse": {
       "leaderboard": [
         {
@@ -428,7 +428,7 @@
     }
   },
   "GET /api/org-types": {
-    "description": "Serves up an array of all types of charity organisations",
+    "description": "Serves up an array of all types of charity organisations.",
     "exampleResponse": {
       "orgTypes": [
         "Health and Medical",
@@ -446,7 +446,7 @@
     }
   },
   "GET /api/favourites/:vol_user_id/orgs": {
-    "description": "Serves up an array of all the volunteer user's favourite organisations",
+    "description": "Serves up an array of all the volunteer user's favourite organisations.",
     "authRequired": true,
     "exampleResponse": {
       "favourite_orgs": [
@@ -468,7 +468,7 @@
     }
   },
   "GET /api/favourites/:vol_user_id/listings": {
-    "description": "Serves up an array of all the volunteer user's favourite listings",
+    "description": "Serves up an array of all the volunteer user's favourite listings.",
     "authRequired": true,
     "exampleResponse": {
       "favourite_listings": [
@@ -492,7 +492,7 @@
     }
   },
   "POST /api/favourites/:vol_user_id/listings": {
-    "description": "Allows the volunteer user to favourite a listing",
+    "description": "Allows the volunteer user to favourite a listing.",
     "authRequired": true,
     "requestBody": { "list_id": "number" },
     "exampleResponse": {
@@ -500,7 +500,7 @@
     }
   },
   "GET /api/images/:img_id": {
-    "description": "Returns a json object with image data in b64 format for the corresponding :img_id",
+    "description": "Returns a json object with image data in b64 format for the corresponding :img_id.",
     "exampleResponse": {
       "image": {
         "img_id": "1",
