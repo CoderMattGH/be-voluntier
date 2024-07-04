@@ -30,51 +30,59 @@ type Application = {
 };
 
 describe("GET api/applications/vol/:vol_user_id", () => {
-  test("Returns the correct array of app objects when vol id for applications matches the user id of the volunteer logged in", () => {
-    const volCredentials = {
-      email: "mattydemail@email.com",
-      password: "mybadpassword",
-      role: "volunteer",
-    };
+  test(
+    "Returns the correct array of app objects when vol id for applications matches the user id " +
+      "of the volunteer logged in",
+    () => {
+      const volCredentials = {
+        email: "mattydemail@email.com",
+        password: "mybadpassword",
+        role: "volunteer",
+      };
 
-    return request(app)
-      .post("/api/login")
-      .send(volCredentials)
-      .then((response) => {
-        // Get cookie
-        const { header } = response;
+      return request(app)
+        .post("/api/login")
+        .send(volCredentials)
+        .then((response) => {
+          // Get cookie
+          const { header } = response;
 
-        return request(app)
-          .get("/api/applications/vol/1")
-          .set("Cookie", [...header["set-cookie"]])
-          .expect(200)
-          .then(({ body }) => {
-            const applications = body.applications;
+          return request(app)
+            .get("/api/applications/vol/1")
+            .set("Cookie", [...header["set-cookie"]])
+            .expect(200)
+            .then(({ body }) => {
+              const applications = body.applications;
 
-            applications.forEach((application: Application) => {
-              expect(application).toMatchObject({
-                app_id: expect.any(Number),
-                vol_id: 1,
-                org_id: expect.any(Number),
-                listing_id: expect.any(Number),
-                prov_confirm: expect.any(Boolean),
-                full_conf: expect.any(Boolean),
-                list_title: expect.any(String),
-                list_location: expect.any(String),
-                list_longitude: expect.any(Number),
-                list_latitude: expect.any(Number),
-                list_description: expect.any(String),
-                org_name: expect.any(String),
-                list_img_id: expect.toSatisfy(
-                  (value) => typeof value === "number" || value === null
-                ),
+              applications.forEach((application: Application) => {
+                expect(application).toMatchObject({
+                  app_id: expect.any(Number),
+                  vol_id: 1,
+                  org_id: expect.any(Number),
+                  listing_id: expect.any(Number),
+                  prov_confirm: expect.any(Boolean),
+                  full_conf: expect.any(Boolean),
+                  list_title: expect.any(String),
+                  list_location: expect.any(String),
+                  list_longitude: expect.any(Number),
+                  list_latitude: expect.any(Number),
+                  list_description: expect.any(String),
+                  org_name: expect.any(String),
+                  list_img_id: expect.toSatisfy(
+                    (value) => typeof value === "number" || value === null
+                  ),
+                });
+                expect(() => new Date(application.list_date)).not.toThrow(
+                  Error
+                );
+                expect(() => new Date(application.list_time)).not.toThrow(
+                  Error
+                );
               });
-              expect(() => new Date(application.list_date)).not.toThrow(Error);
-              expect(() => new Date(application.list_time)).not.toThrow(Error);
             });
-          });
-      });
-  });
+        });
+    }
+  );
   test("Returns a 403 when a volunteer tries to access different volunteer's application", () => {
     const volCredentials = {
       email: "alice.smith@email.com",
@@ -120,25 +128,29 @@ describe("GET api/applications/vol/:vol_user_id", () => {
           });
       });
   });
-  test("Returns a 404 resource not found error when supplied an id as a parametric endpoint that does not exist", () => {
-    const volCredentials = {
-      email: "mattydemail@email.com",
-      password: "mybadpassword",
-      role: "volunteer",
-    };
+  test(
+    "Returns a 404 resource not found error when supplied an id as a parametric endpoint that " +
+      "does not exist",
+    () => {
+      const volCredentials = {
+        email: "mattydemail@email.com",
+        password: "mybadpassword",
+        role: "volunteer",
+      };
 
-    return request(app)
-      .post("/api/login")
-      .send(volCredentials)
-      .then((response) => {
-        // Get cookie
-        const { header } = response;
-        return request(app)
-          .get("/api/applications/vol/999")
-          .expect(404)
-          .then(({ body }) => {
-            expect(body.msg).toBe("No applications found!");
-          });
-      });
-  });
+      return request(app)
+        .post("/api/login")
+        .send(volCredentials)
+        .then((response) => {
+          // Get cookie
+          const { header } = response;
+          return request(app)
+            .get("/api/applications/vol/999")
+            .expect(404)
+            .then(({ body }) => {
+              expect(body.msg).toBe("No applications found!");
+            });
+        });
+    }
+  );
 });

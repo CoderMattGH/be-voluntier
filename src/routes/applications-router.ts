@@ -7,6 +7,7 @@ import {
   deleteApplication,
   patchApplicationWithProvConfirm,
   patchApplicationWithFullConfirm,
+  getApplications,
 } from "../controllers/applications.controller";
 
 export const applicationsRouter = Router();
@@ -24,4 +25,4 @@ applicationsRouter
 applicationsRouter.route("/vol/:vol_user_id").get(getApplicationsByVolId);
 applicationsRouter.route("/org/:org_user_id").get(getApplicationsByOrgId);
 
-applicationsRouter.route("/").post(postApplication);
+applicationsRouter.route("/").get(getApplications).post(postApplication);
