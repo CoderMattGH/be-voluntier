@@ -28,7 +28,7 @@ export function sessionInit(app: Express, session: any) {
   const sessionConfig = {
     store: new (pgSession(session))(pgOptions),
     secret: "keyboard-cat",
-    cookie: { secure: false, httpOnly: false },
+    cookie: { secure: true, httpOnly: false },
     resave: true,
     saveUninitialized: false,
   };
