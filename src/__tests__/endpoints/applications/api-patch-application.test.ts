@@ -240,3 +240,200 @@ describe("PATCH /api/applications/:app_id", () => {
       });
   });
 });
+
+describe("PATCH /api/applications/:app_id/confirm", () => {
+  test("Successfully accepts a full confirm", () => {
+    const orgCredentials = {
+      email: "redcross@email.com",
+      password: "mybadpassword234",
+      role: "organisation",
+    };
+
+    return request(app)
+      .post("/api/login")
+      .send(orgCredentials)
+      .then((response) => {
+        // Get cookie
+        const { header } = response;
+
+        return request(app)
+          .patch("/api/applications/3/confirm/")
+          .set("Cookie", [...header["set-cookie"]])
+          .send({ confirm: true })
+          .expect(200)
+          .then(({ body }) => {
+            const { application } = body;
+
+            expect(application).toMatchObject({
+              app_id: 3,
+              vol_id: expect.any(Number),
+              listing_id: expect.any(Number),
+              prov_confirm: true,
+              full_conf: true,
+            });
+          });
+      });
+  });
+
+  test("Cannot change a full confirm to false", () => {
+    const orgCredentials = {
+      email: "doctorswithoutborders@email.com",
+      password: "bobbinspassword",
+      role: "organisation",
+    };
+
+    return request(app)
+      .post("/api/login")
+      .send(orgCredentials)
+      .then((response) => {
+        // Get cookie
+        const { header } = response;
+
+        return request(app)
+          .patch("/api/applications/4/confirm")
+          .set("Cookie", [...header["set-cookie"]])
+          .send({ confirm: false })
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).toBe(
+              "Application has already been fully confirmed!"
+            );
+          });
+      });
+  });
+
+  test("app_id has to be a number", () => {
+    const orgCredentials = {
+      email: "redcross@email.com",
+      password: "mybadpassword234",
+      role: "organisation",
+    };
+
+    return request(app)
+      .post("/api/login")
+      .send(orgCredentials)
+      .then((response) => {
+        // Get cookie
+        const { header } = response;
+
+        return request(app)
+          .patch("/api/applications/banana/confirm")
+          .set("Cookie", [...header["set-cookie"]])
+          .send({ confirm: false })
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).toBe("app_id is not a number!");
+          });
+      });
+  });
+
+  test("confirm has to be a boolean", () => {
+    const orgCredentials = {
+      email: "redcross@email.com",
+      password: "mybadpassword234",
+      role: "organisation",
+    };
+
+    return request(app)
+      .post("/api/login")
+      .send(orgCredentials)
+      .then((response) => {
+        // Get cookie
+        const { header } = response;
+
+        return request(app)
+          .patch("/api/applications/3/confirm")
+          .set("Cookie", [...header["set-cookie"]])
+          .send({ confirm: "banana" })
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).toBe("confirm must be a boolean!");
+          });
+      });
+  });
+
+  test("confirm has to be a boolean", () => {
+    const orgCredentials = {
+      email: "redcross@email.com",
+      password: "mybadpassword234",
+      role: "organisation",
+    };
+
+    return request(app)
+      .post("/api/login")
+      .send(orgCredentials)
+      .then((response) => {
+        // Get cookie
+        const { header } = response;
+
+        return request(app)
+          .patch("/api/applications/3/confirm")
+          .set("Cookie", [...header["set-cookie"]])
+          .send({ confirm: 23 })
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).toBe("confirm must be a boolean!");
+          });
+      });
+  });
+
+  test("Organisation user must be logged in", () => {
+    return request(app)
+      .patch("/api/applications/3/confirm")
+      .send({ confirm: true })
+      .expect(401)
+      .then(({ body }) => {
+        expect(body.msg).toBe(constants.ERR_MSG_NOT_LOGGED_IN);
+      });
+  });
+
+  test("Organisation user has to own application listing", () => {
+    const orgCredentials = {
+      email: "redcross@email.com",
+      password: "mybadpassword234",
+      role: "organisation",
+    };
+
+    return request(app)
+      .post("/api/login")
+      .send(orgCredentials)
+      .then((response) => {
+        // Get cookie
+        const { header } = response;
+
+        return request(app)
+          .patch("/api/applications/7/confirm")
+          .set("Cookie", [...header["set-cookie"]])
+          .send({ confirm: false })
+          .expect(403)
+          .then(({ body }) => {
+            expect(body.msg).toBe(constants.ERR_MSG_PERMISSION_DENIED);
+          });
+      });
+  });
+
+  test("Volunteer user cannot accept application", () => {
+    const orgCredentials = {
+      email: "john.doe@email.com",
+      password: "password",
+      role: "volunteer",
+    };
+
+    return request(app)
+      .post("/api/login")
+      .send(orgCredentials)
+      .then((response) => {
+        // Get cookie
+        const { header } = response;
+
+        return request(app)
+          .patch("/api/applications/6/confirm")
+          .set("Cookie", [...header["set-cookie"]])
+          .send({ confirm: false })
+          .expect(403)
+          .then(({ body }) => {
+            expect(body.msg).toBe(constants.ERR_MSG_PERMISSION_DENIED);
+          });
+      });
+  });
+});
