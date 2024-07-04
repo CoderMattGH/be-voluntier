@@ -9,7 +9,7 @@ export function selectApplication(appIdNum: string) {
   let queryStr = `
   SELECT app_id, vol_id, listings.list_org AS org_id, listing_id, prov_confirm, full_conf, list_title,
   list_location, list_longitude, list_latitude, list_date, list_time, list_description, 
-  list_img_id, org_users.org_name, org_users.org_id 
+  list_img_id, org_users.org_name
   FROM applications 
   JOIN listings ON applications.listing_id = listings.list_id
   JOIN org_users ON listings.list_org = org_users.org_id
@@ -157,6 +157,31 @@ export function deleteApplicationByAppId(appId: number) {
     }
 
     logger.info(`Application with app_id:${appId} successfully deleted!`);
+
+    return rows[0];
+  });
+}
+
+export function updateApplicationProvConfirmById(
+  appId: number,
+  confirm: boolean
+) {
+  logger.info(`In provConfirmApplicationById in applications.model`);
+  logger.debug(
+    `Trying to provisionally confirm application where appId: ${appId}`
+  );
+
+  const queryStr = `UPDATE applications SET prov_confirm = $1 
+  WHERE app_id = $2 RETURNING *;`;
+
+  return db.query(queryStr, [confirm, appId]).then(({ rows }) => {
+    if (!rows.length) {
+      return Promise.reject({ status: 404, msg: "Application not found!" });
+    }
+
+    logger.info(
+      `Successfully updated application with app_id:${appId} prov_conf: ${confirm}`
+    );
 
     return rows[0];
   });

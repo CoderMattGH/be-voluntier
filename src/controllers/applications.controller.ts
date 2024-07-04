@@ -191,9 +191,7 @@ export function deleteApplication(
       );
 
       if (!volAuthObj.authorised && !orgAuthObj.authorised) {
-        next(volAuthObj.respObj);
-
-        return;
+        return Promise.reject(volAuthObj.respObj);
       }
 
       return applicationsModel
@@ -208,5 +206,70 @@ export function deleteApplication(
       next(err);
 
       return;
+    });
+}
+
+export function patchApplicationWithProvConfirm(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  logger.debug(`In patchApplicationWithProvConf in applications.controller`);
+
+  // Validate app_id is a number
+  const appIdNum = Number(req.params.app_id);
+  if (Number.isNaN(appIdNum)) {
+    next({ status: 400, msg: "app_id is not a number!" });
+
+    return;
+  }
+
+  // Validate accept boolean
+  const { accept: acceptProv } = req.body;
+  if (acceptProv === undefined || typeof acceptProv !== "boolean") {
+    next({ status: 400, msg: "accept must be a boolean!" });
+
+    return;
+  }
+
+  const appPromise = applicationsModel.selectApplication(appIdNum.toString());
+
+  appPromise
+    .then((application) => {
+      // Validate that organisation user owns application listing
+      const orgAuthObj = checkUserCredentials(
+        req,
+        application.org_id,
+        "organisation"
+      );
+
+      if (!orgAuthObj.authorised) {
+        return Promise.reject(orgAuthObj.respObj);
+      }
+
+      logger.debug(
+        `Authorised organisation user with org_id ${application.org_id} with app_id: ${appIdNum}`
+      );
+
+      // If application has already been fully confirmed, then reject
+      if (application.full_conf) {
+        return Promise.reject({
+          status: 400,
+          msg: `Application has already been fully confirmed!`,
+        });
+      }
+
+      return applicationsModel.updateApplicationProvConfirmById(
+        appIdNum,
+        acceptProv
+      );
+    })
+    .then((application) => {
+      res.status(200).send({ application });
+
+      return;
+    })
+    .catch((err) => {
+      next(err);
     });
 }

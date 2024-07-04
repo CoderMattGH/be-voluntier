@@ -194,6 +194,20 @@
       }
     }
   },
+  "PATCH /api/applications/:app_id": {
+    "authRequired": true,
+    "description": "Allows an organisation user to PROVISIONALLY confirm an application",
+    "requestBody": { "accept": "true/false [boolean]" },
+    "exampleResponse": {
+      "application": {
+        "app_id": 6,
+        "vol_id": 5,
+        "listing_id": 1,
+        "prov_confirm": true,
+        "full_conf": false
+      }
+    }
+  },
   "GET /api/applications/vol/:vol_user_id": {
     "authRequired": true,
     "description": "Serves up an array of objects, containing details on the applications whose vol id matches vol user id passed as parametric endpoint.  Only viewable by the  volunter user",
