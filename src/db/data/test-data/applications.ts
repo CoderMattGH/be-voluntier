@@ -28,7 +28,7 @@ export const applications: Application[] = [
   {
     vol_id: 2,
     listing_id: 4,
-    prov_confirm: false,
+    prov_confirm: true,
     full_conf: true,
   },
   {
