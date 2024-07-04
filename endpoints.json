@@ -124,6 +124,38 @@
       ]
     }
   },
+  "POST /api/listings": {
+    "description": "Posts a new listing to the listings table. Skills are optional (can be an empty array), but any skills will populate the list-skills junc table. Optional to have an image string in b64 format. Must be an org user to use this endpoint.",
+    "exampleBody": {
+      "list_title": "Example Listing",
+      "list_location": "123 Main St, City, Country",
+      "list_date": "2024-07-05",
+      "list_time": "14:00",
+      "list_duration": "2",
+      "list_description": "This is a sample description of the listing.",
+      "list_latitude": 37.7749,
+      "list_longitude": -122.4194,
+      "img_b64_data": "exampleB64ImageData",
+      "list_skills": ["Patience", "Sales"],
+      "list_visible": true
+    },
+    "exampleResponse": {
+      "newListing": {
+        "list_id": 11,
+        "list_title": "Example Listing",
+        "list_location": "123 Main St, City, Country",
+        "list_date": "2024-04-07",
+        "list_time": "14:00:00",
+        "list_duration": 2,
+        "list_description": "This is a sample description of the listing.",
+        "list_latitude": 37.7749,
+        "list_longitude": -122.4194,
+        "list_img_id": 2,
+        "list_visible": true,
+        "list_org": 2
+      }
+    }
+  },
   "GET /api/listings/:listing_id": {
     "description": "Serves up an object containing details on the volunteer whose id matches id passed as parametric endpoint",
     "exampleResponse": {
