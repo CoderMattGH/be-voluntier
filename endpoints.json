@@ -1,6 +1,6 @@
 {
   "GET /api": {
-    "description": "Serves up a JSON representation of all the available endpoints of the API"
+    "description": "Serves up a JSON representation of all the available API endpoints"
   },
   "POST /api/login": {
     "description": "Allows the volunter/organisation user to login",
@@ -41,7 +41,7 @@
   },
   "GET /api/org/:org_user_id": {
     "authRequired": true,
-    "description": "Serves an organisation user object for the specified org_user_id. Must be logged in and have the same org_user_id",
+    "description": "Serves an organisation user object for the specified :org_user_id. Must be logged in and have the same :org_user_id",
     "exampleResponse": {
       "org_user": {
         "org_id": 1,
@@ -57,7 +57,7 @@
   },
   "GET /api/vol/:vol_user_id": {
     "authRequired": true,
-    "description": "Serves a volunteer user object for the specified vol_user_id. Must be logged in and have the same vol_user_id",
+    "description": "Serves a volunteer user object for the specified :vol_user_id. Must be logged in and have the same :vol_user_id",
     "exampleResponse": {
       "vol_user": {
         "vol_id": 1,
@@ -79,8 +79,8 @@
       "password": "mypassword",
       "first_name": "Bobby",
       "last_name": "Person",
-      "contact_tel": "82938923 [not-required]",
-      "bio": "A bio [not-required]",
+      "contact_tel [OPTIONAL]": "82938923",
+      "bio [OPTIONAL]": "A bio",
       "avatar_img_b64": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAA [not-required]"
     },
     "exampleResponse": {
@@ -157,7 +157,7 @@
     }
   },
   "GET /api/listings/:listing_id": {
-    "description": "Serves up a listing specified by the listing_id",
+    "description": "Serves up a listing specified by the :listing_id",
     "exampleResponse": {
       "listing": {
         "list_id": 1,
@@ -206,7 +206,7 @@
   },
   "GET /api/applications/:app_id": {
     "authRequired": true,
-    "description": "Serves up an object containing details on the application whose id matches id passed as parametric endpoint.  Only viewable by the organisation or volunter user",
+    "description": "Serves up an object containing details on the application whose id matches :app_id.  Only viewable by the organisation or volunter user",
     "exampleResponse": {
       "application": {
         "app_id": 1,
@@ -295,7 +295,8 @@
   },
   "GET /api/applications/org/:org_user_id": {
     "authRequired": true,
-    "description": "Serves up an array of objects, containing details on the applications whose org id matches org user id passed as parametric endpoint. Contains an optional query to allow filtering by listing_id. Only viewable by the org user",
+    "description": "Serves up an array of objects containing applications for :org_user_id. Optional query to allow filtering by listing_id. Only viewable by the org user",
+    "queries": ["listing_id"]
     "exampleResponse": {
       "applications": [
         {
@@ -385,7 +386,7 @@
     }
   },
   "GET /api/leaderboard": {
-    "description": "Serves up an array of objects that represents the top 10 users by badge points, with each object containing basic information on the user alongside number of points. Limited to 10 users, and sorted by points descending",
+    "description": "Serves up an array of the top 10 users by badge points, with each object.  Limited to 10 users, and sorted by points descending",
     "exampleResponse": {
       "leaderboard": [
         {
@@ -404,7 +405,7 @@
     }
   },
   "GET /api/skills": {
-    "description": "Serves up an array of all skills that a volunteer might need to take part in a volunteering opportunity",
+    "description": "Serves up an array of all skills",
     "exampleResponse": {
       "skills": [
         "Physical Work",
@@ -499,7 +500,7 @@
     }
   },
   "GET /api/images/:img_id": {
-    "description": "Returns a json object with image data in b64 format for the corresponding img_id",
+    "description": "Returns a json object with image data in b64 format for the corresponding :img_id",
     "exampleResponse": {
       "image": {
         "img_id": "1",
