@@ -167,6 +167,20 @@
       }
     }
   },
+  "POST /api/applications/": {
+    "authRequired": true,
+    "description": "Allows the volunteer user to apply for a listing",
+    "requestBody": { "listing_id": "number", "vol_user_id": "number" },
+    "exampleResponse": {
+      "application": {
+        "app_id": 9,
+        "vol_id": 1,
+        "listing_id": 4,
+        "prov_confirm": false,
+        "full_conf": false
+      }
+    }
+  },
   "GET /api/applications/vol/:vol_user_id": {
     "authRequired": true,
     "description": "Serves up an array of objects, containing details on the applications whose vol id matches vol user id passed as parametric endpoint.  Only viewable by the  volunter user",
