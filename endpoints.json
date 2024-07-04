@@ -176,6 +176,34 @@
       }
     }
   },
+  "GET /api/applications/": {
+    "authRequired": true,
+    "description": "Allows users to fetch applications",
+    "queries": ["list_id"],
+    "exampleResponse": {
+      "application": {
+        "app_id": 9,
+        "vol_id": 1,
+        "listing_id": 4,
+        "prov_confirm": false,
+        "full_conf": false
+      }
+    }
+  },
+  "POST /api/applications/": {
+    "authRequired": true,
+    "description": "Allows the volunteer user to apply for a listing",
+    "requestBody": { "listing_id": "number", "vol_user_id": "number" },
+    "exampleResponse": {
+      "application": {
+        "app_id": 9,
+        "vol_id": 1,
+        "listing_id": 4,
+        "prov_confirm": false,
+        "full_conf": false
+      }
+    }
+  },
   "GET /api/applications/:app_id": {
     "authRequired": true,
     "description": "Serves up an object containing details on the application whose id matches id passed as parametric endpoint.  Only viewable by the organisation or volunter user",
@@ -196,20 +224,6 @@
         "list_description": "Join our charity fun run to raise funds for local schools. Whether you're a seasoned runner or a beginner, everyone is welcome to participate.",
         "list_img_id": null,
         "org_name": "Red Cross"
-      }
-    }
-  },
-  "POST /api/applications/": {
-    "authRequired": true,
-    "description": "Allows the volunteer user to apply for a listing",
-    "requestBody": { "listing_id": "number", "vol_user_id": "number" },
-    "exampleResponse": {
-      "application": {
-        "app_id": 9,
-        "vol_id": 1,
-        "listing_id": 4,
-        "prov_confirm": false,
-        "full_conf": false
       }
     }
   },
@@ -319,48 +333,6 @@
           "list_date": "2024-07-03T00:00:00.000Z",
           "list_time": "08:00:00",
           "list_description": "Join our charity fun run to raise funds for local schools. Whether you're a seasoned runner or a beginner, everyone is welcome to participate.",
-          "list_img_id": null,
-          "vol_first_name": "Alice",
-          "vol_last_name": "Smith",
-          "vol_email": "alice.smith@email.com",
-          "vol_contact_tel": "1234567890",
-          "vol_avatar_img_id": null
-        },
-        {
-          "app_id": 3,
-          "vol_id": 3,
-          "org_id": 2,
-          "listing_id": 4,
-          "prov_confirm": true,
-          "full_conf": false,
-          "list_title": "Food Bank Volunteering",
-          "list_location": "M1 1AE",
-          "list_longitude": -2.2374,
-          "list_latitude": 53.4794,
-          "list_date": "2024-07-04T00:00:00.000Z",
-          "list_time": "12:00:00",
-          "list_description": "Assist in organizing and distributing food at our local food bank. Your help will make a significant difference in the lives of those in need.",
-          "list_img_id": null,
-          "vol_first_name": "John",
-          "vol_last_name": "Doe",
-          "vol_email": "john.doe@email.com",
-          "vol_contact_tel": "0987654321",
-          "vol_avatar_img_id": null
-        },
-        {
-          "app_id": 5,
-          "vol_id": 2,
-          "org_id": 2,
-          "listing_id": 4,
-          "prov_confirm": false,
-          "full_conf": true,
-          "list_title": "Food Bank Volunteering",
-          "list_location": "M1 1AE",
-          "list_longitude": -2.2374,
-          "list_latitude": 53.4794,
-          "list_date": "2024-07-04T00:00:00.000Z",
-          "list_time": "12:00:00",
-          "list_description": "Assist in organizing and distributing food at our local food bank. Your help will make a significant difference in the lives of those in need.",
           "list_img_id": null,
           "vol_first_name": "Alice",
           "vol_last_name": "Smith",

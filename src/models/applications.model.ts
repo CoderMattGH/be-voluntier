@@ -90,6 +90,27 @@ export function selectApplicationsByOrgId(
   });
 }
 
+export function selectApplicationsByListingId(listId: number) {
+  logger.info(`In selectApplicationsByListingId() in applications.model`);
+  logger.debug(`Trying to fetch applications where listingId: ${listId}`);
+
+  const queryStr = `SELECT app_id, applications.vol_id, listings.list_org AS org_id,
+  listing_id, prov_confirm, full_conf, list_title, list_location, list_date, list_time,
+  list_img_id, vol_users.vol_email, vol_users.vol_contact_tel, vol_users.vol_avatar_img_id
+  FROM applications 
+  JOIN listings ON applications.listing_id = listings.list_id 
+  JOIN vol_users ON vol_users.vol_id = applications.vol_id
+  WHERE listing_id = $1;`;
+
+  return db.query(queryStr, [listId]).then(({ rows }) => {
+    if (!rows.length) {
+      return Promise.reject({ status: 404, msg: "No applications found!" });
+    }
+
+    return rows;
+  });
+}
+
 export function createApplication(volId: number, listingId: number) {
   logger.info(`In createApplication() in applications.model`);
   logger.debug(
