@@ -1,6 +1,7 @@
 import { logger } from "../logger";
 import { Request, Response, NextFunction } from "express";
 import * as listingsModel from "../models/listings.model";
+import { checkUserCredentials } from "../auth/auth-utils";
 
 export function getListings(req: Request, res: Response, next: NextFunction) {
   logger.debug(`In getListings() in listings.controller`);
@@ -62,4 +63,46 @@ export function getListing(req: Request, res: Response, next: NextFunction) {
     });
 }
 
-export function postListing() {}
+export function postListing(req: Request, res: Response, next: NextFunction) {
+  logger.debug(`In postListing() in listings.controller`);
+
+  interface SessionUser {
+    id: number;
+    role: string;
+  }
+
+  const body = req.body;
+
+  // Check if session and user are defined
+  const user = req.session?.user as SessionUser | undefined;
+  if (!user) {
+    next({ status: 401, msg: "Unauthorized" });
+    return;
+  }
+
+  const { id, role } = user;
+
+  const orgAuthObj = checkUserCredentials(req, id, role);
+
+  if (!orgAuthObj.authorised) {
+    next(orgAuthObj.respObj);
+    return;
+  }
+
+  listingsModel
+    .createListing(body, id)
+    .then((newListing) => {
+      if (body.skills && body.skills.length > 0) {
+        return listingsModel
+          .createListingSkillJunc(newListing.list_id, body.skills)
+          .then(() => newListing);
+      }
+      return newListing;
+    })
+    .then((newListing) => {
+      res.status(201).send({ newListing });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}

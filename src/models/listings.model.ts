@@ -1,5 +1,6 @@
 import { logger } from "../logger";
 import { db } from "../db";
+import { createImage } from "./images.model";
 
 // TODO: Implement better search
 export function selectListings(
@@ -64,4 +65,87 @@ export function selectListing(visible = true, listing_id: string) {
 
     return { listing: rows[0] };
   });
+}
+
+interface ListingBody {
+  list_title: string;
+  list_location: string;
+  list_date: string; // Use appropriate type if it's a Date object
+  list_time: string; // Use appropriate type if it's a Date object
+  list_duration: string; // Use appropriate type (e.g., number) depending on your requirements
+  list_description: string;
+  list_latitude: number;
+  list_longitude: number;
+  img_b64_data: string; // Base64 image data
+  skills: string[];
+  list_visible: boolean;
+}
+
+export function createListing(body: ListingBody, id: number) {
+  logger.debug(`In createListing() in listings.model`);
+
+  const title = body.list_title;
+  const location = body.list_location;
+  const date = body.list_date;
+  const time = body.list_time;
+  const duration = body.list_duration;
+  const description = body.list_description;
+  const latitude = body.list_latitude;
+  const longitude = body.list_longitude;
+  const imgB64Data = body.img_b64_data;
+  const isVisible = body.list_visible;
+
+  let imgId: number | undefined;
+
+  const createListingWithImage = async () => {
+    try {
+      // Step 1: Create image using images.model.createImage
+      const imageResult = await createImage(imgB64Data);
+      imgId = imageResult.img_id;
+
+      // Step 2: Create listing with image_id
+      const queryStrListing = `
+        INSERT INTO listings (list_title, list_location, list_longitude, list_latitude, list_date, list_time, list_duration, list_description, list_org, list_img_id, list_visible)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+        RETURNING *
+      `;
+
+      const values = [
+        title,
+        location,
+        longitude,
+        latitude,
+        date,
+        time,
+        duration,
+        description,
+        id,
+        imgId,
+        isVisible,
+      ];
+
+      const { rows: listingRows } = await db.query(queryStrListing, values);
+
+      return listingRows[0];
+    } catch (err: any) {
+      throw new Error(err);
+    }
+  };
+
+  return createListingWithImage();
+}
+
+export function createListingSkillJunc(listId: number, skills: string[]) {
+  logger.debug(`In createListingSkillJunc() in listings.model`);
+
+  const queryStr = `
+    INSERT INTO list_skill_junc (list_id, skill_id)
+    VALUES ($1, $2)
+  `;
+
+  const queries = skills.map((skillId) =>
+    db.query(queryStr, [listId, skillId])
+  );
+
+  return Promise.all(queries);
 }
