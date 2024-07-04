@@ -1,7 +1,6 @@
 import { logger } from "../logger";
 import { db } from "../db";
 
-// TODO: Do joins to get organisations name
 export function selectFavOrganisationsByUserId(userId: number) {
   logger.debug(`In selectFavOrganisationsByUserId() in favourites.model`);
   logger.info(`Selecting favourite organisations for user_id: ${userId}`);
@@ -17,7 +16,6 @@ export function selectFavOrganisationsByUserId(userId: number) {
   });
 }
 
-// TODO: Do joins to get listings name
 export function selectFavListingsByUserId(userId: number) {
   logger.debug(`In selectFavListingsByUserId() in favourites.model`);
   logger.info(`Selecting favourite listings for user_id: ${userId}`);
@@ -44,6 +42,13 @@ export function postFavouriteToListing(userIdNum: number, listIdNum: number) {
       [userIdNum, listIdNum]
     )
     .then(({ rows }) => {
+      if (!rows.length) {
+        return Promise.reject({
+          status: 400,
+          msg: "An unknown error occurred!",
+        });
+      }
+
       return rows[0];
     });
 }

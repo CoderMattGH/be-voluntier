@@ -2,6 +2,7 @@ import { logger } from "../logger";
 import { Request, Response, NextFunction } from "express";
 import { checkUserCredentials } from "../auth/auth-utils";
 import * as favouritesModel from "../models/favourites.model";
+import * as listingsModel from "../models/listings.model";
 
 export function getFavouriteOrganisations(
   req: Request,
@@ -86,23 +87,41 @@ export function postFavouriteListings(
 ) {
   logger.debug(`In postFavouriteListings() in favourites.controller`);
 
-  const listIdNum = Number(req.params.list_id);
+  const listIdNum = Number(req.body.list_id);
 
   if (Number.isNaN(listIdNum)) {
-    next({ status: 400, msg: "list_id is not a number" });
+    next({ status: 400, msg: "list_id is not a number!" });
     return;
   }
 
-  const userIdNum = Number(req.body.user_id);
+  const userIdNum = Number(req.params.user_id);
   if (Number.isNaN(userIdNum)) {
     next({ status: 400, msg: "user_id is not a number!" });
     return;
   }
 
-  favouritesModel
-    .postFavouriteToListing(userIdNum, listIdNum)
-    .then((favourites) => {
-      res.status(201).send(favourites);
+  // Check authorisation
+  const favAuthObj = checkUserCredentials(req, userIdNum, "volunteer");
+  if (!favAuthObj.authorised) {
+    next(favAuthObj.respObj);
+
+    return;
+  }
+
+  // Check listing exists
+  const listingExistsPromise = listingsModel.selectListing(
+    true,
+    listIdNum.toString()
+  );
+
+  return listingExistsPromise
+    .then(() => {
+      logger.info(`Listing with listing_id:${listIdNum} found!`);
+
+      return favouritesModel.postFavouriteToListing(userIdNum, listIdNum);
+    })
+    .then((favourite) => {
+      res.status(201).send({ favourite });
     })
     .catch((err) => {
       next(err);
