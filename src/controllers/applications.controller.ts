@@ -114,3 +114,45 @@ export function getApplicationsByOrgId(
       next(err);
     });
 }
+
+// Volunteer user applies for listing
+export function postApplication(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  logger.debug(`In postApplication() in applications.controller`);
+
+  // Validate listing_id is a number
+  const listingIdNum = Number(req.body.listing_id);
+  if (Number.isNaN(listingIdNum)) {
+    next({ status: 400, msg: "listing_id is not a number!" });
+
+    return;
+  }
+
+  // Validate vol_user_id is a number
+  const volUserId = Number(req.body.vol_user_id);
+  if (Number.isNaN(volUserId)) {
+    next({ status: 400, msg: "vol_user_id is not a number!" });
+
+    return;
+  }
+
+  // Authorise user
+  const authObj = checkUserCredentials(req, volUserId, "volunteer");
+  if (!authObj.authorised) {
+    next(authObj.respObj);
+
+    return;
+  }
+
+  applicationsModel
+    .createApplication(volUserId, listingIdNum)
+    .then((application) => {
+      res.status(200).send({ application: application });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
