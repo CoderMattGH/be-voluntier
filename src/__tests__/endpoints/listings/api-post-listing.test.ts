@@ -93,12 +93,12 @@ describe("POST /api/listings", () => {
     const loginResponse = await request(app)
       .post("/api/login")
       .send(orgCredentials);
-    const { header } = loginResponse;
+    const { token } = loginResponse.body.user;
 
     // Post the new listing
     const postResponse = await request(app)
       .post("/api/listings")
-      .set("Cookie", header["set-cookie"])
+      .set("Authorization", `Bearer ${token}`)
       .send(newListing)
       .expect(201)
       .then(({ body }) => {
@@ -148,12 +148,12 @@ describe("POST /api/listings", () => {
     const loginResponse = await request(app)
       .post("/api/login")
       .send(orgCredentials);
-    const { header } = loginResponse;
+    const { token } = loginResponse.body.user;
 
     // Post the new listing
     const postResponse = await request(app)
       .post("/api/listings")
-      .set("Cookie", header["set-cookie"])
+      .set("Authorization", `Bearer ${token}`)
       .send(newListing)
       .expect(201)
       .then(({ body }) => {
@@ -206,12 +206,12 @@ describe("POST /api/listings", () => {
     const loginResponse = await request(app)
       .post("/api/login")
       .send(orgCredentials);
-    const { header } = loginResponse;
+    const { token } = loginResponse.body.user;
 
     // Post the new listing
     const postResponse = await request(app)
       .post("/api/listings")
-      .set("Cookie", header["set-cookie"])
+      .set("Authorization", `Bearer ${token}`)
       .send(newListing)
       .expect(403)
       .then(({ body }) => {
@@ -246,11 +246,11 @@ describe("POST /api/listings", () => {
       .send(orgCredentials)
       .then((response) => {
         // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .post("/api/listings")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send(newListing)
           .expect(400)
           .then(({ body }) => {
@@ -285,11 +285,11 @@ describe("POST /api/listings", () => {
       .send(orgCredentials)
       .then((response) => {
         // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .post("/api/listings")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send(newListing)
           .expect(400)
           .then(({ body }) => {
@@ -324,11 +324,11 @@ describe("POST /api/listings", () => {
       .send(orgCredentials)
       .then((response) => {
         // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .post("/api/listings")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send(newListing)
           .expect(400)
           .then(({ body }) => {
@@ -363,11 +363,11 @@ describe("POST /api/listings", () => {
       .send(orgCredentials)
       .then((response) => {
         // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .post("/api/listings")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send(newListing)
           .expect(400)
           .then(({ body }) => {
@@ -402,11 +402,11 @@ describe("POST /api/listings", () => {
       .send(orgCredentials)
       .then((response) => {
         // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .post("/api/listings")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send(newListing)
           .expect(400)
           .then(({ body }) => {
@@ -441,11 +441,11 @@ describe("POST /api/listings", () => {
       .send(orgCredentials)
       .then((response) => {
         // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .post("/api/listings")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send(newListing)
           .expect(400)
           .then(({ body }) => {
@@ -479,11 +479,11 @@ describe("POST /api/listings", () => {
       .send(orgCredentials)
       .then((response) => {
         // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .post("/api/listings")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send(newListing)
           .expect(400)
           .then(({ body }) => {
@@ -515,11 +515,11 @@ describe("POST /api/listings", () => {
       .send(orgCredentials)
       .then((response) => {
         // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .post("/api/listings")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send(newListing)
           .expect(400)
           .then(({ body }) => {
@@ -552,11 +552,11 @@ describe("POST /api/listings", () => {
       .send(orgCredentials)
       .then((response) => {
         // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .post("/api/listings")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send(newListing)
           .expect(400)
           .then(({ body }) => {
@@ -589,11 +589,11 @@ describe("POST /api/listings", () => {
       .send(orgCredentials)
       .then((response) => {
         // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .post("/api/listings")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send(newListing)
           .expect(400)
           .then(({ body }) => {
@@ -628,11 +628,11 @@ describe("POST /api/listings", () => {
       .send(orgCredentials)
       .then((response) => {
         // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .post("/api/listings")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send(newListing)
           .expect(400)
           .then(({ body }) => {

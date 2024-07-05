@@ -1,7 +1,6 @@
 import { logger } from "../logger";
 import { Request, Response, NextFunction } from "express";
 import * as listingsModel from "../models/listings.model";
-import { checkUserCredentials } from "../auth/auth-utils";
 import * as constants from "../constants";
 import { getUserInfoFromToken } from "../auth/auth-utils";
 
@@ -68,10 +67,10 @@ export function getListing(req: Request, res: Response, next: NextFunction) {
 export function postListing(req: Request, res: Response, next: NextFunction) {
   logger.debug(`In postListing() in listings.controller`);
 
-  interface SessionUser {
-    id: number;
-    role: string;
-  }
+  // interface SessionUser {
+  //   id: number;
+  //   role: string;
+  // }
 
   const body = req.body;
 
@@ -82,7 +81,7 @@ export function postListing(req: Request, res: Response, next: NextFunction) {
     return;
   }
 
-  if (role !== "organisation") {
+  if (orgObj.role !== "organisation") {
     next({ status: 403, msg: constants.ERR_MSG_PERMISSION_DENIED });
     return;
   }
