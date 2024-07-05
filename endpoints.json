@@ -176,10 +176,10 @@
   },
   "GET /api/applications/": {
     "authRequired": true,
-    "description": "Allows users to fetch applications.",
+    "description": "Allows users to fetch applications.  Returns an array of applications.",
     "queries": ["list_id"],
     "exampleResponse": {
-      "application": {
+      "application": [{
         "app_id": 6,
         "vol_id": 5,
         "org_id": 1,
@@ -194,7 +194,7 @@
         "vol_email": "michael.brown@email.com",
         "vol_contact_tel": "6677889900",
         "vol_avatar_img_id": null
-      }
+      }]
     }
   },
   "POST /api/applications/": {
