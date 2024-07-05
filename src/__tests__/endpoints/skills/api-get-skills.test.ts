@@ -30,3 +30,41 @@ describe("GET /api/skills", () => {
       });
   });
 });
+
+describe("GET /api/skills/:list_id", () => {
+  test("Returns all skills for a listing id", () => {
+    return request(app)
+      .get("/api/skills/6")
+      .expect(200)
+      .then(({ body }) => {
+        const skills = body.skills;
+
+        expect(skills.length).toBe(2);
+
+        skills.forEach((skill: Skill) => {
+          expect(skill).toMatchObject({
+            skill_id: expect.any(Number),
+            skill_name: expect.any(String),
+          });
+        });
+      });
+  });
+
+  test("Returns 404 when no skills found", () => {
+    return request(app)
+      .get("/api/skills/99")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("No skills found!");
+      });
+  });
+
+  test("Returns a 400 when list_id is not a number", () => {
+    return request(app)
+      .get("/api/skills/banana")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("list_id is not a number!");
+      });
+  });
+});

@@ -14,3 +14,29 @@ export function getSkills(req: Request, res: Response, next: NextFunction) {
       next(err);
     });
 }
+
+export function getSkillsByListId(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  logger.debug(`In getSkillsByListId() in skills.controller`);
+
+  const listIdNum = Number(req.params.list_id);
+
+  if (Number.isNaN(listIdNum)) {
+    next({ status: 400, msg: "list_id is not a number!" });
+
+    return;
+  }
+
+  skillsModel.selectSkillsByListId(listIdNum).then((skills) => {
+    if (!skills.length) {
+      next({ status: 404, msg: "No skills found!" });
+
+      return;
+    }
+
+    res.status(200).send({ skills });
+  });
+}

@@ -260,6 +260,7 @@ describe("POST /api/listings", () => {
           });
       });
   });
+
   test("List_location cannot be undefined or an empty string", () => {
     const orgCredentials = {
       email: "redcross@email.com",
@@ -299,6 +300,7 @@ describe("POST /api/listings", () => {
           });
       });
   });
+
   test("List_date cannot be undefined or an empty string", () => {
     const orgCredentials = {
       email: "redcross@email.com",
@@ -338,6 +340,7 @@ describe("POST /api/listings", () => {
           });
       });
   });
+
   test("List_time cannot be undefined or an empty string", () => {
     const orgCredentials = {
       email: "redcross@email.com",
@@ -377,6 +380,7 @@ describe("POST /api/listings", () => {
           });
       });
   });
+
   test("List_duration cannot be undefined or an empty string", () => {
     const orgCredentials = {
       email: "redcross@email.com",
@@ -416,6 +420,7 @@ describe("POST /api/listings", () => {
           });
       });
   });
+
   test("List_description cannot be undefined or an empty string", () => {
     const orgCredentials = {
       email: "redcross@email.com",
@@ -455,6 +460,7 @@ describe("POST /api/listings", () => {
           });
       });
   });
+
   test("List_latitude cannot be a type other than number", () => {
     const orgCredentials = {
       email: "redcross@email.com",
@@ -491,6 +497,7 @@ describe("POST /api/listings", () => {
           });
       });
   });
+
   test("List_longitude cannot be a type other than number", () => {
     const orgCredentials = {
       email: "redcross@email.com",
@@ -527,6 +534,7 @@ describe("POST /api/listings", () => {
           });
       });
   });
+
   test("list_skills needs to be present in the request body.", () => {
     const orgCredentials = {
       email: "redcross@email.com",
@@ -564,6 +572,7 @@ describe("POST /api/listings", () => {
           });
       });
   });
+
   test("list_skills must be of array type and only contain string elements if populated", () => {
     const orgCredentials = {
       email: "redcross@email.com",
@@ -603,7 +612,8 @@ describe("POST /api/listings", () => {
           });
       });
   });
-  test("list_visible must be present and have value of true", () => {
+
+  test.only("list_visible must be present and have value of true", () => {
     const orgCredentials = {
       email: "redcross@email.com",
       password: "mybadpassword234",
@@ -629,6 +639,7 @@ describe("POST /api/listings", () => {
       .then((response) => {
         // Get cookie
         const { token } = response.body.user;
+        console.log(token);
 
         return request(app)
           .post("/api/listings")
