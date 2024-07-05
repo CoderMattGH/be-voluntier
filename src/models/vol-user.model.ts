@@ -183,3 +183,132 @@ function doesUserAccountExist(email: string) {
       }
     });
 }
+
+export async function updateVolUser(
+  userId: number,
+  changes: {
+    email?: string;
+    password?: string;
+    firstName?: string;
+    lastName?: string;
+    contactTel?: string | null;
+    avatarImg?: string | null;
+    bio?: string | null;
+  }
+) {
+  logger.debug(`Updating vol user in model`);
+
+  const setClauses: string[] = [];
+  const queryParams: any[] = [];
+  const changedFields: string[] = [];
+  let paramIndex = 1;
+
+  if (changes.email) {
+    const emailValObj = registerUserValidator.validateRegisterEmail(
+      changes.email
+    );
+    if (!emailValObj.valid) {
+      return Promise.reject({ status: 400, msg: emailValObj.msg });
+    }
+    setClauses.push(`vol_email = $${paramIndex++}`);
+    queryParams.push(changes.email);
+    changedFields.push("email");
+  }
+
+  if (changes.password) {
+    const passValObj = registerUserValidator.validatePassword(changes.password);
+    if (!passValObj.valid) {
+      return Promise.reject({ status: 400, msg: passValObj.msg });
+    }
+    setClauses.push(`vol_password = $${paramIndex++}`);
+    queryParams.push(hashPassword(changes.password));
+    changedFields.push("password");
+  }
+
+  if (changes.firstName) {
+    const firstNameValObj = registerUserValidator.validateFirstLastName(
+      changes.firstName
+    );
+    if (!firstNameValObj.valid) {
+      return Promise.reject({ status: 400, msg: firstNameValObj.msg });
+    }
+    setClauses.push(`vol_first_name = $${paramIndex++}`);
+    queryParams.push(changes.firstName);
+    changedFields.push("firstName");
+  }
+
+  if (changes.lastName) {
+    const lastNameValObj = registerUserValidator.validateFirstLastName(
+      changes.lastName
+    );
+    if (!lastNameValObj.valid) {
+      return Promise.reject({ status: 400, msg: lastNameValObj.msg });
+    }
+    setClauses.push(`vol_last_name = $${paramIndex++}`);
+    queryParams.push(changes.lastName);
+    changedFields.push("lastName");
+  }
+
+  if (changes.contactTel !== undefined) {
+    if (changes.contactTel !== null) {
+      const contTelValObj = registerUserValidator.validateContactTel(
+        changes.contactTel
+      );
+      if (!contTelValObj.valid) {
+        return Promise.reject({ status: 400, msg: contTelValObj.msg });
+      }
+    }
+    setClauses.push(`vol_contact_tel = $${paramIndex++}`);
+    queryParams.push(changes.contactTel);
+    changedFields.push("contactTel");
+  }
+
+  if (changes.avatarImg !== undefined) {
+    if (changes.avatarImg !== null) {
+      const avatarValObj = imageValidator.validateImage(changes.avatarImg);
+      if (!avatarValObj.valid) {
+        return Promise.reject({ status: 400, msg: avatarValObj.msg });
+      }
+      const imgId = await imagesModel.createImage(changes.avatarImg);
+      setClauses.push(`vol_avatar_img_id = $${paramIndex++}`);
+      queryParams.push(imgId.img_id);
+      changedFields.push("avatarImg");
+    } else {
+      setClauses.push(`vol_avatar_img_id = $${paramIndex++}`);
+      queryParams.push(null);
+      changedFields.push("avatarImg");
+    }
+  }
+
+  if (changes.bio !== undefined) {
+    if (changes.bio !== null) {
+      const bioValObj = registerUserValidator.validateBio(changes.bio);
+      if (!bioValObj.valid) {
+        return Promise.reject({ status: 400, msg: bioValObj.msg });
+      }
+    }
+    setClauses.push(`vol_bio = $${paramIndex++}`);
+    queryParams.push(changes.bio);
+    changedFields.push("bio");
+  }
+
+  if (setClauses.length === 0) {
+    return Promise.resolve(null);
+  }
+
+  const queryStr = `
+    UPDATE vol_users
+    SET ${setClauses.join(", ")}
+    WHERE vol_id = $${paramIndex}
+    RETURNING *;
+  `;
+  queryParams.push(userId);
+
+  return db.query(queryStr, queryParams).then((result) => {
+    const { rows } = result;
+    if (!rows.length) {
+      return null;
+    }
+    return { success: true, changedFields };
+  });
+}
