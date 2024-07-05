@@ -195,3 +195,53 @@ describe("GET /api/listings", () => {
       });
   });
 });
+
+describe("GET api/listings/?org_id", () => {
+  test("Returns all organisations listings", () => {
+    return request(app)
+      .get("/api/listings?org_id=1")
+      .expect(200)
+      .then(({ body }) => {
+        const { listings } = body;
+
+        expect(listings.length).toBe(1);
+
+        listings.forEach((listing: listing) => {
+          expect(listing).toMatchObject({
+            list_id: expect.any(Number),
+            list_title: expect.any(String),
+            list_location: expect.any(String),
+            list_longitude: expect.any(Number),
+            list_latitude: expect.any(Number),
+            list_duration: expect.any(Number),
+            list_description: expect.any(String),
+            list_org: expect.any(Number),
+            org_name: expect.any(String),
+          });
+
+          expect(() => new Date(listing.list_date)).not.toThrow(Error);
+          expect(() => new Date(listing.list_time)).not.toThrow(Error);
+          expect(listing.org_avatar_img_id).toBeDefined();
+          expect(listing.list_img_id).toBeDefined();
+        });
+      });
+  });
+
+  test("org_id must be a number", () => {
+    return request(app)
+      .get("/api/listings?org_id=banana")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("org_id must be a number!");
+      });
+  });
+
+  test("Returns a 404 when org_id has no results", () => {
+    return request(app)
+      .get("/api/listings?org_id=99999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("No listings found!");
+      });
+  });
+});

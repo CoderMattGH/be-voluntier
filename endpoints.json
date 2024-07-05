@@ -99,7 +99,8 @@
       "sort_by [duration, date]",
       "order [asc, desc]",
       "search [string]",
-      "visible [true/false]"
+      "visible [true/false]",
+      "org_id"
     ],
     "exampleResponse": {
       "listings": [
@@ -179,20 +180,20 @@
     "queries": ["list_id"],
     "exampleResponse": {
       "application": {
-			"app_id": 6,
-			"vol_id": 5,
-			"org_id": 1,
-			"listing_id": 1,
-			"prov_confirm": true,
-			"full_conf": false,
-			"list_title": "Community Garden Cleanup",
-			"list_location": "SW1A 1AA",
-			"list_date": "2024-06-30T23:00:00.000Z",
-			"list_time": "09:00:00",
-			"list_img_id": null,
-			"vol_email": "michael.brown@email.com",
-			"vol_contact_tel": "6677889900",
-			"vol_avatar_img_id": null
+        "app_id": 6,
+        "vol_id": 5,
+        "org_id": 1,
+        "listing_id": 1,
+        "prov_confirm": true,
+        "full_conf": false,
+        "list_title": "Community Garden Cleanup",
+        "list_location": "SW1A 1AA",
+        "list_date": "2024-06-30T23:00:00.000Z",
+        "list_time": "09:00:00",
+        "list_img_id": null,
+        "vol_email": "michael.brown@email.com",
+        "vol_contact_tel": "6677889900",
+        "vol_avatar_img_id": null
       }
     }
   },
