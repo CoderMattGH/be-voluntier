@@ -2,6 +2,7 @@ import { logger } from "../logger";
 import { Request, Response, NextFunction } from "express";
 import * as listingsModel from "../models/listings.model";
 import { checkUserCredentials } from "../auth/auth-utils";
+import * as constants from "../constants";
 
 export function getListings(req: Request, res: Response, next: NextFunction) {
   logger.debug(`In getListings() in listings.controller`);
@@ -89,12 +90,118 @@ export function postListing(req: Request, res: Response, next: NextFunction) {
     return;
   }
 
+  if (role !== "organisation") {
+    next({ status: 403, msg: constants.ERR_MSG_PERMISSION_DENIED });
+    return;
+  }
+
+  if (!req.body.list_title) {
+    next({
+      status: 400,
+      msg: "list_title needs to be populated with characters!",
+    });
+
+    return;
+  }
+
+  if (!req.body.list_location) {
+    next({
+      status: 400,
+      msg: "list_location needs to be populated with characters!",
+    });
+
+    return;
+  }
+
+  if (!req.body.list_date) {
+    next({
+      status: 400,
+      msg: "list_date needs to be populated with characters!",
+    });
+
+    return;
+  }
+
+  if (!req.body.list_time) {
+    next({
+      status: 400,
+      msg: "list_time needs to be populated with characters!",
+    });
+
+    return;
+  }
+
+  if (!req.body.list_duration) {
+    next({
+      status: 400,
+      msg: "list_duration needs to be populated with characters!",
+    });
+
+    return;
+  }
+
+  if (!req.body.list_description) {
+    next({
+      status: 400,
+      msg: "list_description needs to be populated with characters!",
+    });
+
+    return;
+  }
+
+  if (typeof req.body.list_latitude !== "number") {
+    next({
+      status: 400,
+      msg: "list_latitude needs to be given!",
+    });
+
+    return;
+  }
+
+  if (typeof req.body.list_longitude !== "number") {
+    next({
+      status: 400,
+      msg: "list_longitude needs to be given!",
+    });
+
+    return;
+  }
+
+  if (!Array.isArray(req.body.list_skills)) {
+    next({
+      status: 400,
+      msg: "list_skills needs to be given!",
+    });
+
+    return;
+  }
+
+  for (const element of req.body.list_skills) {
+    if (typeof element !== "string") {
+      next({
+        status: 400,
+        msg: "list_skills must contain valid skills only!",
+      });
+
+      return;
+    }
+  }
+
+  if (req.body.list_visible !== true) {
+    next({
+      status: 400,
+      msg: "list_visible must be set to true!",
+    });
+
+    return;
+  }
+
   listingsModel
     .createListing(body, id)
     .then((newListing) => {
-      if (body.skills && body.skills.length > 0) {
+      if (body.list_skills && body.list_skills.length > 0) {
         return listingsModel
-          .createListingSkillJunc(newListing.list_id, body.skills)
+          .createListingSkillJunc(newListing.list_id, body.list_skills)
           .then(() => newListing);
       }
       return newListing;
