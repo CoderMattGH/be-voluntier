@@ -142,7 +142,7 @@ describe("GET api/applications/vol/:vol_user_id", () => {
         .send(volCredentials)
         .then((response) => {
           // Get cookie
-          const { token } = response.body.token;
+          const { token } = response.body.user;
           return request(app)
             .get("/api/applications/vol/999")
             .set("Authorization", `Bearer ${token}`)

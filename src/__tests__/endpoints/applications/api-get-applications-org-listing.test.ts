@@ -172,6 +172,7 @@ describe("GET api/applications/org/:org_user_id", () => {
           });
       });
   });
+
   test(
     "Returns a 404 resource not found error when supplied a listing id that does not " +
       "exist",
@@ -188,8 +189,8 @@ describe("GET api/applications/org/:org_user_id", () => {
         .then((response) => {
           const { token } = response.body.user;
           return request(app)
-            .set("Authorization", `Bearer ${token}`)
             .get("/api/applications/org/2?listing_id=999")
+            .set("Authorization", `Bearer ${token}`)
             .expect(404)
             .then(({ body }) => {
               expect(body.msg).toBe("No applications found!");
@@ -208,7 +209,7 @@ describe("GET api/applications/org/:org_user_id", () => {
       .post("/api/login")
       .send(orgCredentials)
       .then((response) => {
-        const { token } = response.body.token;
+        const { token } = response.body.user;
 
         return request(app)
           .get("/api/applications/org/1")
