@@ -51,6 +51,14 @@ export function checkUserCredentials(
   // Decipher token
   const decToken = decipherToken(token);
 
+  if (!decToken) {
+    const respObj = { status: 401, msg: "Unknown error parsing token!" };
+
+    logger.info(`Unknown error parsing token!`);
+
+    return { authorised: false, respObj: respObj };
+  }
+
   if (!decToken.id || !decToken.email || !decToken.role) {
     const respObj = { status: 401, msg: "Unknown error parsing token!" };
 
@@ -102,6 +110,10 @@ export function getUserInfoFromToken(req: Request) {
   // Decipher token
   const decToken = decipherToken(token);
 
+  if (!decToken) {
+    return null;
+  }
+
   if (!decToken.id || !decToken.email || !decToken.role) {
     logger.info(`Unknown error parsing token!`);
 
@@ -117,7 +129,18 @@ function parseTokenFromHeader(req: Request) {
 }
 
 function decipherToken(token: string) {
-  return <TokenInterface>jwt.verify(token, SECRET_KEY);
+  logger.debug(`Trying to parse JWT Token: ${token}`);
+
+  let decToken;
+  try {
+    decToken = <TokenInterface>jwt.verify(token, SECRET_KEY);
+  } catch (err) {
+    logger.info(`Error parsing JWT token!`);
+
+    return null;
+  }
+
+  return decToken;
 }
 
 export function generateJWTToken(
