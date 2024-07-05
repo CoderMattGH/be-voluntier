@@ -38,12 +38,12 @@ describe("POST /api/listings", () => {
     const loginResponse = await request(app)
       .post("/api/login")
       .send(orgCredentials);
-    const { header } = loginResponse;
+    const { token } = loginResponse.body.user;
 
     // Post the new listing
     const postResponse = await request(app)
       .post("/api/listings")
-      .set("Cookie", header["set-cookie"])
+      .set("Authorization", `Bearer ${token}`)
       .send(newListing)
       .expect(201)
       .then(({ body }) => {

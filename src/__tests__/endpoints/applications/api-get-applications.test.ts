@@ -40,11 +40,11 @@ describe("GET api/applications/?list_id=", () => {
       .send(orgCredentials)
       .then((response) => {
         //Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .get("/api/applications/?list_id=1")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .expect(200)
           .then(({ body }) => {
             const applications = body.applications;
@@ -95,12 +95,11 @@ describe("GET api/applications/?list_id=", () => {
       .post("/api/login")
       .send(orgCredentials)
       .then((response) => {
-        //Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .get("/api/applications/?list_id=2")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .expect(403)
           .then(({ body }) => {
             expect(body.msg).toBe(constants.ERR_MSG_PERMISSION_DENIED);
@@ -120,11 +119,11 @@ describe("GET api/applications/?list_id=", () => {
       .send(orgCredentials)
       .then((response) => {
         //Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .get("/api/applications/?list_id=banana")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).toBe("list_id is not a number!");
@@ -144,11 +143,11 @@ describe("GET api/applications/?list_id=", () => {
       .send(orgCredentials)
       .then((response) => {
         //Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .get("/api/applications/")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).toBe("list_id is not set!");
@@ -167,12 +166,11 @@ describe("GET api/applications/?list_id=", () => {
       .post("/api/login")
       .send(orgCredentials)
       .then((response) => {
-        //Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .get("/api/applications/?list_id=9999")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .expect(404)
           .then(({ body }) => {
             expect(body.msg).toBe("No listing found!");

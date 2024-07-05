@@ -24,12 +24,11 @@ describe("POST /api/applications/", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .post("/api/applications/")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send({ listing_id: 1, vol_user_id: 1 })
           .expect(200)
           .then(({ body }) => {
@@ -67,12 +66,11 @@ describe("POST /api/applications/", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .post("/api/applications/")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send({ listing_id: 1, vol_user_id: 2 })
           .expect(403)
           .then(({ body }) => {
@@ -92,12 +90,11 @@ describe("POST /api/applications/", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .post("/api/applications/")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send({ listing_id: 3, vol_user_id: 1 })
           .expect(400)
           .then(({ body }) => {
@@ -117,12 +114,11 @@ describe("POST /api/applications/", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .post("/api/applications/")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send({ listing_id: 1, vol_user_id: 1 })
           .expect(403)
           .then(({ body }) => {
@@ -142,12 +138,11 @@ describe("POST /api/applications/", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .post("/api/applications/")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send({ vol_user_id: 1 })
           .expect(400)
           .then(({ body }) => {
@@ -167,12 +162,11 @@ describe("POST /api/applications/", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .post("/api/applications/")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send({ listing_id: "banana", vol_user_id: 1 })
           .expect(400)
           .then(({ body }) => {
@@ -192,12 +186,11 @@ describe("POST /api/applications/", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .post("/api/applications/")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send({ listing_id: 1 })
           .expect(400)
           .then(({ body }) => {
@@ -217,12 +210,11 @@ describe("POST /api/applications/", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .post("/api/applications/")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send({ listing_id: 1, vol_user_id: "bananan" })
           .expect(400)
           .then(({ body }) => {
