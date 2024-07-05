@@ -117,7 +117,8 @@ export function createListing(body: ListingBody, id: number) {
 
       // Step 2: Create listing with image_id
       const queryStrListing = `
-        INSERT INTO listings (list_title, list_location, list_longitude, list_latitude, list_date, list_time, list_duration, list_description, list_org, list_img_id, list_visible)
+        INSERT INTO listings (list_title, list_location, list_longitude, list_latitude, list_date, 
+        list_time, list_duration, list_description, list_org, list_img_id, list_visible)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
         RETURNING *
       `;
