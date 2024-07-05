@@ -48,11 +48,11 @@ describe("GET api/applications/org/:org_user_id", () => {
         .send(orgCredentials)
         .then((response) => {
           // Get cookie
-          const { header } = response;
+          const { token } = response.body.user;
 
           return request(app)
             .get("/api/applications/org/2")
-            .set("Cookie", [...header["set-cookie"]])
+            .set("Authorization", `Bearer ${token}`)
             .expect(200)
             .then(({ body }) => {
               const applications = body.applications;
@@ -106,12 +106,11 @@ describe("GET api/applications/org/:org_user_id", () => {
         .post("/api/login")
         .send(orgCredentials)
         .then((response) => {
-          // Get cookie
-          const { header } = response;
+          const { token } = response.body.user;
 
           return request(app)
             .get("/api/applications/org/2?listing_id=3")
-            .set("Cookie", [...header["set-cookie"]])
+            .set("Authorization", `Bearer ${token}`)
             .expect(200)
             .then(({ body }) => {
               const applications = body.applications;
@@ -162,11 +161,11 @@ describe("GET api/applications/org/:org_user_id", () => {
       .post("/api/login")
       .send(orgCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .get("/api/applications/org/2?listing_id=two")
+          .set("Authorization", `Bearer ${token}`)
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).toBe("Invalid query for a listing id");
@@ -187,9 +186,9 @@ describe("GET api/applications/org/:org_user_id", () => {
         .post("/api/login")
         .send(orgCredentials)
         .then((response) => {
-          // Get cookie
-          const { header } = response;
+          const { token } = response.body.user;
           return request(app)
+            .set("Authorization", `Bearer ${token}`)
             .get("/api/applications/org/2?listing_id=999")
             .expect(404)
             .then(({ body }) => {
@@ -209,12 +208,11 @@ describe("GET api/applications/org/:org_user_id", () => {
       .post("/api/login")
       .send(orgCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.token;
 
         return request(app)
           .get("/api/applications/org/1")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .expect(403)
           .then(({ body }) => {
             expect(body.msg).toBe(constants.ERR_MSG_PERMISSION_DENIED);
@@ -232,11 +230,11 @@ describe("GET api/applications/org/:org_user_id", () => {
       .post("/api/login")
       .send(orgCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .get("/api/applications/org/two")
+          .set("Authorization", `Bearer ${token}`)
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).toBe("org_user_id is not a number!");
@@ -257,10 +255,10 @@ describe("GET api/applications/org/:org_user_id", () => {
         .post("/api/login")
         .send(orgCredentials)
         .then((response) => {
-          // Get cookie
-          const { header } = response;
+          const { token } = response.body.user;
           return request(app)
             .get("/api/applications/org/999")
+            .set("Authorization", `Bearer ${token}`)
             .expect(404)
             .then(({ body }) => {
               expect(body.msg).toBe("No applications found!");

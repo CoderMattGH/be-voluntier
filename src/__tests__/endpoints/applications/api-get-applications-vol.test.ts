@@ -44,12 +44,11 @@ describe("GET api/applications/vol/:vol_user_id", () => {
         .post("/api/login")
         .send(volCredentials)
         .then((response) => {
-          // Get cookie
-          const { header } = response;
+          const { token } = response.body.user;
 
           return request(app)
             .get("/api/applications/vol/1")
-            .set("Cookie", [...header["set-cookie"]])
+            .set("Authorization", `Bearer ${token}`)
             .expect(200)
             .then(({ body }) => {
               const applications = body.applications;
@@ -95,11 +94,11 @@ describe("GET api/applications/vol/:vol_user_id", () => {
       .send(volCredentials)
       .then((response) => {
         // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .get("/api/applications/vol/1")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .expect(403)
           .then(({ body }) => {
             expect(body.msg).toBe(constants.ERR_MSG_PERMISSION_DENIED);
@@ -117,11 +116,11 @@ describe("GET api/applications/vol/:vol_user_id", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .get("/api/applications/vol/two")
+          .set("Authorization", `Bearer ${token}`)
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).toBe("vol_user_id is not a number!");
@@ -143,9 +142,10 @@ describe("GET api/applications/vol/:vol_user_id", () => {
         .send(volCredentials)
         .then((response) => {
           // Get cookie
-          const { header } = response;
+          const { token } = response.body.token;
           return request(app)
             .get("/api/applications/vol/999")
+            .set("Authorization", `Bearer ${token}`)
             .expect(404)
             .then(({ body }) => {
               expect(body.msg).toBe("No applications found!");

@@ -24,14 +24,14 @@ describe("DELETE /api/applications/", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const token = response.body.user.token;
 
         return request(app)
           .delete("/api/applications/1")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .expect(200)
           .then(({ body }) => {
+            console.log(body);
             const application = body.application;
 
             expect(application).toMatchObject({
@@ -56,12 +56,11 @@ describe("DELETE /api/applications/", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .delete("/api/applications/6")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .expect(200)
           .then(({ body }) => {
             const application = body.application;
@@ -88,12 +87,11 @@ describe("DELETE /api/applications/", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .delete("/api/applications/1")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .expect(403)
           .then(({ body }) => {
             expect(body.msg).toBe(constants.ERR_MSG_PERMISSION_DENIED);
@@ -121,12 +119,11 @@ describe("DELETE /api/applications/", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .delete("/api/applications/banana")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).toBe("app_id is not a number!");
@@ -145,12 +142,11 @@ describe("DELETE /api/applications/", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .delete("/api/applications/9999")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .expect(404)
           .then(({ body }) => {
             expect(body.msg).toBe("No application found!");
@@ -169,12 +165,11 @@ describe("DELETE /api/applications/", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .delete("/api/applications/2")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .expect(403)
           .then(({ body }) => {
             expect(body.msg).toBe(constants.ERR_MSG_PERMISSION_DENIED);

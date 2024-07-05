@@ -24,13 +24,12 @@ describe("POST /api/favourites/:vol_user_id/listings", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         // Fetch favourites
         return request(app)
           .post("/api/favourites/1/listings")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send({ list_id })
           .expect(201)
           .then(({ body }) => {
@@ -66,13 +65,12 @@ describe("POST /api/favourites/:vol_user_id/listings", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         // Fetch favourites
         return request(app)
           .post("/api/favourites/1/listings")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send({ list_id })
           .expect(400)
           .then(({ body }) => {
@@ -92,13 +90,12 @@ describe("POST /api/favourites/:vol_user_id/listings", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         // Fetch favourites
         return request(app)
           .post("/api/favourites/1/listings")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).toBe("list_id is not a number!");
@@ -118,13 +115,12 @@ describe("POST /api/favourites/:vol_user_id/listings", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         // Fetch favourites
         return request(app)
           .post("/api/favourites/banana/listings")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send({ list_id })
           .expect(400)
           .then(({ body }) => {
@@ -145,13 +141,12 @@ describe("POST /api/favourites/:vol_user_id/listings", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         // Fetch favourites
         return request(app)
           .post("/api/favourites/1/listings")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send({ list_id })
           .expect(404)
           .then(({ body }) => {

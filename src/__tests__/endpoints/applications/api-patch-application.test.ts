@@ -23,12 +23,11 @@ describe("PATCH /api/applications/:app_id", () => {
       .post("/api/login")
       .send(orgCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .patch("/api/applications/6")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send({ accept: true })
           .expect(200)
           .then(({ body }) => {
@@ -56,12 +55,11 @@ describe("PATCH /api/applications/:app_id", () => {
       .post("/api/login")
       .send(orgCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .patch("/api/applications/6")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send({ accept: false })
           .expect(200)
           .then(({ body }) => {
@@ -89,12 +87,11 @@ describe("PATCH /api/applications/:app_id", () => {
       .post("/api/login")
       .send(orgCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .patch("/api/applications/5")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send({ accept: false })
           .expect(400)
           .then(({ body }) => {
@@ -117,11 +114,11 @@ describe("PATCH /api/applications/:app_id", () => {
       .send(orgCredentials)
       .then((response) => {
         // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .patch("/api/applications/banana")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send({ accept: false })
           .expect(400)
           .then(({ body }) => {
@@ -141,12 +138,11 @@ describe("PATCH /api/applications/:app_id", () => {
       .post("/api/login")
       .send(orgCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .patch("/api/applications/6")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send({ accept: "banana" })
           .expect(400)
           .then(({ body }) => {
@@ -167,11 +163,11 @@ describe("PATCH /api/applications/:app_id", () => {
       .send(orgCredentials)
       .then((response) => {
         // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .patch("/api/applications/6")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send({ accept: 23 })
           .expect(400)
           .then(({ body }) => {
@@ -201,12 +197,11 @@ describe("PATCH /api/applications/:app_id", () => {
       .post("/api/login")
       .send(orgCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .patch("/api/applications/4")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send({ accept: false })
           .expect(403)
           .then(({ body }) => {
@@ -226,12 +221,11 @@ describe("PATCH /api/applications/:app_id", () => {
       .post("/api/login")
       .send(orgCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .patch("/api/applications/6")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send({ accept: false })
           .expect(403)
           .then(({ body }) => {
@@ -253,12 +247,11 @@ describe("PATCH /api/applications/:app_id/confirm", () => {
       .post("/api/login")
       .send(orgCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .patch("/api/applications/3/confirm/")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send({ confirm: true })
           .expect(200)
           .then(({ body }) => {
@@ -286,12 +279,11 @@ describe("PATCH /api/applications/:app_id/confirm", () => {
       .post("/api/login")
       .send(orgCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .patch("/api/applications/4/confirm")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send({ confirm: false })
           .expect(400)
           .then(({ body }) => {
@@ -313,12 +305,11 @@ describe("PATCH /api/applications/:app_id/confirm", () => {
       .post("/api/login")
       .send(orgCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .patch("/api/applications/banana/confirm")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send({ confirm: false })
           .expect(400)
           .then(({ body }) => {
@@ -338,12 +329,11 @@ describe("PATCH /api/applications/:app_id/confirm", () => {
       .post("/api/login")
       .send(orgCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .patch("/api/applications/3/confirm")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send({ confirm: "banana" })
           .expect(400)
           .then(({ body }) => {
@@ -363,12 +353,11 @@ describe("PATCH /api/applications/:app_id/confirm", () => {
       .post("/api/login")
       .send(orgCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .patch("/api/applications/3/confirm")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send({ confirm: 23 })
           .expect(400)
           .then(({ body }) => {
@@ -398,12 +387,11 @@ describe("PATCH /api/applications/:app_id/confirm", () => {
       .post("/api/login")
       .send(orgCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .patch("/api/applications/7/confirm")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send({ confirm: false })
           .expect(403)
           .then(({ body }) => {
@@ -423,12 +411,11 @@ describe("PATCH /api/applications/:app_id/confirm", () => {
       .post("/api/login")
       .send(orgCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .patch("/api/applications/6/confirm")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .send({ confirm: false })
           .expect(403)
           .then(({ body }) => {
