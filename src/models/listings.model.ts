@@ -77,7 +77,7 @@ interface ListingBody {
   list_latitude: number;
   list_longitude: number;
   img_b64_data: string; // Base64 image data
-  skills: string[];
+  list_skills: string[];
   list_visible: boolean;
 }
 
@@ -95,13 +95,16 @@ export function createListing(body: ListingBody, id: number) {
   const imgB64Data = body.img_b64_data;
   const isVisible = body.list_visible;
 
-  let imgId: number | undefined;
+  let imgId: number | null = null;
 
   const createListingWithImage = async () => {
     try {
       // Step 1: Create image using images.model.createImage
-      const imageResult = await createImage(imgB64Data);
-      imgId = imageResult.img_id;
+
+      if (imgB64Data && imgB64Data.trim().length > 0) {
+        const imageResult = await createImage(imgB64Data);
+        imgId = imageResult.img_id;
+      }
 
       // Step 2: Create listing with image_id
       const queryStrListing = `
@@ -135,17 +138,22 @@ export function createListing(body: ListingBody, id: number) {
   return createListingWithImage();
 }
 
-export function createListingSkillJunc(listId: number, skills: string[]) {
-  logger.debug(`In createListingSkillJunc() in listings.model`);
+export async function createListingSkillJunc(
+  listId: number,
+  list_skills: string[]
+) {
+  try {
+    const queryStr = `
+      INSERT INTO list_skill_junc (list_id, skill_id)
+      SELECT $1, skill_id FROM skills WHERE skill_name = $2
+    `;
 
-  const queryStr = `
-    INSERT INTO list_skill_junc (list_id, skill_id)
-    VALUES ($1, $2)
-  `;
+    const queries = list_skills.map(async (skillName) => {
+      await db.query(queryStr, [listId, skillName]);
+    });
 
-  const queries = skills.map((skillId) =>
-    db.query(queryStr, [listId, skillId])
-  );
-
-  return Promise.all(queries);
+    await Promise.all(queries);
+  } catch (err: any) {
+    throw new Error(err);
+  }
 }
