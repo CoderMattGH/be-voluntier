@@ -1,6 +1,7 @@
 import { logger } from "../logger";
 import { Request, Response, NextFunction } from "express";
 import * as applicationsModel from "../models/applications.model";
+import * as listingsModel from "../models/listings.model";
 import { checkUserCredentials } from "../auth/auth-utils";
 
 export function getApplication(
@@ -97,11 +98,15 @@ export function getApplicationsByOrgId(
   let listingQuery;
   if (req.query.listing_id) listingQuery = req.query.listing_id.toString();
 
+  logger.debug(
+    `Searching for applications where listingQuery: ${listingQuery} ` +
+      `orgIdNum: ${orgIdNum}`
+  );
+
   applicationsModel
     .selectApplicationsByOrgId(orgIdNum.toString(), listingQuery)
     .then((applications) => {
       const orgAuthObj = checkUserCredentials(req, orgIdNum, "organisation");
-
       if (!orgAuthObj.authorised) {
         next(orgAuthObj.respObj);
 
@@ -109,6 +114,61 @@ export function getApplicationsByOrgId(
       }
 
       res.status(200).send({ applications: applications });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+export function getApplications(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  logger.debug(`In getApplicationsByListingId() in applications.controller`);
+
+  if (!req.query.list_id) {
+    next({ status: 400, msg: "list_id is not set!" });
+
+    return;
+  }
+
+  const listIdNum = Number(req.query.list_id);
+  if (Number.isNaN(listIdNum)) {
+    next({ status: 400, msg: "list_id is not a number!" });
+
+    return;
+  }
+
+  // Check listing id exists
+  const listingIdExistsProm = listingsModel.selectListing(
+    true,
+    listIdNum.toString()
+  );
+
+  return listingIdExistsProm
+    .then(({ listing }) => {
+      // Check organisation user owns the listing
+      const orgAuthObj = checkUserCredentials(
+        req,
+        listing.list_org,
+        "organisation"
+      );
+
+      if (!orgAuthObj.authorised) {
+        return Promise.reject(orgAuthObj.respObj);
+      }
+
+      logger.debug(`Authorisation OK!`);
+
+      return applicationsModel.selectApplicationsByListingId(listIdNum);
+    })
+    .then((applications) => {
+      logger.info(
+        `Successfully selected application listings for list_id: ${listIdNum}`
+      );
+
+      res.status(200).send({ applications });
     })
     .catch((err) => {
       next(err);
@@ -274,7 +334,6 @@ export function patchApplicationWithProvConfirm(
     });
 }
 
-// TODO: Refactor
 export function patchApplicationWithFullConfirm(
   req: Request,
   res: Response,

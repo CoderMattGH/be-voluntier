@@ -23,12 +23,11 @@ describe("GET /api/applications/:app_id", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .get("/api/applications/1")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .expect(200)
           .then(({ body }) => {
             const application = body.application;
@@ -67,12 +66,11 @@ describe("GET /api/applications/:app_id", () => {
       .post("/api/login")
       .send(orgCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .get("/api/applications/1")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .expect(200)
           .then(({ body }) => {
             const application = body.application;
@@ -111,12 +109,11 @@ describe("GET /api/applications/:app_id", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .get("/api/applications/1")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .expect(403)
           .then(({ body }) => {
             expect(body.msg).toBe(constants.ERR_MSG_PERMISSION_DENIED);
@@ -134,12 +131,11 @@ describe("GET /api/applications/:app_id", () => {
       .post("/api/login")
       .send(orgCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .get("/api/applications/1")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .expect(403)
           .then(({ body }) => {
             expect(body.msg).toBe(constants.ERR_MSG_PERMISSION_DENIED);
@@ -157,11 +153,11 @@ describe("GET /api/applications/:app_id", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         return request(app)
           .get("/api/applications/two")
+          .set("Authorization", `Bearer ${token}`)
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).toBe("app_id is not a number!");
@@ -179,10 +175,11 @@ describe("GET /api/applications/:app_id", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
+
         return request(app)
           .get("/api/applications/999")
+          .set("Authorization", `Bearer ${token}`)
           .expect(404)
           .then(({ body }) => {
             expect(body.msg).toBe("No application found!");

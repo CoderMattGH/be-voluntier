@@ -1,9 +1,9 @@
 {
   "GET /api": {
-    "description": "Serves up a JSON representation of all the available endpoints of the API"
+    "description": "Serves up a JSON representation of all the available API endpoints."
   },
   "POST /api/login": {
-    "description": "Allows the volunter/organisation user to login",
+    "description": "Allows the volunter/organisation user to login.",
     "requestBody": {
       "email": "useremail@email.com",
       "password": "userpassword",
@@ -37,11 +37,11 @@
     }
   },
   "DELETE /api/logout": {
-    "description": "Allows the volunteer/organisation user to logout. Returns an empty body with 200 OK if successful"
+    "description": "Allows the volunteer/organisation user to logout. Returns an empty body with 200 OK if successful."
   },
   "GET /api/org/:org_user_id": {
     "authRequired": true,
-    "description": "Serves an organisation user object for the specified org_user_id. Must be logged in and have the same org_user_id",
+    "description": "Serves an organisation user object for the specified :org_user_id. Must be logged in and have the same :org_user_id.",
     "exampleResponse": {
       "org_user": {
         "org_id": 1,
@@ -57,7 +57,7 @@
   },
   "GET /api/vol/:vol_user_id": {
     "authRequired": true,
-    "description": "Serves a volunteer user object for the specified vol_user_id. Must be logged in and have the same vol_user_id",
+    "description": "Serves a volunteer user object for the specified :vol_user_id. Must be logged in and have the same :vol_user_id.",
     "exampleResponse": {
       "vol_user": {
         "vol_id": 1,
@@ -73,14 +73,14 @@
     }
   },
   "POST /api/vol": {
-    "description": "Registers a volunteer user",
+    "description": "Registers a volunteer user.",
     "requestBody": {
       "email": "a-valid-unusedemail@email.com",
       "password": "mypassword",
       "first_name": "Bobby",
       "last_name": "Person",
-      "contact_tel": "82938923 [not-required]",
-      "bio": "A bio [not-required]",
+      "contact_tel [OPTIONAL]": "82938923",
+      "bio [OPTIONAL]": "A bio",
       "avatar_img_b64": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAA [not-required]"
     },
     "exampleResponse": {
@@ -97,7 +97,7 @@
     }
   },
   "GET /api/listings": {
-    "description": "Serves up an array of all the visible volunteer listings",
+    "description": "Serves up an array of all the visible volunteer listings.",
     "queries": [
       "sort_by [duration, date]",
       "order [asc, desc]",
@@ -125,7 +125,7 @@
     }
   },
   "POST /api/listings": {
-    "description": "Posts a new listing to the listings table. Skills are optional (can be an empty array), but any skills will populate the list-skills junc table. Optional to have an image string in b64 format. Must be an org user to use this endpoint.",
+    "description": "Posts a new listing to the listings table. Must be an org user to use this endpoint.",
     "requestBody": {
       "list_title": "Example Listing",
       "list_location": "123 Main St, City, Country",
@@ -135,8 +135,8 @@
       "list_description": "This is a sample description of the listing.",
       "list_latitude": 37.7749,
       "list_longitude": -122.4194,
-      "img_b64_data": "exampleB64ImageData",
-      "list_skills": ["Patience", "Sales"],
+      "img_b64_data [OPTIONAL]": "exampleB64ImageData",
+      "list_skills [OPTIONAL]": ["Patience", "Sales"],
       "list_visible": true
     },
     "exampleResponse": {
@@ -157,7 +157,7 @@
     }
   },
   "GET /api/listings/:listing_id": {
-    "description": "Serves up an object containing details on the volunteer whose id matches id passed as parametric endpoint",
+    "description": "Serves up a listing specified by the :listing_id.",
     "exampleResponse": {
       "listing": {
         "list_id": 1,
@@ -176,9 +176,46 @@
       }
     }
   },
+  "GET /api/applications/": {
+    "authRequired": true,
+    "description": "Allows users to fetch applications.",
+    "queries": ["list_id"],
+    "exampleResponse": {
+      "application": {
+			"app_id": 6,
+			"vol_id": 5,
+			"org_id": 1,
+			"listing_id": 1,
+			"prov_confirm": true,
+			"full_conf": false,
+			"list_title": "Community Garden Cleanup",
+			"list_location": "SW1A 1AA",
+			"list_date": "2024-06-30T23:00:00.000Z",
+			"list_time": "09:00:00",
+			"list_img_id": null,
+			"vol_email": "michael.brown@email.com",
+			"vol_contact_tel": "6677889900",
+			"vol_avatar_img_id": null
+      }
+    }
+  },
+  "POST /api/applications/": {
+    "authRequired": true,
+    "description": "Allows the volunteer user to apply for a listing.",
+    "requestBody": { "listing_id": "number", "vol_user_id": "number" },
+    "exampleResponse": {
+      "application": {
+        "app_id": 9,
+        "vol_id": 1,
+        "listing_id": 4,
+        "prov_confirm": false,
+        "full_conf": false
+      }
+    }
+  },
   "GET /api/applications/:app_id": {
     "authRequired": true,
-    "description": "Serves up an object containing details on the application whose id matches id passed as parametric endpoint.  Only viewable by the organisation or volunter user",
+    "description": "Serves up an object containing details on the application whose id matches :app_id.  Only viewable by the organisation or volunter user.",
     "exampleResponse": {
       "application": {
         "app_id": 1,
@@ -199,23 +236,9 @@
       }
     }
   },
-  "POST /api/applications/": {
-    "authRequired": true,
-    "description": "Allows the volunteer user to apply for a listing",
-    "requestBody": { "listing_id": "number", "vol_user_id": "number" },
-    "exampleResponse": {
-      "application": {
-        "app_id": 9,
-        "vol_id": 1,
-        "listing_id": 4,
-        "prov_confirm": false,
-        "full_conf": false
-      }
-    }
-  },
   "DELETE /api/applications/:app_id": {
     "authRequired": true,
-    "description": "Allows the relevant volunteer user or organisation user to withdraw an application",
+    "description": "Allows the relevant volunteer user or organisation user to withdraw an application.",
     "exampleResponse": {
       "application": {
         "app_id": 7,
@@ -228,7 +251,7 @@
   },
   "PATCH /api/applications/:app_id": {
     "authRequired": true,
-    "description": "Allows an organisation user to PROVISIONALLY confirm an application",
+    "description": "Allows an organisation user to PROVISIONALLY confirm an application.",
     "requestBody": { "accept": "true/false [boolean]" },
     "exampleResponse": {
       "application": {
@@ -256,7 +279,7 @@
   },
   "GET /api/applications/vol/:vol_user_id": {
     "authRequired": true,
-    "description": "Serves up an array of objects, containing details on the applications whose vol id matches vol user id passed as parametric endpoint.  Only viewable by the  volunter user",
+    "description": "Serves up an array of application for the :vol_user_id.  Only viewable by the specified volunter user.",
     "exampleResponse": {
       "applications": [
         {
@@ -281,7 +304,8 @@
   },
   "GET /api/applications/org/:org_user_id": {
     "authRequired": true,
-    "description": "Serves up an array of objects, containing details on the applications whose org id matches org user id passed as parametric endpoint. Contains an optional query to allow filtering by listing_id. Only viewable by the org user",
+    "description": "Serves up an array of objects containing applications for :org_user_id. Optional query to allow filtering by listing_id. Only viewable by the org user.",
+    "queries": ["listing_id"],
     "exampleResponse": {
       "applications": [
         {
@@ -325,54 +349,12 @@
           "vol_email": "alice.smith@email.com",
           "vol_contact_tel": "1234567890",
           "vol_avatar_img_id": null
-        },
-        {
-          "app_id": 3,
-          "vol_id": 3,
-          "org_id": 2,
-          "listing_id": 4,
-          "prov_confirm": true,
-          "full_conf": false,
-          "list_title": "Food Bank Volunteering",
-          "list_location": "M1 1AE",
-          "list_longitude": -2.2374,
-          "list_latitude": 53.4794,
-          "list_date": "2024-07-04T00:00:00.000Z",
-          "list_time": "12:00:00",
-          "list_description": "Assist in organizing and distributing food at our local food bank. Your help will make a significant difference in the lives of those in need.",
-          "list_img_id": null,
-          "vol_first_name": "John",
-          "vol_last_name": "Doe",
-          "vol_email": "john.doe@email.com",
-          "vol_contact_tel": "0987654321",
-          "vol_avatar_img_id": null
-        },
-        {
-          "app_id": 5,
-          "vol_id": 2,
-          "org_id": 2,
-          "listing_id": 4,
-          "prov_confirm": false,
-          "full_conf": true,
-          "list_title": "Food Bank Volunteering",
-          "list_location": "M1 1AE",
-          "list_longitude": -2.2374,
-          "list_latitude": 53.4794,
-          "list_date": "2024-07-04T00:00:00.000Z",
-          "list_time": "12:00:00",
-          "list_description": "Assist in organizing and distributing food at our local food bank. Your help will make a significant difference in the lives of those in need.",
-          "list_img_id": null,
-          "vol_first_name": "Alice",
-          "vol_last_name": "Smith",
-          "vol_email": "alice.smith@email.com",
-          "vol_contact_tel": "1234567890",
-          "vol_avatar_img_id": null
         }
       ]
     }
   },
   "GET /api/badges": {
-    "description": "Serves up an array of all the different badge types",
+    "description": "Serves up an array of all the different badge types.",
     "exampleResponse": {
       "badges": [
         {
@@ -392,7 +374,7 @@
   },
   "GET /api/badges/:vol_user_id": {
     "authRequired": "true",
-    "description": "Serves up an array of the specified volunteer user's badges.  Must be logged in as specified user",
+    "description": "Serves up an array of the specified volunteer user's badges.  Must be logged in as specified user.",
     "exampleResponse": {
       "badges": [
         {
@@ -413,7 +395,7 @@
     }
   },
   "GET /api/leaderboard": {
-    "description": "Serves up an array of objects that represents the top 10 users by badge points, with each object containing basic information on the user alongside number of points. Limited to 10 users, and sorted by points descending",
+    "description": "Serves up an array of the top 10 users by badge points, with each object.  Limited to 10 users, and sorted by points descending.",
     "exampleResponse": {
       "leaderboard": [
         {
@@ -432,7 +414,7 @@
     }
   },
   "GET /api/skills": {
-    "description": "Serves up an array of all skills that a volunteer might need to take part in a volunteering opportunity",
+    "description": "Serves up an array of all skills",
     "exampleResponse": {
       "skills": [
         "Physical Work",
@@ -455,7 +437,7 @@
     }
   },
   "GET /api/org-types": {
-    "description": "Serves up an array of all types of charity organisations",
+    "description": "Serves up an array of all types of charity organisations.",
     "exampleResponse": {
       "orgTypes": [
         "Health and Medical",
@@ -473,7 +455,7 @@
     }
   },
   "GET /api/favourites/:vol_user_id/orgs": {
-    "description": "Serves up an array of all the volunteer user's favourite organisations",
+    "description": "Serves up an array of all the volunteer user's favourite organisations.",
     "authRequired": true,
     "exampleResponse": {
       "favourite_orgs": [
@@ -495,7 +477,7 @@
     }
   },
   "GET /api/favourites/:vol_user_id/listings": {
-    "description": "Serves up an array of all the volunteer user's favourite listings",
+    "description": "Serves up an array of all the volunteer user's favourite listings.",
     "authRequired": true,
     "exampleResponse": {
       "favourite_listings": [
@@ -519,7 +501,7 @@
     }
   },
   "POST /api/favourites/:vol_user_id/listings": {
-    "description": "Allows the volunteer user to favourite a listing",
+    "description": "Allows the volunteer user to favourite a listing.",
     "authRequired": true,
     "requestBody": { "list_id": "number" },
     "exampleResponse": {
@@ -527,7 +509,7 @@
     }
   },
   "GET /api/images/:img_id": {
-    "description": "Returns a json object with image data in b64 format for the corresponding img_id",
+    "description": "Returns a json object with image data in b64 format for the corresponding :img_id.",
     "exampleResponse": {
       "image": {
         "img_id": "1",

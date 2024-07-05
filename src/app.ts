@@ -3,22 +3,14 @@ import { logger } from "./logger";
 
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
-import session from "express-session";
 
 import { apiRouter } from "./routes/api-router";
-import { sessionInit } from "./auth/session-init";
 
 import { CustomReqError } from "./types";
 
-const corsConfig = {
-  origin: true,
-  credentials: true,
-};
-
 export const app = express();
 
-sessionInit(app, session);
-app.use(cors(corsConfig));
+app.use(cors());
 app.use(express.json());
 
 app.use("/api", apiRouter);

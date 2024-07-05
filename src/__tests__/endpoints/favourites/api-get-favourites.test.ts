@@ -31,13 +31,12 @@ describe("GET /api/favourites/:vol_id/listings", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         // Fetch favourites
         return request(app)
           .get("/api/favourites/1/listings")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .expect(200)
           .then(({ body }) => {
             const { favourite_listings: listings } = body;
@@ -70,13 +69,12 @@ describe("GET /api/favourites/:vol_id/listings", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         // Fetch favourites
         return request(app)
           .get("/api/favourites/banana/listings")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).toBe("user_id is not a number!");
@@ -95,13 +93,12 @@ describe("GET /api/favourites/:vol_id/listings", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         // Fetch favourites
         return request(app)
           .get("/api/favourites/3/listings")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .expect(403)
           .then(({ body }) => {
             expect(body.msg).toBe(constants.ERR_MSG_PERMISSION_DENIED);
@@ -120,13 +117,12 @@ describe("GET /api/favourites/:vol_id/listings", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         // Fetch favourites
         return request(app)
           .get("/api/favourites/10/listings")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .expect(404)
           .then(({ body }) => {
             expect(body.msg).toBe("No favourites found!");
@@ -165,13 +161,12 @@ describe("GET /api/favourites/:vol_id/orgs", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         // Fetch favourites
         return request(app)
           .get("/api/favourites/1/orgs")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .expect(200)
           .then(({ body }) => {
             const { favourite_orgs: listings } = body;
@@ -203,13 +198,12 @@ describe("GET /api/favourites/:vol_id/orgs", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         // Fetch favourites
         return request(app)
           .get("/api/favourites/banana/orgs")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .expect(400)
           .then(({ body }) => {
             expect(body.msg).toBe("user_id is not a number!");
@@ -228,13 +222,12 @@ describe("GET /api/favourites/:vol_id/orgs", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         // Fetch favourites
         return request(app)
           .get("/api/favourites/3/orgs")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .expect(403)
           .then(({ body }) => {
             expect(body.msg).toBe(constants.ERR_MSG_PERMISSION_DENIED);
@@ -262,13 +255,12 @@ describe("GET /api/favourites/:vol_id/orgs", () => {
       .post("/api/login")
       .send(volCredentials)
       .then((response) => {
-        // Get cookie
-        const { header } = response;
+        const { token } = response.body.user;
 
         // Fetch favourites
         return request(app)
           .get("/api/favourites/10/orgs")
-          .set("Cookie", [...header["set-cookie"]])
+          .set("Authorization", `Bearer ${token}`)
           .expect(404)
           .then(({ body }) => {
             expect(body.msg).toBe("No favourites found!");

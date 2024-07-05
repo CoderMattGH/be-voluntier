@@ -32,6 +32,7 @@ describe("POST /api/login", () => {
           vol_bio: expect.any(String),
           vol_hours: expect.any(Number),
           role: expect.any(String),
+          token: expect.any(String),
         });
 
         expect(user.vol_avatar_img_id).toBeDefined();
@@ -59,6 +60,7 @@ describe("POST /api/login", () => {
           org_bio: expect.any(String),
           org_verified: expect.any(Boolean),
           role: expect.any(String),
+          token: expect.any(String),
         });
 
         expect(user.org_avatar_img_id).toBeDefined();
