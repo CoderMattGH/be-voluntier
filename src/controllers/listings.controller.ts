@@ -1,7 +1,7 @@
 import { logger } from "../logger";
 import { Request, Response, NextFunction } from "express";
 import * as listingsModel from "../models/listings.model";
-import { checkUserCredentials } from "../auth/auth-utils";
+import { getUserInfoFromToken } from "../auth/auth-utils";
 
 export function getListings(req: Request, res: Response, next: NextFunction) {
   logger.debug(`In getListings() in listings.controller`);
@@ -73,30 +73,22 @@ export function postListing(req: Request, res: Response, next: NextFunction) {
 
   const body = req.body;
 
-  // Check if session and user are defined
-  const user = req.session?.user as SessionUser | undefined;
-  if (!user) {
-    next({ status: 401, msg: "Unauthorized" });
-    return;
-  }
+  const orgObj = getUserInfoFromToken(req);
+  if (!orgObj) {
+    next({ status: 401, msg: "User must be logged in as organisation!" });
 
-  const { id, role } = user;
-
-  const orgAuthObj = checkUserCredentials(req, id, role);
-
-  if (!orgAuthObj.authorised) {
-    next(orgAuthObj.respObj);
     return;
   }
 
   listingsModel
-    .createListing(body, id)
+    .createListing(body, orgObj.id)
     .then((newListing) => {
       if (body.skills && body.skills.length > 0) {
         return listingsModel
           .createListingSkillJunc(newListing.list_id, body.skills)
           .then(() => newListing);
       }
+
       return newListing;
     })
     .then((newListing) => {

@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { getEndpoints } from "../controllers/api.controller";
 import { loginRouter } from "../routes/login-router";
-import { logoutRouter } from "../routes/logout-router";
 import { listingsRouter } from "../routes/listings-router";
 import { applicationsRouter } from "../routes/applications-router";
 import { badgesRouter } from "../routes/badges-router";
@@ -18,7 +17,6 @@ export const apiRouter = Router();
 apiRouter.get("/", getEndpoints);
 
 apiRouter.use("/login", loginRouter);
-apiRouter.use("/logout", logoutRouter);
 apiRouter.use("/listings", listingsRouter);
 apiRouter.use("/applications", applicationsRouter);
 apiRouter.use("/badges", badgesRouter);

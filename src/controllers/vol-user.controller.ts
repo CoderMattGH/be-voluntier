@@ -1,5 +1,5 @@
 import { logger } from "../logger";
-import { checkUserCredentials } from "../auth/auth-utils";
+import { checkUserCredentials, getUserInfoFromToken } from "../auth/auth-utils";
 import { Request, Response, NextFunction } from "express";
 import * as volUserModel from "../models/vol-user.model";
 
@@ -59,8 +59,8 @@ export function postVolUser(req: Request, res: Response, next: NextFunction) {
       `first_name: ${first_name} contact_tel: ${contact_tel}`
   );
 
-  // Make sure user is not logged in
-  if (req.session.user) {
+  // Make sure user is logged out
+  if (getUserInfoFromToken(req)) {
     next({
       status: 400,
       msg: "You must be logged out to register!",
