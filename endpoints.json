@@ -36,9 +36,6 @@
       }
     }
   },
-  "DELETE /api/logout": {
-    "description": "Allows the volunteer/organisation user to logout. Returns an empty body with 200 OK if successful."
-  },
   "GET /api/org/:org_user_id": {
     "authRequired": true,
     "description": "Serves an organisation user object for the specified :org_user_id. Must be logged in and have the same :org_user_id.",
