@@ -31,8 +31,19 @@ export function getListings(req: Request, res: Response, next: NextFunction) {
     search = req.query.search.toString();
   }
 
+  // Set org_id
+  let orgId;
+  if (req.query.org_id) {
+    const orgIdNum = Number(req.query.org_id);
+    if (Number.isNaN(orgIdNum)) {
+      next({ status: 400, msg: "org_id must be a number!" });
+    }
+
+    orgId = orgIdNum;
+  }
+
   listingsModel
-    .selectListings(visible, sortBy, order, search)
+    .selectListings(visible, sortBy, order, search, orgId)
     .then((listings) => {
       if (!listings.length) {
         next({ status: 404, msg: "No listings found!" });
@@ -66,11 +77,6 @@ export function getListing(req: Request, res: Response, next: NextFunction) {
 
 export function postListing(req: Request, res: Response, next: NextFunction) {
   logger.debug(`In postListing() in listings.controller`);
-
-  // interface SessionUser {
-  //   id: number;
-  //   role: string;
-  // }
 
   const body = req.body;
 

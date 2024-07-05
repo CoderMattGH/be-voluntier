@@ -7,7 +7,8 @@ export function selectListings(
   visible = true,
   sortBy = "date",
   order = "asc",
-  search = ""
+  search = "",
+  orgId?: number
 ) {
   logger.debug(`In selectListings() in listings.model`);
 
@@ -36,13 +37,21 @@ export function selectListings(
 
   queryStr += `AND (listings.list_title ILIKE $2 OR listings.list_description ILIKE $2) `;
 
+  const queryParams = [visible, `%${search}%`];
+
+  // TODO: Potential bug
+  if (orgId) {
+    queryStr += `AND listings.list_org = $3 `;
+    queryParams.push(orgId.toString());
+  }
+
   queryStr += `ORDER BY list_${sortBy} `;
 
   queryStr += `${order.toUpperCase()} `;
 
   queryStr += `, listings.list_id ASC`;
 
-  return db.query(queryStr, [visible, `%${search}%`]).then(({ rows }) => {
+  return db.query(queryStr, queryParams).then(({ rows }) => {
     return rows;
   });
 }
