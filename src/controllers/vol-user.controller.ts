@@ -113,6 +113,31 @@ export function patchVolUser(req: Request, res: Response, next: NextFunction) {
     return;
   }
 
+  if ("email" in changes && changes.email === "") {
+    next({ status: 400, msg: "Email cannot be empty!" });
+    return;
+  }
+
+  if ("password" in changes && changes.password === "") {
+    next({ status: 400, msg: "Password cannot be empty!" });
+    return;
+  }
+
+  if ("contactTel" in changes && changes.contactTel === "") {
+    next({ status: 400, msg: "Contact Telephone cannot be empty!" });
+    return;
+  }
+
+  if ("firstName" in changes && changes.firstName === "") {
+    next({ status: 400, msg: "Name cannot be empty!" });
+    return;
+  }
+
+  if ("lastName" in changes && changes.lastName === "") {
+    next({ status: 400, msg: "Name cannot be empty!" });
+    return;
+  }
+
   if (Object.keys(changes).length === 0) {
     next({ status: 400, msg: "No changes provided" });
     return;

@@ -204,6 +204,12 @@ export async function updateVolUser(
   let paramIndex = 1;
 
   if (changes.email) {
+    // Check if the email already exists
+    const emailExists = await doesUserAccountExist(changes.email);
+    if (emailExists) {
+      return Promise.reject({ status: 400, msg: "Email already exists!" });
+    }
+
     const emailValObj = registerUserValidator.validateRegisterEmail(
       changes.email
     );
