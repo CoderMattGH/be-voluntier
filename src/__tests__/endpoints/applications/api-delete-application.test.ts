@@ -31,7 +31,6 @@ describe("DELETE /api/applications/", () => {
           .set("Authorization", `Bearer ${token}`)
           .expect(200)
           .then(({ body }) => {
-            console.log(body);
             const application = body.application;
 
             expect(application).toMatchObject({

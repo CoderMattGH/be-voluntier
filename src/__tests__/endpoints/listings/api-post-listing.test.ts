@@ -613,7 +613,7 @@ describe("POST /api/listings", () => {
       });
   });
 
-  test.only("list_visible must be present and have value of true", () => {
+  test("list_visible must be present and have value of true", () => {
     const orgCredentials = {
       email: "redcross@email.com",
       password: "mybadpassword234",
