@@ -2,6 +2,7 @@ import { logger } from "../logger";
 import { checkUserCredentials, getUserInfoFromToken } from "../auth/auth-utils";
 import { Request, Response, NextFunction } from "express";
 import * as volUserModel from "../models/vol-user.model";
+import * as constants from "../constants";
 
 export function getVolUserById(
   req: Request,
@@ -92,4 +93,44 @@ export function postVolUser(req: Request, res: Response, next: NextFunction) {
     .catch((err) => {
       next(err);
     });
+}
+
+export function patchVolUser(req: Request, res: Response, next: NextFunction) {
+  logger.debug(`In patchVolUser() in vol-user.controller`);
+
+  const changes = req.body;
+  const userIdNum = Number(req.params.user_id);
+
+  if (Number.isNaN(userIdNum)) {
+    next({ status: 400, msg: "user_id is not a number!" });
+    return;
+  }
+
+  // Authorise user
+  const authObj = checkUserCredentials(req, userIdNum, "volunteer");
+  if (!authObj.authorised) {
+    next(authObj.respObj);
+    return;
+  }
+
+  if (Object.keys(changes).length === 0) {
+    next({ status: 400, msg: "No changes provided" });
+    return;
+  }
+
+  volUserModel
+    .updateVolUser(userIdNum, changes)
+    .then((updateResult) => {
+      if (!updateResult) {
+        next({ status: 404, msg: "User not found" });
+        return;
+      }
+
+      const { success, changedFields } = updateResult;
+      const message = `Update successful: ${changedFields.join(
+        " and "
+      )} changed`;
+      res.status(200).send({ message });
+    })
+    .catch(next);
 }
