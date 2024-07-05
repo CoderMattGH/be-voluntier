@@ -9,7 +9,7 @@ export const validateRegisterEmail = (email: string | undefined) => {
     return { valid: false, msg: "Email cannot be empty!" };
   }
 
-  if (email.trim().length !== email.trim().length) {
+  if (email.trim().length !== email.length) {
     return { valid: false, msg: "Email cannot start or end with spaces!" };
   }
 
@@ -75,7 +75,7 @@ export function validateContactTel(contactTel: string | undefined) {
     return { valid: false, msg: "Contact Telephone cannot be empty!" };
   }
 
-  if (contactTel.trim().length !== contactTel.trim().length) {
+  if (contactTel.trim().length !== contactTel.length) {
     return {
       valid: false,
       msg: "Contact Telephone cannot start or end with spaces!",
@@ -112,7 +112,7 @@ export function validateBio(bio: string | undefined) {
     return { valid: false, msg: "Bio cannot be empty!" };
   }
 
-  if (bio.trim().length !== bio.trim().length) {
+  if (bio.trim().length !== bio.length) {
     return {
       valid: false,
       msg: "Bio cannot start or end with spaces!",
@@ -141,7 +141,7 @@ export function validatePassword(password: string | undefined) {
     return { valid: false, msg: "Password cannot be empty!" };
   }
 
-  if (password.trim().length !== password.trim().length) {
+  if (password.trim().length !== password.length) {
     return {
       valid: false,
       msg: "Password cannot start or end with spaces!",
