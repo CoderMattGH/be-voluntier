@@ -1,8 +1,10 @@
 import { logger } from "../logger";
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, application } from "express";
 import * as applicationsModel from "../models/applications.model";
 import * as listingsModel from "../models/listings.model";
 import { checkUserCredentials } from "../auth/auth-utils";
+import * as volUserModel from "../models/vol-user.model";
+import * as volUserBadgeModel from "../models/vol-user-badge.model";
 
 export function getApplication(
   req: Request,
@@ -125,7 +127,7 @@ export function getApplications(
   res: Response,
   next: NextFunction
 ) {
-  logger.debug(`In getApplicationsByListingId() in applications.controller`);
+  logger.debug(`In getApplications() in applications.controller`);
 
   if (!req.query.list_id) {
     next({ status: 400, msg: "list_id is not set!" });
@@ -269,12 +271,12 @@ export function deleteApplication(
     });
 }
 
-export function patchApplicationWithProvConfirm(
+export function patchApplicationConfirm(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
-  logger.debug(`In patchApplicationWithProvConf in applications.controller`);
+  logger.debug(`In patchApplicationConfirm in applications.controller`);
 
   // Validate app_id is a number
   const appIdNum = Number(req.params.app_id);
@@ -285,8 +287,8 @@ export function patchApplicationWithProvConfirm(
   }
 
   // Validate accept boolean
-  const { accept: acceptProv } = req.body;
-  if (acceptProv === undefined || typeof acceptProv !== "boolean") {
+  const { accept: confirm } = req.body;
+  if (confirm === undefined || typeof confirm !== "boolean") {
     next({ status: 400, msg: "accept must be a boolean!" });
 
     return;
@@ -311,18 +313,15 @@ export function patchApplicationWithProvConfirm(
         `Authorised organisation user with org_id ${application.org_id} with app_id: ${appIdNum}`
       );
 
-      // If application has already been fully confirmed, then reject
-      if (application.full_conf) {
+      // If application has already confirmed, then reject
+      if (application.attended) {
         return Promise.reject({
           status: 400,
-          msg: `Application has already been fully confirmed!`,
+          msg: `Application has already been attended!`,
         });
       }
 
-      return applicationsModel.updateApplicationProvConfirmById(
-        appIdNum,
-        acceptProv
-      );
+      return applicationsModel.updateApplicationConfirmById(appIdNum, confirm);
     })
     .then((application) => {
       res.status(200).send({ application });
@@ -334,14 +333,15 @@ export function patchApplicationWithProvConfirm(
     });
 }
 
-export function patchApplicationWithFullConfirm(
+// PATCH /api/applications/:app_id/confirm-attendance
+// Confirms attendance of applicant and awards badges for hours
+export function patchAppAttendance(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
-  logger.debug(`In patchApplicationWithFullConf in applications.controller`);
+  logger.debug(`In patchAppAttendance() in applications.controller`);
 
-  // Validate app_id is a number
   const appIdNum = Number(req.params.app_id);
   if (Number.isNaN(appIdNum)) {
     next({ status: 400, msg: "app_id is not a number!" });
@@ -349,58 +349,98 @@ export function patchApplicationWithFullConfirm(
     return;
   }
 
-  // Validate accept boolean
-  const { confirm: confirmFull } = req.body;
-  if (confirmFull === undefined || typeof confirmFull !== "boolean") {
-    next({ status: 400, msg: "confirm must be a boolean!" });
-
-    return;
-  }
-
-  const appPromise = applicationsModel.selectApplication(appIdNum.toString());
-
-  appPromise
+  applicationsModel
+    .selectAppByIdWithListInfoAndUserInfo(appIdNum)
     .then((application) => {
-      // Validate that organisation user owns application listing
-      const orgAuthObj = checkUserCredentials(
-        req,
-        application.org_id,
-        "organisation"
+      if (!application) {
+        return Promise.reject({ status: 404, msg: "Application not found!" });
+      }
+
+      // TODO:
+      // // Check org_user owns the application
+      // const orgAuthObj = checkUserCredentials(
+      //   req,
+      //   application.org_id,
+      //   "organisation"
+      // );
+      // if (!orgAuthObj.authorised) {
+      //   return Promise.reject(orgAuthObj.respObj);
+      // }
+
+      // Check application has been confirmed.
+      if (!application.confirm) {
+        return Promise.reject({
+          status: 400,
+          msg: "Application has not yet been confirmed!",
+        });
+      }
+
+      // Check application attendance has not already been confirmed!
+      if (application.attended) {
+        return Promise.reject({
+          status: 400,
+          msg: "Application attendance has already been confirmed!",
+        });
+      }
+
+      const hours = application.list_duration;
+      const volUserId = application.vol_id;
+      const volUserHours = application.vol_hours;
+
+      logger.info(
+        `Confirming application attendance where application: ${appIdNum} ` +
+          `vol_id: ${volUserId} vol_user_hours: ${volUserHours} app_duration: ${hours}`
       );
 
-      if (!orgAuthObj.authorised) {
-        return Promise.reject(orgAuthObj.respObj);
+      const newVolUserHours = volUserHours + hours;
+
+      // Update hours on vol_user
+      logger.debug(
+        `Updating volunteer user hours where vol_user_id: ${volUserId} ` +
+          `vol_user_hours: ${newVolUserHours}`
+      );
+      return volUserModel.updateVolUserHours(volUserId, newVolUserHours);
+    })
+    .then((user) => {
+      if (!user) {
+        return Promise.reject({
+          status: 500,
+          msg: "Could not update volunteer user!",
+        });
       }
 
       logger.debug(
-        `Authorised organisation user with org_id ${application.org_id} with app_id: ${appIdNum}`
+        `Successfully updated volunteer user hours where vol_user_id: ${user.vol_id}!`
       );
 
-      // If application has not yet been fully provisionally confirmed, then reject
-      if (!application.prov_confirm) {
+      // TODO: FIGURE OUT WHICH BADGE TO ADD
+
+      // Add badges
+      logger.debug(
+        `Adding badges to vol_user_badge_junc table where vol_user_id: ${user.vol_id}`
+      );
+      return volUserBadgeModel.createVolUserBadge(user.vol_id, 8);
+    })
+    .then((badgeInfo) => {
+      if (!badgeInfo) {
         return Promise.reject({
-          status: 400,
-          msg: `Application has not yet been provisionally confirmed!`,
+          status: 404,
+          msg: "Could not update volunteer badges!",
         });
       }
 
-      // If application has already been fully confirmed, then reject
-      if (application.full_conf) {
-        return Promise.reject({
-          status: 400,
-          msg: `Application has already been fully confirmed!`,
-        });
-      }
+      logger.debug(`Successfully added badges to vol_user_badge_junc table!`);
 
-      return applicationsModel.updateApplicationFullConfirmById(
-        appIdNum,
-        confirmFull
-      );
+      // Finally update appplication attendance status
+      logger.debug(`Updating application attendance where app_id: ${appIdNum}`);
+      return applicationsModel.updateAppAttendance(appIdNum);
     })
     .then((application) => {
-      res.status(200).send({ application });
+      logger.info(
+        `Application attendance successfully confirmed where app_id: ${appIdNum}!`
+      );
 
-      return;
+      res.status(200).send({ application });
     })
     .catch((err) => {
       next(err);
