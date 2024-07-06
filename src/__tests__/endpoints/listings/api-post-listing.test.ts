@@ -66,7 +66,6 @@ describe("POST /api/listings", () => {
     // Assert that the length of list_skill_junc table has increased by 2 (assuming two skills were added)
     const skillJuncQuery = "SELECT * FROM list_skill_junc;";
     const skillJuncResult = await db.query(skillJuncQuery);
-    // console.log("here is skillJuncResult", skillJuncResult);
     expect(skillJuncResult.rows).toHaveLength(20);
   });
   test("An org user successfully posts a listing with skills, but without an image", async () => {
@@ -121,7 +120,6 @@ describe("POST /api/listings", () => {
     // Assert that the length of list_skill_junc table has increased by 2 (assuming two skills were added)
     const skillJuncQuery = "SELECT * FROM list_skill_junc;";
     const skillJuncResult = await db.query(skillJuncQuery);
-    // console.log("here is skillJuncResult", skillJuncResult);
     expect(skillJuncResult.rows).toHaveLength(20);
   });
   test("An org user successfully posts a listing with an image, but no skills", async () => {
@@ -176,7 +174,6 @@ describe("POST /api/listings", () => {
     // Assert that the length of list_skill_junc table has stayed the same
     const skillJuncQuery = "SELECT * FROM list_skill_junc;";
     const skillJuncResult = await db.query(skillJuncQuery);
-    // console.log("here is skillJuncResult", skillJuncResult);
     expect(skillJuncResult.rows).toHaveLength(18);
   });
 
@@ -639,7 +636,6 @@ describe("POST /api/listings", () => {
       .then((response) => {
         // Get cookie
         const { token } = response.body.user;
-        console.log(token);
 
         return request(app)
           .post("/api/listings")

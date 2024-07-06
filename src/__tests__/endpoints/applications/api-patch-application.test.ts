@@ -31,8 +31,6 @@ describe("PATCH /api/applications/:app_id", () => {
           .send({ accept: true })
           .expect(200)
           .then(({ body }) => {
-            console.log(body);
-
             const { application } = body;
 
             expect(application).toMatchObject({
