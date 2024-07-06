@@ -49,15 +49,17 @@ export function checkUserCredentials(
   }
 
   // Decipher token
-  const decToken = decipherToken(token);
+  const decTokenObj = decipherToken(token);
 
-  if (!decToken) {
-    const respObj = { status: 401, msg: "Unknown error parsing token!" };
+  if (!decTokenObj.valid || !decTokenObj.decToken) {
+    const respObj = { status: 401, msg: decTokenObj.msg };
 
-    logger.info(`Unknown error parsing token!`);
+    logger.info(`Token parsing error: ${decTokenObj.msg}`);
 
     return { authorised: false, respObj: respObj };
   }
+
+  const { decToken } = decTokenObj;
 
   if (!decToken.id || !decToken.email || !decToken.role) {
     const respObj = { status: 401, msg: "Unknown error parsing token!" };
@@ -108,11 +110,15 @@ export function getUserInfoFromToken(req: Request) {
   }
 
   // Decipher token
-  const decToken = decipherToken(token);
+  const decTokenObj = decipherToken(token);
 
-  if (!decToken) {
+  if (!decTokenObj.valid || !decTokenObj.decToken) {
+    logger.info(`Token parsing error: ${decTokenObj.msg}`);
+
     return null;
   }
+
+  const { decToken } = decTokenObj;
 
   if (!decToken.id || !decToken.email || !decToken.role) {
     logger.info(`Unknown error parsing token!`);
@@ -135,12 +141,19 @@ function decipherToken(token: string) {
   try {
     decToken = <TokenInterface>jwt.verify(token, SECRET_KEY);
   } catch (err) {
-    logger.info(`Error parsing JWT token!`);
+    if (err instanceof jwt.TokenExpiredError) {
+      logger.info(`Token has expired!`);
 
-    return null;
+      return { valid: false, msg: "Token has expired!" };
+    }
+
+    logger.info(`Unknown error parsing JWT token!`);
+    logger.debug(err);
+
+    return { valid: false, msg: "Unknown error parsing JWT token!" };
   }
 
-  return decToken;
+  return { valid: true, decToken: decToken, msg: "Token OK!" };
 }
 
 export function generateJWTToken(
@@ -152,7 +165,7 @@ export function generateJWTToken(
     { id: userId, email: userEmail, role: userRole },
     SECRET_KEY,
     {
-      expiresIn: "2 days",
+      expiresIn: "365d", // expires in 365 days
     }
   );
 
