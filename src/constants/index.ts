@@ -10,6 +10,8 @@ export const ERR_MSG_NOT_LOGGED_IN =
 /**
  * Validation
  */
+export const LETT_NUM_SPACES_PATTERN = /^[a-zA-Z0-9 ]+$/;
+
 export const MIN_PASSWD_LENGTH = 5;
 export const MAX_PASSWD_LENGTH = 20;
 export const VAL_PASSWD_PATTERN = /^[^\s]+$/;
@@ -30,6 +32,16 @@ export const VAL_IMG_PATTERN = /^(data:image\/)[^\s]+$/;
 
 export const MIN_BIO_SIZE = 1;
 export const MAX_BIO_SIZE = 700;
+
+export const MIN_TITLE_LENGTH = 5;
+export const MAX_TITLE_LENGTH = 100;
+export const VAL_TITLE_PATTERN = LETT_NUM_SPACES_PATTERN;
+export const MAX_LIST_DURATION = 50;
+
+export const VAL_LOCAT_PATTERN = LETT_NUM_SPACES_PATTERN;
+
+export const MIN_LIST_DESC_LENGTH = 10;
+export const MAX_LIST_DESC_LENGTH = 2000;
 
 export const MAX_EMAIL_LENGTH = 80;
 export const MIN_EMAIL_LENGTH = 5;

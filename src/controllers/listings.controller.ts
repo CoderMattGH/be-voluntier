@@ -1,8 +1,8 @@
 import { logger } from "../logger";
 import { Request, Response, NextFunction } from "express";
+import { getUserInfoFromToken } from "../auth/auth-utils";
 import * as listingsModel from "../models/listings.model";
 import * as constants from "../constants";
-import { getUserInfoFromToken } from "../auth/auth-utils";
 
 export function getListings(req: Request, res: Response, next: NextFunction) {
   logger.debug(`In getListings() in listings.controller`);
@@ -78,134 +78,44 @@ export function getListing(req: Request, res: Response, next: NextFunction) {
 export function postListing(req: Request, res: Response, next: NextFunction) {
   logger.debug(`In postListing() in listings.controller`);
 
-  const body = req.body;
+  const { body: listing } = req.body;
+
+  // Non nullable values
+  const valMap = new Map();
+  valMap.set("list_title", listing.list_title);
+  valMap.set("list_location", listing.list_location);
+  valMap.set("list_date", listing.list_date);
+  valMap.set("list_time", listing.list_time);
+  valMap.set("list_duration", listing.list_duration);
+  valMap.set("list_description", listing.list_description);
+  valMap.set("list_latitude", listing.list_latitude);
+  valMap.set("list_longitude", listing.list_longitude);
+
+  for (const [key, value] of valMap) {
+    if (value === undefined || value === null) {
+      next({ status: 400, msg: `${key} is not defined or null!` });
+
+      return;
+    }
+  }
 
   const orgObj = getUserInfoFromToken(req);
   if (!orgObj) {
-    next({ status: 401, msg: "User must be logged in as organisation!" });
+    next({ status: 401, msg: constants.ERR_MSG_NOT_LOGGED_IN });
 
     return;
   }
 
   if (orgObj.role !== "organisation") {
     next({ status: 403, msg: constants.ERR_MSG_PERMISSION_DENIED });
-    return;
-  }
-
-  if (!req.body.list_title) {
-    next({
-      status: 400,
-      msg: "list_title needs to be populated with characters!",
-    });
-
-    return;
-  }
-
-  if (!req.body.list_location) {
-    next({
-      status: 400,
-      msg: "list_location needs to be populated with characters!",
-    });
-
-    return;
-  }
-
-  if (!req.body.list_date) {
-    next({
-      status: 400,
-      msg: "list_date needs to be populated with characters!",
-    });
-
-    return;
-  }
-
-  if (!req.body.list_time) {
-    next({
-      status: 400,
-      msg: "list_time needs to be populated with characters!",
-    });
-
-    return;
-  }
-
-  if (!req.body.list_duration) {
-    next({
-      status: 400,
-      msg: "list_duration needs to be populated with characters!",
-    });
-
-    return;
-  }
-
-  if (!req.body.list_description) {
-    next({
-      status: 400,
-      msg: "list_description needs to be populated with characters!",
-    });
-
-    return;
-  }
-
-  if (typeof req.body.list_latitude !== "number") {
-    next({
-      status: 400,
-      msg: "list_latitude needs to be given!",
-    });
-
-    return;
-  }
-
-  if (typeof req.body.list_longitude !== "number") {
-    next({
-      status: 400,
-      msg: "list_longitude needs to be given!",
-    });
-
-    return;
-  }
-
-  if (!Array.isArray(req.body.list_skills)) {
-    next({
-      status: 400,
-      msg: "list_skills needs to be given!",
-    });
-
-    return;
-  }
-
-  for (const element of req.body.list_skills) {
-    if (typeof element !== "string") {
-      next({
-        status: 400,
-        msg: "list_skills must contain valid skills only!",
-      });
-
-      return;
-    }
-  }
-
-  if (req.body.list_visible !== true) {
-    next({
-      status: 400,
-      msg: "list_visible must be set to true!",
-    });
 
     return;
   }
 
   listingsModel
-    .createListing(body, orgObj.id)
+    .createListing(listing, orgObj.id)
     .then((newListing) => {
-      if (body.list_skills && body.list_skills.length > 0) {
-        return listingsModel
-          .createListingSkillJunc(newListing.list_id, body.list_skills)
-          .then(() => newListing);
-      }
-
-      return newListing;
-    })
-    .then((newListing) => {
-      res.status(201).send({ newListing });
+      res.status(201).send(newListing);
     })
     .catch((err) => {
       next(err);
