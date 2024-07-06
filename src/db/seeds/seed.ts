@@ -53,12 +53,12 @@ export function seed({
 }: SeedData) {
   logger.debug("Starting db seed!");
 
-  let concurrentTableCreation = false;
+  let concurrency = false;
   if (ENV === "test") {
-    concurrentTableCreation = true;
+    concurrency = true;
   }
 
-  if (concurrentTableCreation) {
+  if (concurrency) {
     logger.info("Concurrently creating tables!");
 
     return dropTables()
@@ -138,6 +138,7 @@ export function seed({
       });
   }
 
+  // Non-concurrent table creation
   return dropTables()
     .then(() => {
       logger.info("Creating tables!");
@@ -261,8 +262,6 @@ function dropTables() {
       logger.info(`Finished dropping tables!`);
     });
 }
-
-function concurrentTableCreationFunc() {}
 
 function setupVolUsersTable(volUsers: VolUser[]) {
   logger.debug("Setting up vol_users table!");
