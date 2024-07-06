@@ -24,7 +24,7 @@ describe("GET /api/badges", () => {
       .then(({ body }) => {
         const badges = body.badges;
 
-        expect(badges.length).toBe(18);
+        expect(badges.length).toBe(9);
 
         badges.forEach((badge: Badge) => {
           expect(badge).toMatchObject({
