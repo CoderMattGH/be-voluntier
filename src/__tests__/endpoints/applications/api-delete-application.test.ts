@@ -37,8 +37,8 @@ describe("DELETE /api/applications/", () => {
               app_id: 1,
               vol_id: 1,
               listing_id: expect.any(Number),
-              prov_confirm: expect.any(Boolean),
-              full_conf: expect.any(Boolean),
+              attended: expect.any(Boolean),
+              confirm: expect.any(Boolean),
             });
           });
       });
@@ -68,8 +68,8 @@ describe("DELETE /api/applications/", () => {
               app_id: expect.any(Number),
               vol_id: expect.any(Number),
               listing_id: 1,
-              prov_confirm: expect.any(Boolean),
-              full_conf: expect.any(Boolean),
+              attended: expect.any(Boolean),
+              confirm: expect.any(Boolean),
             });
           });
       });

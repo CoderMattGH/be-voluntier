@@ -16,8 +16,8 @@ type Application = {
   vol_id: number;
   org_id: number;
   listing_id: number;
-  prov_confirm: boolean;
-  full_conf: boolean;
+  attended: boolean;
+  confirm: boolean;
   list_title: string;
   list_location: string;
   list_longitude: number;
@@ -59,8 +59,8 @@ describe("GET api/applications/vol/:vol_user_id", () => {
                   vol_id: 1,
                   org_id: expect.any(Number),
                   listing_id: expect.any(Number),
-                  prov_confirm: expect.any(Boolean),
-                  full_conf: expect.any(Boolean),
+                  attended: expect.any(Boolean),
+                  confirm: expect.any(Boolean),
                   list_title: expect.any(String),
                   list_location: expect.any(String),
                   list_longitude: expect.any(Number),
