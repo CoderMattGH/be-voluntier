@@ -80,8 +80,8 @@ type Application = {
   app_id?: number;
   vol_id: number;
   listing_id: number;
-  prov_confirm: boolean;
-  full_conf: boolean;
+  confirm: boolean;
+  attended: boolean;
 };
 
 type FavouriteOrg = {

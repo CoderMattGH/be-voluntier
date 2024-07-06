@@ -437,8 +437,8 @@ function setupApplicationsTable(applications: Application[]) {
       app_id SERIAL PRIMARY KEY,
       vol_id INT REFERENCES vol_users(vol_id) NOT NULL,
       listing_id INT REFERENCES listings(list_id) NOT NULL,
-      prov_confirm BOOL NOT NULL,
-      full_conf BOOL NOT NULL
+      confirm BOOL NOT NULL,
+      attended BOOL NOT NULL
     );`
     )
     .then(() => {
@@ -446,15 +446,15 @@ function setupApplicationsTable(applications: Application[]) {
         `INSERT INTO applications (
           vol_id,
           listing_id,
-          prov_confirm,
-          full_conf 
+          confirm,
+          attended
         ) VALUES %L;`,
         applications.map((application) => {
           return [
             application.vol_id,
             application.listing_id,
-            application.prov_confirm,
-            application.full_conf,
+            application.confirm,
+            application.attended,
           ];
         })
       );

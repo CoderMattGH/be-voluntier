@@ -38,8 +38,8 @@ describe("POST /api/applications/", () => {
               app_id: expect.any(Number),
               vol_id: 1,
               listing_id: 1,
-              prov_confirm: false,
-              full_conf: false,
+              confirm: false,
+              attended: false,
             });
           });
       });

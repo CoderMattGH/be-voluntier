@@ -318,3 +318,15 @@ export async function updateVolUser(
     return { success: true, changedFields };
   });
 }
+
+export function updateVolUserHours(userId: number, hours: number) {
+  const queryStr = `UPDATE vol_users SET vol_hours = $1 WHERE vol_id = $2 RETURNING *;`;
+
+  return db.query(queryStr, [hours, userId]).then(({ rows }) => {
+    if (!rows.length) {
+      return null;
+    }
+
+    return rows[0];
+  });
+}
