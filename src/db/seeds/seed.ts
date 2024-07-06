@@ -1,3 +1,4 @@
+import { ENV } from "../../env-parser";
 import { logger } from "../../logger";
 import format from "pg-format";
 import { db } from "../../db";
@@ -52,6 +53,91 @@ export function seed({
 }: SeedData) {
   logger.debug("Starting db seed!");
 
+  let concurrentTableCreation = false;
+  if (ENV === "test") {
+    concurrentTableCreation = true;
+  }
+
+  if (concurrentTableCreation) {
+    logger.info("Concurrently creating tables!");
+
+    return dropTables()
+      .then(() => {
+        logger.info("Creating first batch of tables!");
+
+        const skillsTableProm = setupSkillsTable(skills);
+        const setupBadgesTableProm = setupBadgesTable(badges);
+        const setupOrgTypesTableProm = setupOrgTypesTable(orgTypes);
+        const setupImagesTableProm = setupImagesTable(images);
+
+        const firstPromiseBatch = [
+          skillsTableProm,
+          setupBadgesTableProm,
+          setupOrgTypesTableProm,
+          setupImagesTableProm,
+        ];
+
+        return Promise.all(firstPromiseBatch);
+      })
+      .then(() => {
+        logger.info("Creating second batch of tables!");
+
+        const setupOrgUsersTableProm = setupOrgUsersTable(orgUsers);
+        const setupVolUsersTableProm = setupVolUsersTable(volUsers);
+
+        const secondPromiseBatch = [
+          setupOrgUsersTableProm,
+          setupVolUsersTableProm,
+        ];
+
+        return Promise.all(secondPromiseBatch);
+      })
+      .then(() => {
+        logger.info("Creating third batch of tables!");
+
+        const setupListingsTableProm = setupListingsTable(listings);
+        const setupVolUserBadgeJuncTableProm =
+          setupVolUserBadgeJuncTable(volUserBadgeJuncs);
+        const setupVolUserSkillJuncTableProm =
+          setupVolUserSkillJuncTable(volUserSkillJuncs);
+        const setupFavouriteOrgsTableProm =
+          setupFavouriteOrgsTable(favouriteOrgs);
+
+        const thirdPromiseBatch = [
+          setupListingsTableProm,
+          setupVolUserBadgeJuncTableProm,
+          setupVolUserSkillJuncTableProm,
+          setupFavouriteOrgsTableProm,
+        ];
+
+        return Promise.all(thirdPromiseBatch);
+      })
+      .then(() => {
+        logger.info("Creating fourth batch of tables!");
+
+        const setupApplicationsTableProm = setupApplicationsTable(applications);
+        const setupListSkillJuncTableProm =
+          setupListSkillJuncTable(listSkillJuncs);
+        const setupFavouriteListingsTableProm =
+          setupFavouriteListingsTable(favouriteListings);
+
+        const fourthPromiseBatch = [
+          setupApplicationsTableProm,
+          setupListSkillJuncTableProm,
+          setupFavouriteListingsTableProm,
+        ];
+
+        return Promise.all(fourthPromiseBatch);
+      })
+      .finally(() => {
+        logger.info("Finished creating tables!");
+        logger.info("Closing connection to database!");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   return dropTables()
     .then(() => {
       logger.info("Creating tables!");
@@ -60,6 +146,9 @@ export function seed({
     })
     .then(() => {
       return setupBadgesTable(badges);
+    })
+    .then(() => {
+      return setupImagesTable(images);
     })
     .then(() => {
       return setupOrgTypesTable(orgTypes);
@@ -91,12 +180,6 @@ export function seed({
     .then(() => {
       return setupFavouriteListingsTable(favouriteListings);
     })
-    .then(() => {
-      return setupImagesTable(images);
-    })
-    .then(() => {
-      return setupSessionTable();
-    })
     .finally(() => {
       logger.info("Finished creating tables!");
       logger.info("Closing connection to database!");
@@ -113,11 +196,6 @@ function dropTables() {
       logger.debug(`Dropping list_skill_junc table!`);
 
       return db.query(`DROP TABLE IF EXISTS list_skill_junc;`);
-    })
-    .then(() => {
-      logger.debug(`Dropping images table!`);
-
-      return db.query(`DROP TABLE IF EXISTS images;`);
     })
     .then(() => {
       logger.debug(`Dropping vol_user_badge_junc table!`);
@@ -175,34 +253,16 @@ function dropTables() {
       return db.query(`DROP TABLE IF EXISTS vol_users;`);
     })
     .then(() => {
+      logger.debug(`Dropping images table!`);
+
+      return db.query(`DROP TABLE IF EXISTS images;`);
+    })
+    .then(() => {
       logger.info(`Finished dropping tables!`);
     });
 }
 
-function setupSessionTable() {
-  logger.debug("Setting up session table!");
-
-  return db
-    .query(
-      `CREATE TABLE "session" (
-      "sid" varchar NOT NULL COLLATE "default",
-      "sess" json NOT NULL,
-      "expire" timestamp(6) NOT NULL
-    )
-    WITH (OIDS=FALSE);`
-    )
-    .then(() => {
-      return db.query(
-        `ALTER TABLE "session" ADD CONSTRAINT "session_pkey" PRIMARY KEY ("sid") 
-                NOT DEFERRABLE INITIALLY IMMEDIATE;`
-      );
-    })
-    .then(() => {
-      return db.query(
-        `CREATE INDEX "IDX_session_expire" ON "session" ("expire");`
-      );
-    });
-}
+function concurrentTableCreationFunc() {}
 
 function setupVolUsersTable(volUsers: VolUser[]) {
   logger.debug("Setting up vol_users table!");
@@ -216,7 +276,7 @@ function setupVolUsersTable(volUsers: VolUser[]) {
       vol_first_name VARCHAR(100) NOT NULL,
       vol_last_name VARCHAR(100) NOT NULL,
       vol_contact_tel VARCHAR(50),
-      vol_avatar_img_id INT,
+      vol_avatar_img_id INT REFERENCES images(img_id),
       vol_bio TEXT,
       vol_hours INT
     );`
@@ -263,7 +323,7 @@ function setupOrgUsersTable(orgUsers: OrgUser[]) {
       org_type INT REFERENCES org_types(type_id) NOT NULL,
       org_contact_tel VARCHAR(100),
       org_bio TEXT,
-      org_avatar_img_id INT,
+      org_avatar_img_id INT REFERENCES images(img_id),
       org_verified BOOLEAN
     );`
     )
