@@ -15,8 +15,16 @@ const salt = "$2a$10$mjBiK50OQB2g.s.QXSV8zu";
 // TODO: Change secret and store in .env
 const SECRET_KEY: Secret = "keyboard-cat";
 
+const hashedPasswordsCache = new Map();
 export function hashPassword(password: string) {
+  let pass;
+  if ((pass = hashedPasswordsCache.get(password))) {
+    return pass;
+  }
+
   let hash = bcrypt.hashSync(password, salt);
+
+  hashedPasswordsCache.set(password, hash);
 
   return hash;
 }
