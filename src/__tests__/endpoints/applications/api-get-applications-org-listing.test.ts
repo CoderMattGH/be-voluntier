@@ -43,11 +43,11 @@ describe("GET api/applications/org/:org_user_id", () => {
         password: "mybadpassword234",
         role: "organisation",
       };
+
       return request(app)
         .post("/api/login")
         .send(orgCredentials)
         .then((response) => {
-          // Get cookie
           const { token } = response.body.user;
 
           return request(app)
@@ -102,6 +102,7 @@ describe("GET api/applications/org/:org_user_id", () => {
         password: "mybadpassword234",
         role: "organisation",
       };
+
       return request(app)
         .post("/api/login")
         .send(orgCredentials)
@@ -205,6 +206,7 @@ describe("GET api/applications/org/:org_user_id", () => {
       password: "mybadpassword234",
       role: "organisation",
     };
+
     return request(app)
       .post("/api/login")
       .send(orgCredentials)
