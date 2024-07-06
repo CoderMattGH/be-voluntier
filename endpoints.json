@@ -251,35 +251,34 @@
   },
   "PATCH /api/applications/:app_id": {
     "authRequired": true,
-    "description": "Allows an organisation user to PROVISIONALLY confirm an application.",
+    "description": "Allows an organisation user to confirm an application.",
     "requestBody": { "accept": "true/false [boolean]" },
     "exampleResponse": {
       "application": {
         "app_id": 6,
         "vol_id": 5,
         "listing_id": 1,
-        "prov_confirm": true,
-        "full_conf": false
+        "confirm": true,
+        "attended": false
       }
     }
   },
-  "PATCH /api/applications/:app_id/confirm": {
+  "PATCH /api/applications/:app_id/confirm-attendance": {
     "authRequired": true,
-    "description": "Allows an organisation user to FULLY confirm an application.  Application must already be provisionally accepted.",
-    "requestBody": { "confirm": "true" },
+    "description": "Allows an organisation user to confirm a volunteer's attendance. Automatically applies any user badges earned.",
     "exampleResponse": {
       "application": {
         "app_id": 6,
         "vol_id": 5,
         "listing_id": 1,
-        "prov_confirm": true,
-        "full_conf": true
+        "confirm": true,
+        "attended": true
       }
     }
   },
   "GET /api/applications/vol/:vol_user_id": {
     "authRequired": true,
-    "description": "Serves up an array of application for the :vol_user_id.  Only viewable by the specified volunter user.",
+    "description": "Serves up an array of applications for the :vol_user_id.  Only viewable by the specified volunter user.",
     "exampleResponse": {
       "applications": [
         {
@@ -373,8 +372,7 @@
     }
   },
   "GET /api/badges/:vol_user_id": {
-    "authRequired": "true",
-    "description": "Serves up an array of the specified volunteer user's badges.  Must be logged in as specified user.",
+    "description": "Serves up an array of the specified volunteer user's badges.",
     "exampleResponse": {
       "badges": [
         {

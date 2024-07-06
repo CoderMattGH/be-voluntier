@@ -63,7 +63,7 @@ export function seed({
 
     return dropTables()
       .then(() => {
-        logger.info("Creating first batch of tables!");
+        logger.debug("Creating first batch of tables!");
 
         const skillsTableProm = setupSkillsTable(skills);
         const setupBadgesTableProm = setupBadgesTable(badges);
@@ -80,7 +80,7 @@ export function seed({
         return Promise.all(firstPromiseBatch);
       })
       .then(() => {
-        logger.info("Creating second batch of tables!");
+        logger.debug("Creating second batch of tables!");
 
         const setupOrgUsersTableProm = setupOrgUsersTable(orgUsers);
         const setupVolUsersTableProm = setupVolUsersTable(volUsers);
@@ -93,7 +93,7 @@ export function seed({
         return Promise.all(secondPromiseBatch);
       })
       .then(() => {
-        logger.info("Creating third batch of tables!");
+        logger.debug("Creating third batch of tables!");
 
         const setupListingsTableProm = setupListingsTable(listings);
         const setupVolUserBadgeJuncTableProm =
@@ -113,7 +113,7 @@ export function seed({
         return Promise.all(thirdPromiseBatch);
       })
       .then(() => {
-        logger.info("Creating fourth batch of tables!");
+        logger.debug("Creating fourth batch of tables!");
 
         const setupApplicationsTableProm = setupApplicationsTable(applications);
         const setupListSkillJuncTableProm =
@@ -556,8 +556,8 @@ function setupVolUserBadgeJuncTable(volUserBadgeJuncs: VolUserBadgeJunc[]) {
       `CREATE TABLE vol_user_badge_junc (
       vol_user_badge_id SERIAL PRIMARY KEY,
       vol_id INT REFERENCES vol_users(vol_id),
-      badge_id INT REFERENCES badges(badge_id)
-    );`
+      badge_id INT REFERENCES badges(badge_id)); 
+      CREATE UNIQUE INDEX unique_user_badge ON vol_user_badge_junc (vol_id, badge_id);`
     )
     .then(() => {
       const queryStr = format(

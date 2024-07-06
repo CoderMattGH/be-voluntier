@@ -1,10 +1,10 @@
 import { logger } from "../logger";
+import { Request, Response, NextFunction } from "express";
 import { generateJWTToken } from "../auth/auth-utils";
 import * as volUserModel from "../models/vol-user.model";
 import * as orgUserModel from "../models/org-user.model";
 import * as authUtils from "../auth/auth-utils";
 import * as loginValidator from "../validators/login.validator";
-import { Request, Response, NextFunction } from "express";
 
 export function loginUser(req: Request, res: Response, next: NextFunction) {
   logger.debug(`In loginUser() in login.controller`);

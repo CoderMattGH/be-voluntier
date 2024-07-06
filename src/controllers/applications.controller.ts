@@ -1,8 +1,9 @@
 import { logger } from "../logger";
 import { Request, Response, NextFunction, application } from "express";
-import * as applicationsModel from "../models/applications.model";
-import * as listingsModel from "../models/listings.model";
 import { checkUserCredentials } from "../auth/auth-utils";
+import { volHoursToBadgeIds } from "../util-functions/badges-utils";
+import * as listingsModel from "../models/listings.model";
+import * as applicationsModel from "../models/applications.model";
 import * as volUserModel from "../models/vol-user.model";
 import * as volUserBadgeModel from "../models/vol-user-badge.model";
 
@@ -333,8 +334,7 @@ export function patchApplicationConfirm(
     });
 }
 
-// PATCH /api/applications/:app_id/confirm-attendance
-// Confirms attendance of applicant and awards badges for hours
+// Confirms attendance of volunteer applicant and awards badges for hours
 export function patchAppAttendance(
   req: Request,
   res: Response,
@@ -356,16 +356,15 @@ export function patchAppAttendance(
         return Promise.reject({ status: 404, msg: "Application not found!" });
       }
 
-      // TODO:
-      // // Check org_user owns the application
-      // const orgAuthObj = checkUserCredentials(
-      //   req,
-      //   application.org_id,
-      //   "organisation"
-      // );
-      // if (!orgAuthObj.authorised) {
-      //   return Promise.reject(orgAuthObj.respObj);
-      // }
+      // Check org_user owns the application
+      const orgAuthObj = checkUserCredentials(
+        req,
+        application.org_id,
+        "organisation"
+      );
+      if (!orgAuthObj.authorised) {
+        return Promise.reject(orgAuthObj.respObj);
+      }
 
       // Check application has been confirmed.
       if (!application.confirm) {
@@ -386,19 +385,15 @@ export function patchAppAttendance(
       const hours = application.list_duration;
       const volUserId = application.vol_id;
       const volUserHours = application.vol_hours;
+      const newVolUserHours = volUserHours + hours;
 
       logger.info(
         `Confirming application attendance where application: ${appIdNum} ` +
-          `vol_id: ${volUserId} vol_user_hours: ${volUserHours} app_duration: ${hours}`
+          `vol_id: ${volUserId} vol_user_hours: ${volUserHours} app_duration: ${hours} ` +
+          `new_vol_user_hours: ${newVolUserHours}`
       );
-
-      const newVolUserHours = volUserHours + hours;
 
       // Update hours on vol_user
-      logger.debug(
-        `Updating volunteer user hours where vol_user_id: ${volUserId} ` +
-          `vol_user_hours: ${newVolUserHours}`
-      );
       return volUserModel.updateVolUserHours(volUserId, newVolUserHours);
     })
     .then((user) => {
@@ -413,26 +408,25 @@ export function patchAppAttendance(
         `Successfully updated volunteer user hours where vol_user_id: ${user.vol_id}!`
       );
 
-      // TODO: FIGURE OUT WHICH BADGE TO ADD
+      const badgesToAward = volHoursToBadgeIds(user.vol_hours);
 
-      // Add badges
       logger.debug(
         `Adding badges to vol_user_badge_junc table where vol_user_id: ${user.vol_id}`
       );
-      return volUserBadgeModel.createVolUserBadge(user.vol_id, 8);
+
+      // Add badges
+      return volUserBadgeModel.createVolUserBadges(user.vol_id, badgesToAward);
     })
-    .then((badgeInfo) => {
-      if (!badgeInfo) {
-        return Promise.reject({
-          status: 404,
-          msg: "Could not update volunteer badges!",
-        });
+    .then((insertedBadges) => {
+      if (!insertedBadges.length) {
+        logger.info(`No new badges awarded!`);
+      } else {
+        logger.info(`Successfully added badges to vol_user_badge_junc table!`);
       }
 
-      logger.debug(`Successfully added badges to vol_user_badge_junc table!`);
+      logger.debug(`Updating application attendance where app_id: ${appIdNum}`);
 
       // Finally update appplication attendance status
-      logger.debug(`Updating application attendance where app_id: ${appIdNum}`);
       return applicationsModel.updateAppAttendance(appIdNum);
     })
     .then((application) => {

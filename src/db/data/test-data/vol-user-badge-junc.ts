@@ -23,10 +23,6 @@ export const volUserBadgeJuncs: VolUserBadgeJunc[] = [
   },
   {
     vol_id: 1,
-    badge_id: 4,
-  },
-  {
-    vol_id: 1,
     badge_id: 6,
   },
   {
@@ -95,14 +91,6 @@ export const volUserBadgeJuncs: VolUserBadgeJunc[] = [
   },
   {
     vol_id: 5,
-    badge_id: 1,
-  },
-  {
-    vol_id: 5,
-    badge_id: 1,
-  },
-  {
-    vol_id: 6,
     badge_id: 1,
   },
   {

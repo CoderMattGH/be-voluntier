@@ -30,14 +30,6 @@ export function getBadgesByUserId(
     return;
   }
 
-  // Check authorisation
-  const volAuthObj = checkUserCredentials(req, userIdNum, "volunteer");
-  if (!volAuthObj.authorised) {
-    next(volAuthObj.respObj);
-
-    return;
-  }
-
   badgesModel
     .selectBadgesByUserId(userIdNum.toString())
     .then((badges) => {
