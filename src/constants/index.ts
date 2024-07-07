@@ -41,7 +41,8 @@ export const MAX_LIST_DURATION = 50;
 export const MIN_LOCAT_LENGTH = 5;
 export const MAX_LOCAT_LENGTH = 400;
 // TODO: Better validation
-export const VAL_LOCAT_PATTERN = /^[a-zA-Z0-9,. ]+$/;
+// export const VAL_LOCAT_PATTERN = /^[a-zA-Z0-9,. ]+$/;
+export const VAL_LOCAT_PATTERN = /./u;
 
 export const VAL_LIST_TIME_PATTERN = /^([01]\d|2[0-3]):([0-5]\d)$/;
 

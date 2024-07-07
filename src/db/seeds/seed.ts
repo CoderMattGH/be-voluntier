@@ -421,7 +421,7 @@ function setupListingsTable(listings: Listing[]) {
       list_duration INT NOT NULL,
       list_description TEXT NOT NULL,
       list_img_id INT,
-      list_visible BOOL,
+      list_visible BOOL DEFAULT true,
       list_org INT REFERENCES org_users(org_id) NOT NULL
     );`
     )

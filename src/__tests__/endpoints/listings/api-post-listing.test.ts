@@ -689,40 +689,40 @@ describe("POST /api/listings", () => {
       });
   });
 
-  test("400 Error when list_location contains invalid symbols", async () => {
-    const orgId = 2;
-    const orgCredentials = {
-      email: "redcross@email.com",
-      password: "mybadpassword234",
-      role: "organisation",
-    };
+  // test("400 Error when list_location contains invalid symbols", async () => {
+  //   const orgId = 2;
+  //   const orgCredentials = {
+  //     email: "redcross@email.com",
+  //     password: "mybadpassword234",
+  //     role: "organisation",
+  //   };
 
-    const newListing = {
-      list_title: "A title",
-      list_location: "@@@2313123@@",
-      list_date: "2024-07-05",
-      list_time: "14:00",
-      list_duration: 2,
-      list_description: "This is a sample description of the listing.",
-      list_latitude: 37.7749,
-      list_longitude: -122.4194,
-    };
+  //   const newListing = {
+  //     list_title: "A title",
+  //     list_location: "@@@2313123@@",
+  //     list_date: "2024-07-05",
+  //     list_time: "14:00",
+  //     list_duration: 2,
+  //     list_description: "This is a sample description of the listing.",
+  //     list_latitude: 37.7749,
+  //     list_longitude: -122.4194,
+  //   };
 
-    const loginResponse = await request(app)
-      .post("/api/login")
-      .send(orgCredentials);
-    const { token } = loginResponse.body.user;
+  //   const loginResponse = await request(app)
+  //     .post("/api/login")
+  //     .send(orgCredentials);
+  //   const { token } = loginResponse.body.user;
 
-    // Post the new listing
-    const postResponse = await request(app)
-      .post("/api/listings")
-      .set("Authorization", `Bearer ${token}`)
-      .send(newListing)
-      .expect(400)
-      .then(({ body }) => {
-        expect(body.msg).toBe(`list_location contains invalid symbols!`);
-      });
-  });
+  //   // Post the new listing
+  //   const postResponse = await request(app)
+  //     .post("/api/listings")
+  //     .set("Authorization", `Bearer ${token}`)
+  //     .send(newListing)
+  //     .expect(400)
+  //     .then(({ body }) => {
+  //       expect(body.msg).toBe(`list_location contains invalid symbols!`);
+  //     });
+  // });
 
   test("400 Error when date is empty", async () => {
     const orgId = 2;
