@@ -631,8 +631,8 @@ function setupFavouriteListingsTable(favouriteListings: FavouriteListing[]) {
       `CREATE TABLE favourite_listings (
       fav_lists_id SERIAL PRIMARY KEY,
       vol_id INT REFERENCES vol_users(vol_id),
-      list_id INT REFERENCES listings(list_id)
-    );`
+      list_id INT REFERENCES listings(list_id));
+      CREATE UNIQUE INDEX unique_list_favourite ON favourite_listings (vol_id, list_id);`
     )
     .then(() => {
       const queryStr = format(
