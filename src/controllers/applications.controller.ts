@@ -220,7 +220,6 @@ export function postApplication(
     });
 }
 
-// Delete application
 export function deleteApplication(
   req: Request,
   res: Response,
@@ -236,9 +235,8 @@ export function deleteApplication(
     return;
   }
 
-  const appPromise = applicationsModel.selectApplication(appIdNum.toString());
-
-  appPromise
+  applicationsModel
+    .selectApplication(appIdNum.toString())
     .then((application) => {
       // Verify application is owned by user or org
       const volAuthObj = checkUserCredentials(
@@ -295,9 +293,8 @@ export function patchApplicationConfirm(
     return;
   }
 
-  const appPromise = applicationsModel.selectApplication(appIdNum.toString());
-
-  appPromise
+  applicationsModel
+    .selectApplication(appIdNum.toString())
     .then((application) => {
       // Validate that organisation user owns application listing
       const orgAuthObj = checkUserCredentials(
@@ -349,6 +346,7 @@ export function patchAppAttendance(
     return;
   }
 
+  // Check org_user owns the application
   applicationsModel
     .selectAppByIdWithListInfoAndUserInfo(appIdNum)
     .then((application) => {
@@ -366,74 +364,9 @@ export function patchAppAttendance(
         return Promise.reject(orgAuthObj.respObj);
       }
 
-      // Check application has been confirmed.
-      if (!application.confirm) {
-        return Promise.reject({
-          status: 400,
-          msg: "Application has not yet been confirmed!",
-        });
-      }
-
-      // Check application attendance has not already been confirmed!
-      if (application.attended) {
-        return Promise.reject({
-          status: 400,
-          msg: "Application attendance has already been confirmed!",
-        });
-      }
-
-      const hours = application.list_duration;
-      const volUserId = application.vol_id;
-      const volUserHours = application.vol_hours;
-      const newVolUserHours = volUserHours + hours;
-
-      logger.info(
-        `Confirming application attendance where application: ${appIdNum} ` +
-          `vol_id: ${volUserId} vol_user_hours: ${volUserHours} app_duration: ${hours} ` +
-          `new_vol_user_hours: ${newVolUserHours}`
-      );
-
-      // Update hours on vol_user
-      return volUserModel.updateVolUserHours(volUserId, newVolUserHours);
-    })
-    .then((user) => {
-      if (!user) {
-        return Promise.reject({
-          status: 500,
-          msg: "Could not update volunteer user!",
-        });
-      }
-
-      logger.debug(
-        `Successfully updated volunteer user hours where vol_user_id: ${user.vol_id}!`
-      );
-
-      const badgesToAward = volHoursToBadgeIds(user.vol_hours);
-
-      logger.debug(
-        `Adding badges to vol_user_badge_junc table where vol_user_id: ${user.vol_id}`
-      );
-
-      // Add badges
-      return volUserBadgeModel.createVolUserBadges(user.vol_id, badgesToAward);
-    })
-    .then((insertedBadges) => {
-      if (!insertedBadges.length) {
-        logger.info(`No new badges awarded!`);
-      } else {
-        logger.info(`Successfully added badges to vol_user_badge_junc table!`);
-      }
-
-      logger.debug(`Updating application attendance where app_id: ${appIdNum}`);
-
-      // Finally update appplication attendance status
       return applicationsModel.updateAppAttendance(appIdNum);
     })
     .then((application) => {
-      logger.info(
-        `Application attendance successfully confirmed where app_id: ${appIdNum}!`
-      );
-
       res.status(200).send({ application });
     })
     .catch((err) => {
