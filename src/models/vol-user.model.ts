@@ -1,9 +1,8 @@
 import { logger } from "../logger";
 import { db } from "../db";
-
+import { hashPassword } from "../auth/auth-utils";
 import * as registerUserValidator from "../validators/register-user.validator";
 import * as imageValidator from "../validators/image.validator";
-import { hashPassword } from "../auth/auth-utils";
 import * as imagesModel from "../models/images.model";
 
 export function selectVolUserByEmail(email: string) {
