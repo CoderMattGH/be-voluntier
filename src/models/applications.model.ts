@@ -1,13 +1,14 @@
 import { logger } from "../logger";
 import { db } from "../db";
+import { volHoursToBadgeIds } from "../util-functions/badges-utils";
 import * as volUserModel from "../models/vol-user.model";
+import * as volUserBadgeModel from "../models/vol-user-badge.model";
 import * as listingsModel from "../models/listings.model";
 
 export function selectApplication(appIdNum: string) {
   logger.debug(`In selectApplication() in applications.model`);
 
-  let queryStr = `
-  SELECT app_id, vol_id, listings.list_org AS org_id, listing_id, attended, confirm, 
+  let queryStr = `SELECT app_id, vol_id, listings.list_org AS org_id, listing_id, attended, confirm, 
     list_title, list_location, list_longitude, list_latitude, list_date, list_time, 
     list_description, list_img_id, org_users.org_name 
     FROM applications 
@@ -27,8 +28,7 @@ export function selectApplication(appIdNum: string) {
 export function selectApplicationsByVolId(volIdNum: string) {
   logger.debug(`In selectApplicationsByVolId() in applications.model`);
 
-  let queryStr = `
-  SELECT app_id, vol_id, listings.list_org AS org_id, listing_id, attended, confirm, 
+  let queryStr = `SELECT app_id, vol_id, listings.list_org AS org_id, listing_id, attended, confirm, 
     list_title, list_location, list_longitude, list_latitude, list_date, list_time, 
     list_description, list_img_id, org_users.org_name
     FROM applications 
@@ -61,8 +61,7 @@ export function selectApplicationsByOrgId(
     }
   }
 
-  let queryStr = `
-  SELECT app_id, applications.vol_id, listings.list_org AS org_id, listing_id, confirm, 
+  let queryStr = `SELECT app_id, applications.vol_id, listings.list_org AS org_id, listing_id, confirm, 
     attended, list_title, list_location, list_longitude, list_latitude, list_date, list_time, 
     list_description, list_img_id, vol_users.vol_first_name, vol_users.vol_last_name, 
     vol_users.vol_email, vol_users.vol_contact_tel, vol_users.vol_avatar_img_id
@@ -192,7 +191,7 @@ export function updateApplicationConfirmById(appId: number, confirm: boolean) {
     }
 
     logger.info(
-      `Successfully confirmed application with app_id:${appId} confirm: ${confirm}`
+      `Successfully confirmed application with app_id:${appId} confirm:${confirm}`
     );
 
     return rows[0];
@@ -203,19 +202,86 @@ export function updateAppAttendance(appId: number) {
   logger.info(`In patchAppAttendance in applications.model`);
   logger.debug(`Confirming attendance where appId: ${appId}`);
 
-  const queryStr = `UPDATE applications SET attended = true WHERE app_id = $1 RETURNING *;`;
+  return selectAppByIdWithListInfoAndUserInfo(appId)
+    .then((application) => {
+      if (!application) {
+        return Promise.reject({ status: 404, msg: "Application not found!" });
+      }
 
-  return db.query(queryStr, [appId]).then(({ rows }) => {
-    if (!rows.length) {
-      return Promise.reject({ status: 404, msg: "Application not found!" });
-    }
+      // Check application has been confirmed.
+      if (!application.confirm) {
+        return Promise.reject({
+          status: 400,
+          msg: "Application has not yet been confirmed!",
+        });
+      }
 
-    logger.info(
-      `Successfully updated attendance in application with app_id:${appId}`
-    );
+      // Check application attendance has not already been confirmed!
+      if (application.attended) {
+        return Promise.reject({
+          status: 400,
+          msg: "Application attendance has already been confirmed!",
+        });
+      }
 
-    return rows[0];
-  });
+      const hours = application.list_duration;
+      const volUserId = application.vol_id;
+      const volUserHours = application.vol_hours;
+      const newVolUserHours = volUserHours + hours;
+
+      logger.info(
+        `Confirming application attendance where application: ${appId} ` +
+          `vol_id: ${volUserId} vol_user_hours: ${volUserHours} app_duration: ${hours} ` +
+          `new_vol_user_hours: ${newVolUserHours}`
+      );
+
+      // Update hours on vol_user
+      return volUserModel.updateVolUserHours(volUserId, newVolUserHours);
+    })
+    .then((user) => {
+      if (!user) {
+        return Promise.reject({
+          status: 500,
+          msg: "Could not update volunteer user!",
+        });
+      }
+
+      logger.debug(
+        `Successfully updated volunteer user hours where vol_user_id: ${user.vol_id}!`
+      );
+
+      const badgesToAward = volHoursToBadgeIds(user.vol_hours);
+
+      logger.debug(
+        `Adding badges to vol_user_badge_junc table where vol_user_id: ${user.vol_id}`
+      );
+
+      // Add badges
+      return volUserBadgeModel.createVolUserBadges(user.vol_id, badgesToAward);
+    })
+    .then((insertedBadges) => {
+      if (!insertedBadges.length) {
+        logger.info(`No new badges awarded!`);
+      } else {
+        logger.info(`Successfully added badges to vol_user_badge_junc table!`);
+      }
+
+      // Finally update appplication attendance status
+      const queryStr = `UPDATE applications SET attended = true WHERE app_id = $1 RETURNING *;`;
+
+      return db.query(queryStr, [appId]);
+    })
+    .then(({ rows }) => {
+      if (!rows.length) {
+        return Promise.reject({ status: 404, msg: "Application not found!" });
+      }
+
+      logger.info(
+        `Successfully updated attendance in application with app_id:${appId}`
+      );
+
+      return rows[0];
+    });
 }
 
 export function selectAppByIdWithListInfoAndUserInfo(appId: number) {
