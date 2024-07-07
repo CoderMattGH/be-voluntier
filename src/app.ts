@@ -1,11 +1,8 @@
 import "./env-parser";
 import { logger } from "./logger";
-
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
-
 import { apiRouter } from "./routes/api-router";
-
 import { CustomReqError } from "./types";
 
 export const app = express();
@@ -60,6 +57,6 @@ app.use(
       next(err);
     }
   }
-
-  // TODO: General error handler
 );
+
+// TODO: General error handler
