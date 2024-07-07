@@ -1,7 +1,7 @@
 import { logger } from "../logger";
-import bcrypt from "bcryptjs";
-import { Request } from "express";
 import jwt, { Secret, JwtPayload } from "jsonwebtoken";
+import { Request } from "express";
+import bcrypt from "bcryptjs";
 import * as constants from "../constants";
 
 interface TokenInterface {

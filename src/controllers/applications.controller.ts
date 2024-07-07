@@ -1,11 +1,8 @@
 import { logger } from "../logger";
 import { Request, Response, NextFunction, application } from "express";
 import { checkUserCredentials } from "../auth/auth-utils";
-import { volHoursToBadgeIds } from "../util-functions/badges-utils";
 import * as listingsModel from "../models/listings.model";
 import * as applicationsModel from "../models/applications.model";
-import * as volUserModel from "../models/vol-user.model";
-import * as volUserBadgeModel from "../models/vol-user-badge.model";
 
 export function getApplication(
   req: Request,

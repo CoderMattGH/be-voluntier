@@ -141,7 +141,7 @@ export function createApplication(volId: number, listingId: number) {
       }
 
       const queryStr = `INSERT INTO applications (vol_id, listing_id, confirm, attended) 
-      VALUES($1, $2, false, false) RETURNING *;`;
+        VALUES($1, $2, false, false) RETURNING *;`;
 
       return db.query(queryStr, [volId, listingId]);
     })

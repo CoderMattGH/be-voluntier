@@ -1,7 +1,6 @@
 import { logger } from "../logger";
 import { Request, Response, NextFunction } from "express";
 import * as badgesModel from "../models/badges.model";
-import { checkUserCredentials } from "../auth/auth-utils";
 
 export function getBadges(req: Request, res: Response, next: NextFunction) {
   logger.debug(`In getBadges() in badges.controller`);

@@ -31,11 +31,11 @@ export function selectListings(
   }
 
   let queryStr = `SELECT list_id, list_title, list_location, list_longitude, list_latitude, list_date,
-        list_time, list_duration, list_description, list_img_id, list_org, org_users.org_name,
-        org_users.org_avatar_img_id
-        FROM listings 
-        JOIN org_users on listings.list_org = org_users.org_id 
-        WHERE listings.list_visible = $1 `;
+    list_time, list_duration, list_description, list_img_id, list_org, org_users.org_name,
+    org_users.org_avatar_img_id
+    FROM listings 
+    JOIN org_users on listings.list_org = org_users.org_id 
+    WHERE listings.list_visible = $1 `;
 
   queryStr += `AND (listings.list_title ILIKE $2 OR listings.list_description ILIKE $2) `;
 
@@ -244,7 +244,7 @@ export async function createListingSkillJunc(
   list_skills: string[]
 ) {
   const queryStr = `INSERT INTO list_skill_junc (list_id, skill_id)
-      SELECT $1, skill_id FROM skills WHERE skill_name ILIKE $2 RETURNING *;`;
+    SELECT $1, skill_id FROM skills WHERE skill_name ILIKE $2 RETURNING *;`;
 
   const queries = list_skills.map(async (skillName) => {
     await db.query(queryStr, [listId, skillName]);
