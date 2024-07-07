@@ -52,3 +52,23 @@ export function postFavouriteToListing(userIdNum: number, listIdNum: number) {
       return rows[0];
     });
 }
+
+export function deleteFavouriteListing(userIdNum: number, listIdNum: number) {
+  logger.debug(`In deleteFavouriteListing() in favourites.model`);
+
+  return db
+    .query(
+      `DELETE FROM favourite_listings WHERE vol_id = $1 AND list_id = $2 RETURNING *;`,
+      [userIdNum, listIdNum]
+    )
+    .then(({ rows }) => {
+      if (!rows.length) {
+        return Promise.reject({
+          status: 404,
+          msg: "Favourite listing not found!",
+        });
+      }
+
+      return rows[0];
+    });
+}

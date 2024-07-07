@@ -127,3 +127,41 @@ export function postFavouriteListings(
       next(err);
     });
 }
+
+export function deleteFavouriteListing(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  logger.debug("In deleteFavouriteListing() in favourites.controller");
+
+  const listIdNum = Number(req.body.list_id);
+
+  if (Number.isNaN(listIdNum)) {
+    next({ status: 400, msg: "list_id is not a number!" });
+    return;
+  }
+
+  const userIdNum = Number(req.params.user_id);
+  if (Number.isNaN(userIdNum)) {
+    next({ status: 400, msg: "user_id is not a number!" });
+    return;
+  }
+
+  // Check authorisation
+  const favAuthObj = checkUserCredentials(req, userIdNum, "volunteer");
+  if (!favAuthObj.authorised) {
+    next(favAuthObj.respObj);
+
+    return;
+  }
+
+  favouritesModel
+    .deleteFavouriteListing(userIdNum, listIdNum)
+    .then((favourite_listing) => {
+      res.status(200).send({ favourite_listing });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}

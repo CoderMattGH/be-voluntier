@@ -515,6 +515,14 @@
       "favourite": { "fav_lists_id": 12, "vol_id": 1, "list_id": 1 }
     }
   },
+  "DELETE /api/favourites/:vol_user_id/listings": {
+    "description": "Allows the volunteer user to delete a favourite listing.",
+    "authRequired": true,
+    "requestBody": { "list_id": "number" },
+    "exampleResponse": {
+      "favourite": { "fav_lists_id": 12, "vol_id": 1, "list_id": 1 }
+    }
+  },
   "GET /api/images/:img_id": {
     "description": "Returns a json object with image data in b64 format for the corresponding :img_id.",
     "exampleResponse": {
