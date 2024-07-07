@@ -2,7 +2,6 @@ import { logger } from "../logger";
 import { checkUserCredentials, getUserInfoFromToken } from "../auth/auth-utils";
 import { Request, Response, NextFunction } from "express";
 import * as volUserModel from "../models/vol-user.model";
-import * as constants from "../constants";
 
 export function getVolUserById(
   req: Request,

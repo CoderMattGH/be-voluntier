@@ -143,9 +143,8 @@ export function createVolUser(
         logger.debug(`Avatar image was created with img_id: ${imgId.img_id}!`);
       }
 
-      const queryStr =
-        `INSERT INTO vol_users (vol_email, vol_password, vol_first_name, vol_last_name, ` +
-        `vol_contact_tel, vol_bio, vol_avatar_img_id, vol_hours) 
+      const queryStr = `INSERT INTO vol_users (vol_email, vol_password, vol_first_name, vol_last_name,
+        vol_contact_tel, vol_bio, vol_avatar_img_id, vol_hours) 
         VALUES ($1, $2, $3, $4, $5, $6, $7, 0) RETURNING *;`;
 
       return db.query(queryStr, [
@@ -302,12 +301,11 @@ export async function updateVolUser(
     return Promise.resolve(null);
   }
 
-  const queryStr = `
-    UPDATE vol_users
+  // TODO: Sanitised?
+  const queryStr = `UPDATE vol_users
     SET ${setClauses.join(", ")}
     WHERE vol_id = $${paramIndex}
-    RETURNING *;
-  `;
+    RETURNING *;`;
   queryParams.push(userId);
 
   return db.query(queryStr, queryParams).then((result) => {
