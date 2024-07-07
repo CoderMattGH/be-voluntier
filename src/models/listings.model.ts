@@ -148,7 +148,7 @@ export function createListing(listing: ListingBody, orgId: number) {
   }
 
   // TODO: nullable
-  if (!skills && skills !== null) {
+  if (skills && skills !== null) {
     const skillsValObj = postListingValidator.validateSkills(skills);
     if (!skillsValObj.valid) {
       return Promise.reject({ status: 400, msg: skillsValObj.msg });
@@ -244,7 +244,7 @@ export async function createListingSkillJunc(
   list_skills: string[]
 ) {
   const queryStr = `INSERT INTO list_skill_junc (list_id, skill_id)
-      SELECT $1, skill_id FROM skills WHERE skill_name = $2 RETURNING *;`;
+      SELECT $1, skill_id FROM skills WHERE skill_name ILIKE $2 RETURNING *;`;
 
   const queries = list_skills.map(async (skillName) => {
     await db.query(queryStr, [listId, skillName]);

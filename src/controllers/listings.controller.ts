@@ -78,22 +78,56 @@ export function getListing(req: Request, res: Response, next: NextFunction) {
 export function postListing(req: Request, res: Response, next: NextFunction) {
   logger.debug(`In postListing() in listings.controller`);
 
-  const { body: listing } = req.body;
+  const { body: listing } = req;
 
   // Non nullable values
   const valMap = new Map();
-  valMap.set("list_title", listing.list_title);
-  valMap.set("list_location", listing.list_location);
-  valMap.set("list_date", listing.list_date);
-  valMap.set("list_time", listing.list_time);
-  valMap.set("list_duration", listing.list_duration);
-  valMap.set("list_description", listing.list_description);
-  valMap.set("list_latitude", listing.list_latitude);
-  valMap.set("list_longitude", listing.list_longitude);
+  valMap.set("list_title", { val: listing.list_title, type: "string" });
+  valMap.set("list_location", { val: listing.list_location, type: "string" });
+  valMap.set("list_date", { val: listing.list_date, type: "string" });
+  valMap.set("list_time", { val: listing.list_time, type: "string" });
+  valMap.set("list_duration", { val: listing.list_duration, type: "number" });
+  valMap.set("list_description", {
+    val: listing.list_description,
+    type: "string",
+  });
+  valMap.set("list_latitude", { val: listing.list_latitude, type: "number" });
+  valMap.set("list_longitude", { val: listing.list_longitude, type: "number" });
 
-  for (const [key, value] of valMap) {
-    if (value === undefined || value === null) {
-      next({ status: 400, msg: `${key} is not defined or null!` });
+  for (const [key, value] of valMap.entries()) {
+    if (value.val === undefined || value.val === null) {
+      next({ status: 400, msg: `${key} is not a ${value.type}!` });
+
+      return;
+    }
+
+    if (typeof value.val !== value.type) {
+      next({ status: 400, msg: `${key} is not a ${value.type}!` });
+
+      return;
+    }
+  }
+
+  // Nullable values
+  if (listing.img_b64_data) {
+    if (typeof listing.img_b64_data !== "string") {
+      next({ status: 400, msg: `img_b64_data is not a string!` });
+
+      return;
+    }
+  }
+
+  if (listing.list_skills) {
+    if (!Array.isArray(listing.list_skills)) {
+      next({ status: 400, msg: `list_skills is not an array!` });
+
+      return;
+    }
+  }
+
+  if (listing.list_visible !== undefined) {
+    if (typeof listing.list_visble !== "boolean") {
+      next({ status: 400, msg: `list_visible is not a boolean!` });
 
       return;
     }
@@ -114,8 +148,8 @@ export function postListing(req: Request, res: Response, next: NextFunction) {
 
   listingsModel
     .createListing(listing, orgObj.id)
-    .then((newListing) => {
-      res.status(201).send(newListing);
+    .then((listing) => {
+      res.status(201).send({ listing });
     })
     .catch((err) => {
       next(err);

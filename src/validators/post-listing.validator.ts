@@ -43,6 +43,17 @@ export function validateLocation(location: string) {
     };
   }
 
+  if (
+    location.length < constants.MIN_LOCAT_LENGTH ||
+    location.length > constants.MAX_LOCAT_LENGTH
+  ) {
+    const str =
+      `list_location must be between ${constants.MIN_LOCAT_LENGTH} and ` +
+      `${constants.MAX_LOCAT_LENGTH} characters in length!`;
+
+    return { valid: false, msg: str };
+  }
+
   if (!constants.VAL_LOCAT_PATTERN.test(location)) {
     return { valid: false, msg: "list_location contains invalid symbols!" };
   }
@@ -59,9 +70,7 @@ export function validateDate(date: string) {
     return { valid: false, msg: "list_date cannot start or end with spaces!" };
   }
 
-  try {
-    new Date(date);
-  } catch (err) {
+  if (new Date(date).toString() === "Invalid Date") {
     return { status: 400, msg: "list_date is in an invalid format!" };
   }
 
@@ -77,9 +86,7 @@ export function validateTime(time: string) {
     return { valid: false, msg: "list_time cannot start or end with spaces!" };
   }
 
-  try {
-    new Date(time);
-  } catch (err) {
+  if (!constants.VAL_LIST_TIME_PATTERN.test(time)) {
     return { status: 400, msg: "list_time is in an invalid format!" };
   }
 
@@ -152,6 +159,7 @@ export function validateLongLat(longLat: number) {
   return { valid: true };
 }
 
+// TODO: Prevent listing skills twice
 export function validateSkills(skills: string[]) {
   if (!skills || !skills.length) {
     return { valid: false, msg: "list_skills cannot be empty!" };
@@ -163,8 +171,8 @@ export function validateSkills(skills: string[]) {
 
   // Check skills are strings
   for (const skill of skills) {
-    if (!skill || typeof skill === "string") {
-      return { valid: false, msg: "Skills must be strings!" };
+    if (!skill || typeof skill !== "string") {
+      return { valid: false, msg: "skills must be strings!" };
     }
   }
 
@@ -201,6 +209,13 @@ export function validateSkills(skills: string[]) {
     if (!found) {
       return { status: 400, msg: `Invalid skill found! (${skill})` };
     }
+  }
+
+  if (skills.length > constants.MAX_LIST_SKILLS) {
+    return {
+      status: 400,
+      msg: `You may only list a maximum of ${constants.MAX_LIST_SKILLS}!`,
+    };
   }
 
   return { valid: true };
