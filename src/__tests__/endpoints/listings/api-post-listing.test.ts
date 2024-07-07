@@ -76,6 +76,69 @@ describe("POST /api/listings", () => {
       });
   });
 
+  test("Visible defaults to true", async () => {
+    const orgId = 2;
+    const orgCredentials = {
+      email: "redcross@email.com",
+      password: "mybadpassword234",
+      role: "organisation",
+    };
+
+    const newListing = {
+      list_title: "Example Listing",
+      list_location: "123 Main St, City, Country",
+      list_date: "2024-07-05",
+      list_time: "14:00",
+      list_duration: 2,
+      list_description: "This is a sample description of the listing.",
+      list_latitude: 37.7749,
+      list_longitude: -122.4194,
+      img_b64_data: testImg1,
+      list_skills: ["Patience", "Sales"],
+    };
+
+    // Login as org user and get cookie
+    const loginResponse = await request(app)
+      .post("/api/login")
+      .send(orgCredentials);
+    const { token } = loginResponse.body.user;
+
+    // Post the new listing
+    const postResponse = await request(app)
+      .post("/api/listings")
+      .set("Authorization", `Bearer ${token}`)
+      .send(newListing)
+      .expect(201)
+      .then(({ body }) => {
+        const { listing } = body;
+
+        expect(listing).toMatchObject({
+          list_id: expect.any(Number),
+          list_title: newListing.list_title,
+          list_location: newListing.list_location,
+          list_date: expect.any(String),
+          list_time: expect.any(String),
+          list_duration: newListing.list_duration,
+          list_description: newListing.list_description,
+          list_latitude: newListing.list_latitude,
+          list_longitude: newListing.list_longitude,
+          list_img_id: expect.any(Number),
+          list_org: orgId,
+          list_visible: true,
+        });
+
+        return listing.list_id;
+      })
+      .then((listId) => {
+        return request(app).get(`/api/skills/${listId}`);
+      })
+      .then(({ body }) => {
+        const { skills } = body;
+
+        expect(skills).toHaveLength(2);
+      });
+  });
+
   test("Skills can be uppercase", async () => {
     const orgId = 2;
     const orgCredentials = {
