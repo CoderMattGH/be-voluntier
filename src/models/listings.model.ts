@@ -1,6 +1,8 @@
 import { logger } from "../logger";
 import { db } from "../db";
 import { createImage } from "./images.model";
+import * as postListingValidator from "../validators/post-listing.validator";
+import * as imageValidator from "../validators/image.validator";
 
 // TODO: Implement better search
 export function selectListings(
@@ -60,12 +62,12 @@ export function selectListing(visible = true, listing_id: string) {
   logger.debug(`In selectListing() in listings.model`);
 
   let queryStr = `SELECT list_id, list_title, list_location, list_longitude, list_latitude, list_date,
-        list_time, list_duration, list_description, list_img_id, list_org, org_users.org_name, 
-        org_users.org_avatar_img_id
-        FROM listings 
-        JOIN org_users on listings.list_org = org_users.org_id 
-        WHERE listings.list_visible = $1
-        AND listings.list_id = $2;`;
+    list_time, list_duration, list_description, list_img_id, list_org, org_users.org_name, 
+    org_users.org_avatar_img_id
+    FROM listings 
+    JOIN org_users on listings.list_org = org_users.org_id 
+    WHERE listings.list_visible = $1
+    AND listings.list_id = $2;`;
 
   return db.query(queryStr, [visible, listing_id]).then(({ rows }) => {
     if (!rows.length) {
@@ -79,49 +81,118 @@ export function selectListing(visible = true, listing_id: string) {
 interface ListingBody {
   list_title: string;
   list_location: string;
-  list_date: string; // Use appropriate type if it's a Date object
-  list_time: string; // Use appropriate type if it's a Date object
-  list_duration: string; // Use appropriate type (e.g., number) depending on your requirements
+  list_date: string;
+  list_time: string;
+  list_duration: number;
   list_description: string;
   list_latitude: number;
   list_longitude: number;
-  img_b64_data: string; // Base64 image data
-  list_skills: string[];
-  list_visible: boolean;
+  img_b64_data: string;
+  list_skills: string[] | null;
+  list_visible: boolean | null;
 }
 
-export function createListing(body: ListingBody, id: number) {
+export function createListing(listing: ListingBody, orgId: number) {
   logger.debug(`In createListing() in listings.model`);
 
-  const title = body.list_title;
-  const location = body.list_location;
-  const date = body.list_date;
-  const time = body.list_time;
-  const duration = body.list_duration;
-  const description = body.list_description;
-  const latitude = body.list_latitude;
-  const longitude = body.list_longitude;
-  const imgB64Data = body.img_b64_data;
-  const isVisible = body.list_visible;
+  const title = listing.list_title;
+  const location = listing.list_location;
+  const date = listing.list_date;
+  const time = listing.list_time;
+  const duration = listing.list_duration;
+  const description = listing.list_description;
+  const latitude = listing.list_latitude;
+  const longitude = listing.list_longitude;
+  let skills = listing.list_skills;
+  let imgB64Data = listing.img_b64_data;
+  let visible = listing.list_visible;
 
-  let imgId: number | null = null;
+  const titleValObj = postListingValidator.validateTitle(title);
+  if (!titleValObj.valid) {
+    return Promise.reject({ status: 400, msg: titleValObj.msg });
+  }
 
-  const createListingWithImage = async () => {
-    try {
-      // Step 1: Create image using images.model.createImage
+  const locValObj = postListingValidator.validateLocation(location);
+  if (!locValObj.valid) {
+    return Promise.reject({ status: 400, msg: locValObj.msg });
+  }
 
-      if (imgB64Data && imgB64Data.trim().length > 0) {
-        const imageResult = await createImage(imgB64Data);
-        imgId = imageResult.img_id;
+  const dateValObj = postListingValidator.validateDate(date);
+  if (!dateValObj.valid) {
+    return Promise.reject({ status: 400, msg: dateValObj.msg });
+  }
+
+  const timeValObj = postListingValidator.validateTime(time);
+  if (!timeValObj.valid) {
+    return Promise.reject({ status: 400, msg: timeValObj.msg });
+  }
+
+  const durValObj = postListingValidator.validateDuration(duration);
+  if (!durValObj.valid) {
+    return Promise.reject({ status: 400, msg: durValObj.msg });
+  }
+
+  const descValObj = postListingValidator.validateDescription(description);
+  if (!descValObj.valid) {
+    return Promise.reject({ status: 400, msg: descValObj.msg });
+  }
+
+  const longValObj = postListingValidator.validateLongLat(longitude);
+  if (!longValObj.valid) {
+    return Promise.reject({ status: 400, msg: longValObj.msg });
+  }
+
+  const latValObj = postListingValidator.validateLongLat(latitude);
+  if (!latValObj.valid) {
+    return Promise.reject({ status: 400, msg: latValObj.msg });
+  }
+
+  // TODO: nullable
+  if (skills && skills !== null) {
+    const skillsValObj = postListingValidator.validateSkills(skills);
+    if (!skillsValObj.valid) {
+      return Promise.reject({ status: 400, msg: skillsValObj.msg });
+    }
+  } else {
+    skills = null;
+  }
+
+  // Nullable
+  if (visible) {
+    const visValObj = postListingValidator.validateVisibility(visible);
+    if (!visValObj.valid) {
+      return Promise.reject({ status: 400, msg: visValObj.msg });
+    }
+  } else {
+    visible = null;
+  }
+
+  // Create image if sent image data
+  let createImagePromise;
+  if (imgB64Data) {
+    const imgValObj = imageValidator.validateImage(imgB64Data);
+    if (!imgValObj.valid) {
+      return Promise.reject({ status: 400, msg: imgValObj.msg });
+    }
+
+    createImagePromise = createImage(imgB64Data);
+  } else {
+    createImagePromise = Promise.resolve(null);
+  }
+
+  return createImagePromise
+    .then((img) => {
+      if (img) {
+        logger.debug(`Image successfully created with img_id: ${img.img_id}!`);
+      } else {
+        logger.debug(`Skipping image creation!`);
       }
 
-      // Step 2: Create listing with image_id
-      const queryStrListing = `
-        INSERT INTO listings (list_title, list_location, list_longitude, list_latitude, list_date, 
-        list_time, list_duration, list_description, list_org, list_img_id, list_visible)
+      const queryStr = `INSERT INTO listings (list_title, list_location, list_longitude, 
+        list_latitude, list_date, list_time, list_duration, list_description, list_org, 
+        list_img_id, list_visible)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-        RETURNING *
-      `;
+        RETURNING *;`;
 
       const values = [
         title,
@@ -132,38 +203,52 @@ export function createListing(body: ListingBody, id: number) {
         time,
         duration,
         description,
-        id,
-        imgId,
-        isVisible,
+        orgId,
+        img ? img.img_id : null,
+        visible,
       ];
 
-      const { rows: listingRows } = await db.query(queryStrListing, values);
+      return db.query(queryStr, values);
+    })
+    .then(({ rows }) => {
+      if (!rows.length) {
+        return Promise.reject({
+          status: 500,
+          msg: "Unknown error creating listing!",
+        });
+      }
 
-      return listingRows[0];
-    } catch (err: any) {
-      throw new Error(err);
-    }
-  };
+      const newListing = rows[0];
 
-  return createListingWithImage();
+      // Add skills to list_skill_junc table if set
+      let addSkillsProm;
+      if (skills) {
+        addSkillsProm = createListingSkillJunc(newListing.list_id, skills);
+      } else {
+        addSkillsProm = Promise.resolve(null);
+      }
+
+      return addSkillsProm.then(() => {
+        logger.info("Successfully inserted listing!");
+
+        return newListing;
+      });
+    })
+    .catch((err) => {
+      return err;
+    });
 }
 
 export async function createListingSkillJunc(
   listId: number,
   list_skills: string[]
 ) {
-  try {
-    const queryStr = `
-      INSERT INTO list_skill_junc (list_id, skill_id)
-      SELECT $1, skill_id FROM skills WHERE skill_name = $2
-    `;
+  const queryStr = `INSERT INTO list_skill_junc (list_id, skill_id)
+      SELECT $1, skill_id FROM skills WHERE skill_name ILIKE $2 RETURNING *;`;
 
-    const queries = list_skills.map(async (skillName) => {
-      await db.query(queryStr, [listId, skillName]);
-    });
+  const queries = list_skills.map(async (skillName) => {
+    await db.query(queryStr, [listId, skillName]);
+  });
 
-    await Promise.all(queries);
-  } catch (err: any) {
-    throw new Error(err);
-  }
+  return Promise.all(queries);
 }

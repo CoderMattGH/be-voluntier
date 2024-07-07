@@ -1,8 +1,8 @@
 import { logger } from "../logger";
 import { Request, Response, NextFunction } from "express";
+import { getUserInfoFromToken } from "../auth/auth-utils";
 import * as listingsModel from "../models/listings.model";
 import * as constants from "../constants";
-import { getUserInfoFromToken } from "../auth/auth-utils";
 
 export function getListings(req: Request, res: Response, next: NextFunction) {
   logger.debug(`In getListings() in listings.controller`);
@@ -78,134 +78,78 @@ export function getListing(req: Request, res: Response, next: NextFunction) {
 export function postListing(req: Request, res: Response, next: NextFunction) {
   logger.debug(`In postListing() in listings.controller`);
 
-  const body = req.body;
+  const { body: listing } = req;
+
+  // Non nullable values
+  const valMap = new Map();
+  valMap.set("list_title", { val: listing.list_title, type: "string" });
+  valMap.set("list_location", { val: listing.list_location, type: "string" });
+  valMap.set("list_date", { val: listing.list_date, type: "string" });
+  valMap.set("list_time", { val: listing.list_time, type: "string" });
+  valMap.set("list_duration", { val: listing.list_duration, type: "number" });
+  valMap.set("list_description", {
+    val: listing.list_description,
+    type: "string",
+  });
+  valMap.set("list_latitude", { val: listing.list_latitude, type: "number" });
+  valMap.set("list_longitude", { val: listing.list_longitude, type: "number" });
+
+  for (const [key, value] of valMap.entries()) {
+    if (value.val === undefined || value.val === null) {
+      next({ status: 400, msg: `${key} is not a ${value.type}!` });
+
+      return;
+    }
+
+    if (typeof value.val !== value.type) {
+      next({ status: 400, msg: `${key} is not a ${value.type}!` });
+
+      return;
+    }
+  }
+
+  // Nullable values
+  if (listing.img_b64_data) {
+    if (typeof listing.img_b64_data !== "string") {
+      next({ status: 400, msg: `img_b64_data is not a string!` });
+
+      return;
+    }
+  }
+
+  if (listing.list_skills) {
+    if (!Array.isArray(listing.list_skills)) {
+      next({ status: 400, msg: `list_skills is not an array!` });
+
+      return;
+    }
+  }
+
+  if (listing.list_visible !== undefined) {
+    if (typeof listing.list_visble !== "boolean") {
+      next({ status: 400, msg: `list_visible is not a boolean!` });
+
+      return;
+    }
+  }
 
   const orgObj = getUserInfoFromToken(req);
   if (!orgObj) {
-    next({ status: 401, msg: "User must be logged in as organisation!" });
+    next({ status: 401, msg: constants.ERR_MSG_NOT_LOGGED_IN });
 
     return;
   }
 
   if (orgObj.role !== "organisation") {
     next({ status: 403, msg: constants.ERR_MSG_PERMISSION_DENIED });
-    return;
-  }
-
-  if (!req.body.list_title) {
-    next({
-      status: 400,
-      msg: "list_title needs to be populated with characters!",
-    });
-
-    return;
-  }
-
-  if (!req.body.list_location) {
-    next({
-      status: 400,
-      msg: "list_location needs to be populated with characters!",
-    });
-
-    return;
-  }
-
-  if (!req.body.list_date) {
-    next({
-      status: 400,
-      msg: "list_date needs to be populated with characters!",
-    });
-
-    return;
-  }
-
-  if (!req.body.list_time) {
-    next({
-      status: 400,
-      msg: "list_time needs to be populated with characters!",
-    });
-
-    return;
-  }
-
-  if (!req.body.list_duration) {
-    next({
-      status: 400,
-      msg: "list_duration needs to be populated with characters!",
-    });
-
-    return;
-  }
-
-  if (!req.body.list_description) {
-    next({
-      status: 400,
-      msg: "list_description needs to be populated with characters!",
-    });
-
-    return;
-  }
-
-  if (typeof req.body.list_latitude !== "number") {
-    next({
-      status: 400,
-      msg: "list_latitude needs to be given!",
-    });
-
-    return;
-  }
-
-  if (typeof req.body.list_longitude !== "number") {
-    next({
-      status: 400,
-      msg: "list_longitude needs to be given!",
-    });
-
-    return;
-  }
-
-  if (!Array.isArray(req.body.list_skills)) {
-    next({
-      status: 400,
-      msg: "list_skills needs to be given!",
-    });
-
-    return;
-  }
-
-  for (const element of req.body.list_skills) {
-    if (typeof element !== "string") {
-      next({
-        status: 400,
-        msg: "list_skills must contain valid skills only!",
-      });
-
-      return;
-    }
-  }
-
-  if (req.body.list_visible !== true) {
-    next({
-      status: 400,
-      msg: "list_visible must be set to true!",
-    });
 
     return;
   }
 
   listingsModel
-    .createListing(body, orgObj.id)
-    .then((newListing) => {
-      if (body.list_skills && body.list_skills.length > 0) {
-        return listingsModel
-          .createListingSkillJunc(newListing.list_id, body.list_skills)
-          .then(() => newListing);
-      }
-
-      return newListing;
-    })
-    .then((newListing) => {
-      res.status(201).send({ newListing });
+    .createListing(listing, orgObj.id)
+    .then((listing) => {
+      res.status(201).send({ listing });
     })
     .catch((err) => {
       next(err);

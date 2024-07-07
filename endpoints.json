@@ -78,7 +78,7 @@
       "last_name": "Person",
       "contact_tel [OPTIONAL]": "82938923",
       "bio [OPTIONAL]": "A bio",
-      "avatar_img_b64": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAA [not-required]"
+      "avatar_img_b64 [OPTIONAL]": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAA"
     },
     "exampleResponse": {
       "user": {
@@ -123,7 +123,7 @@
     }
   },
   "POST /api/listings": {
-    "description": "Posts a new listing to the listings table. Must be an org user to use this endpoint.",
+    "description": "Posts a new listing to the listings table. Must be an organisation user.",
     "requestBody": {
       "list_title": "Example Listing",
       "list_location": "123 Main St, City, Country",
@@ -135,7 +135,7 @@
       "list_longitude": -122.4194,
       "img_b64_data [OPTIONAL]": "exampleB64ImageData",
       "list_skills [OPTIONAL]": ["Patience", "Sales"],
-      "list_visible": true
+      "list_visible [OPTIONAL]": true
     },
     "exampleResponse": {
       "newListing": {
@@ -435,7 +435,7 @@
     }
   },
   "GET /api/skills/:list_id": {
-    "description": "Serves an array skills for a specified listing id.",
+    "description": "Serves an array of skills for a specified listing id.",
     "exampleResponse": {
       "skills": [
         { "skill_id": 8, "skill_name": "Animal Care" },

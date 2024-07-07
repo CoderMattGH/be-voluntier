@@ -132,9 +132,6 @@ export function seed({
       .finally(() => {
         logger.info("Finished creating tables!");
         logger.info("Closing connection to database!");
-      })
-      .catch((err) => {
-        console.log(err);
       });
   }
 
