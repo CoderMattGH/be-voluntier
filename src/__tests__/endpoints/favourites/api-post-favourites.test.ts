@@ -12,7 +12,7 @@ afterAll(() => db.end());
 
 describe("POST /api/favourites/:vol_user_id/listings", () => {
   test("When given appropriate user_id and list_id will post to favourite table", () => {
-    const list_id = 1;
+    const list_id = 5;
 
     const volCredentials = {
       email: "mattydemail@email.com",
@@ -35,8 +35,33 @@ describe("POST /api/favourites/:vol_user_id/listings", () => {
           .then(({ body }) => {
             const { favourite } = body;
             expect(favourite.vol_id).toBe(1);
-            expect(favourite.list_id).toBe(1);
+            expect(favourite.list_id).toBe(list_id);
           });
+      });
+  });
+
+  // TODO: More user friendly error message
+  test("Cannot favourite the same post twice", () => {
+    const list_id = 1;
+
+    const volCredentials = {
+      email: "mattydemail@email.com",
+      password: "mybadpassword",
+      role: "volunteer",
+    };
+
+    return request(app)
+      .post("/api/login")
+      .send(volCredentials)
+      .then((response) => {
+        const { token } = response.body.user;
+
+        // Fetch favourites
+        return request(app)
+          .post("/api/favourites/1/listings")
+          .set("Authorization", `Bearer ${token}`)
+          .send({ list_id })
+          .expect(409);
       });
   });
 
