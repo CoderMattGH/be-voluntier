@@ -1,6 +1,7 @@
 import { logger } from "../logger";
 import { db } from "../db";
 import { hashPassword } from "../auth/auth-utils";
+import { doesUserAccountExist } from "./misc-user.model";
 import * as registerUserValidator from "../validators/register-user.validator";
 import * as imageValidator from "../validators/image.validator";
 import * as imagesModel from "../models/images.model";
@@ -164,21 +165,6 @@ export function createVolUser(
       logger.info(`${email} volunteer successfully registered!`);
 
       return rows[0];
-    });
-}
-
-function doesUserAccountExist(email: string) {
-  return db
-    .query(
-      "SELECT vol_email, org_email FROM vol_users, org_users WHERE vol_email = $1 OR org_email = $1;",
-      [email]
-    )
-    .then(({ rows }) => {
-      if (rows.length) {
-        return true;
-      } else {
-        return false;
-      }
     });
 }
 

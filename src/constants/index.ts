@@ -51,6 +51,9 @@ export const MAX_LIST_DESC_LENGTH = 2000;
 
 export const MAX_LIST_SKILLS = 5;
 
+export const MAX_ORG_TYPE_LENGTH = 100;
+export const MIN_ORG_TYPE_LENGTH = 1;
+
 export const MAX_EMAIL_LENGTH = 80;
 export const MIN_EMAIL_LENGTH = 5;
 export const VAL_EMAIL_PATTERN =

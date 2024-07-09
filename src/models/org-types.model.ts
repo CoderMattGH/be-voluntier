@@ -16,3 +16,17 @@ export function selectOrgTypes() {
     return { orgTypes: orgTypesArr };
   });
 }
+
+export function selectOrgTypesWithId() {
+  logger.debug(`In selectOrgTypesById()`);
+
+  let queryStr = "SELECT * FROM org_types";
+
+  return db.query(queryStr).then(({ rows }) => {
+    if (!rows) {
+      return Promise.reject({ status: 404, msg: "No org types found!" });
+    }
+
+    return { orgTypes: rows };
+  });
+}

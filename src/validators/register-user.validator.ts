@@ -1,4 +1,5 @@
 import * as constants from "../constants";
+import * as miscValidator from "./misc.validator";
 
 export const validateRegisterEmail = (email: string | undefined) => {
   if (!email) {
@@ -64,6 +65,10 @@ export function validateFirstLastName(name: string | undefined) {
   }
 
   return { valid: true };
+}
+
+export function validateOrgName(name: string | undefined) {
+  return validateFirstLastName(name);
 }
 
 export function validateContactTel(contactTel: string | undefined) {
@@ -167,6 +172,54 @@ export function validatePassword(password: string | undefined) {
     return {
       valid: false,
       msg: "Password must not contain whitespace characters!",
+    };
+  }
+
+  return { valid: true };
+}
+
+export function validateOrgTypeId(orgType: number | undefined) {
+  if (orgType === undefined) {
+    return { valid: false, msg: "Org Type ID is undefined!" };
+  }
+
+  if (!miscValidator.isNumber(orgType)) {
+    return { valid: false, msg: "Org Type ID is not a number!" };
+  }
+
+  if (orgType < 0) {
+    return { valid: false, msg: "Org type ID must be a positive integer!" };
+  }
+
+  if (!Number.isInteger(orgType)) {
+    return { valid: false, msg: "Org type ID must be a postive integer!;" };
+  }
+
+  return { valid: true };
+}
+
+export function validateOrgType(orgType: string | undefined) {
+  if (!orgType) {
+    return { valid: false, msg: "Org type is undefined!" };
+  }
+
+  if (miscValidator.isEmptyString(orgType)) {
+    return { valid: false, msg: "Org type is an empty string!" };
+  }
+
+  if (miscValidator.startsEndsWSpaces(orgType)) {
+    return { valid: false, msg: "Org type cannot start or end with spaces!" };
+  }
+
+  if (
+    orgType.length < constants.MIN_ORG_TYPE_LENGTH ||
+    orgType.length > constants.MAX_ORG_TYPE_LENGTH
+  ) {
+    return {
+      valid: false,
+      msg:
+        `Org type must be between ${constants.MIN_ORG_TYPE_LENGTH} and ` +
+        `${constants.MAX_ORG_TYPE_LENGTH} characters in length!`,
     };
   }
 
