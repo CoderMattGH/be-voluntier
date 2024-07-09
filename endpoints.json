@@ -69,6 +69,20 @@
       }
     }
   },
+  "PATCH /api/vol/:vol_user_id": {
+    "authRequired": true,
+    "description": "Edits the vol-user's details with the data provided.",
+    "requestBody": {
+      "email [OPTIONAL]": "a-valid-unusedemail@email.com",
+      "password [OPTIONAL]:": "a-new-password",
+      "contactTel [OPTIONAL]": "893274982",
+      "firstName [OPTIONAL]": "Bobby",
+      "lastName [OPTIONAL]": "Person"
+    },
+    "exampleResponse": {
+      "message": "Update successful: firstName and lastName changed"
+    }
+  },
   "POST /api/vol": {
     "description": "Registers a volunteer user.",
     "requestBody": {
