@@ -150,6 +150,7 @@ export function patchVolUser(req: Request, res: Response, next: NextFunction) {
         return;
       }
 
+      // TODO: Return new data instead of message
       const { success, changedFields } = updateResult;
       const message = `Update successful: ${changedFields.join(
         " and "

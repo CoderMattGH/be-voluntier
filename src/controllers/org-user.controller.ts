@@ -1,6 +1,7 @@
 import { logger } from "../logger";
 import { Request, Response, NextFunction } from "express";
 import { checkUserCredentials } from "../auth/auth-utils";
+import { getUserInfoFromToken } from "../auth/auth-utils";
 import * as orgUserModel from "../models/org-user.model";
 
 export function getOrgUserById(
@@ -33,6 +34,61 @@ export function getOrgUserById(
       delete org_user.org_password;
 
       res.status(200).send({ org_user: org_user });
+    })
+    .catch((err) => {
+      next(err);
+    });
+}
+
+export function postOrgUser(req: Request, res: Response, next: NextFunction) {
+  logger.debug("In postOrgUser() in org-user.controller");
+
+  let {
+    org_name,
+    email,
+    password,
+    org_type_id,
+    contact_tel,
+    avatar_img_b64,
+    bio,
+  } = req.body;
+
+  logger.debug(
+    `Trying to register org where email: ${email} password: ${password} ` +
+      `org_name: ${org_name} contact_tel: ${contact_tel} avatar_img_b64: ${avatar_img_b64} ` +
+      `bio: ${bio}, orgType: ${org_type_id}`
+  );
+
+  // Make sure user is logged out
+  if (getUserInfoFromToken(req)) {
+    next({
+      status: 400,
+      msg: "You must be logged out to register!",
+    });
+
+    return;
+  }
+
+  // Register org user
+  orgUserModel
+    .createOrgUser(
+      email,
+      password,
+      org_name,
+      org_type_id,
+      contact_tel,
+      avatar_img_b64,
+      bio
+    )
+    .then((orgUserObj) => {
+      logger.info(`Successfully registered organisation user: ${orgUserObj}!`);
+
+      // Remove password from response
+      delete orgUserObj.org_password;
+
+      res.status(200).send({ user: orgUserObj });
+
+      return;
     })
     .catch((err) => {
       next(err);
