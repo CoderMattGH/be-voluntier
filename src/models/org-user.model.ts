@@ -5,6 +5,7 @@ import * as registerUserValidator from "../validators/register-user.validator";
 import * as imageValidator from "../validators/image.validator";
 import * as imagesModel from "../models/images.model";
 import * as orgTypesModel from "../models/org-types.model";
+import { hashPassword } from "../auth/auth-utils";
 
 export function selectOrgUserByEmail(email: string) {
   logger.debug(`In selectOrgUserByEmail() in org-user.model`);
@@ -178,7 +179,7 @@ export function createOrgUser(
       return db.query(queryStr, [
         orgName,
         email,
-        password,
+        hashPassword(password),
         orgTypeId,
         contactTel,
         bio,

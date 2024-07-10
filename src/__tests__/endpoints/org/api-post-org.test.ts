@@ -41,6 +41,60 @@ describe("POST /api/org", () => {
       });
   });
 
+  test("Can login after registration", () => {
+    const newOrgUser = {
+      email: "mattymoo@moo.com",
+      org_name: "Matty Moo Charity",
+      org_type_id: 1,
+      password: "password",
+      contact_tel: "2222222",
+      bio: "This is a bio!",
+    };
+
+    return request(app)
+      .post("/api/org")
+      .send(newOrgUser)
+      .expect(200)
+      .then(({ body }) => {
+        const { user } = body;
+
+        expect(user).toMatchObject({
+          org_id: expect.any(Number),
+          org_name: newOrgUser.org_name,
+          org_type: newOrgUser.org_type_id,
+          org_contact_tel: newOrgUser.contact_tel,
+          org_bio: newOrgUser.bio,
+          org_verified: true,
+        });
+
+        const loginObj = {
+          email: "mattymoo@moo.com",
+          password: "password",
+          role: "organisation",
+        };
+
+        return request(app)
+          .post("/api/login")
+          .send(loginObj)
+          .expect(200)
+          .then(({ body }) => {
+            const { user } = body;
+
+            expect(user).toMatchObject({
+              org_id: expect.any(Number),
+              org_email: expect.any(String),
+              org_name: expect.any(String),
+              org_bio: expect.any(String),
+              org_verified: expect.any(Boolean),
+              role: "organisation",
+              token: expect.any(String),
+            });
+
+            expect(user.org_avatar_img_id).toBeDefined();
+          });
+      });
+  });
+
   test("Successfully registers a new org user with image avatar image attached", () => {
     let b64Image = testImg1;
 
