@@ -68,8 +68,6 @@ For installation, you will need to have the following applications installed:
    LOGL=debug
    ```
 
-   <br />
-
 2. Add a `.env.test` file to your root directory.
 
    For example:
@@ -79,8 +77,6 @@ For installation, you will need to have the following applications installed:
 
    LOGL=error
    ```
-
-   <br />
 
 3. Add a `.env.production` file to your root directory if you are planning on hosting the API.
 
@@ -94,8 +90,6 @@ For installation, you will need to have the following applications installed:
    LOGL=error
    ```
 
-   <br />
-
 4. `npm install`
 
 ### Setup database
@@ -104,13 +98,9 @@ For installation, you will need to have the following applications installed:
 
    `npm run setup-dbs`
 
-<br />
-
 2. Compile the project:
 
    `npm run build`
-
-<br />
 
 3. Seed the database:
 
@@ -122,13 +112,9 @@ For installation, you will need to have the following applications installed:
 
    `npm run build`
 
-   <br />
-
 2. Run the project:
 
    `npm start`
-
-   <br />
 
 ## <img src="https://github.com/hexmax-nc/fe-voluntier/blob/main/assets/voluntier-badge.png?raw=true" width="14"> Testing
 
