@@ -24,10 +24,8 @@ export const MIN_CONT_TEL_LENGTH = 5;
 export const MAX_CONT_TEL_LENGTH = 50;
 export const CONT_TEL_PATTERN = /^[0-9]+$/;
 
-// NOTE: Base64 is approx. 33% bigger than raw binary data!
 export const MIN_IMG_SIZE = 1024 * 10; // 10KB
 export const MAX_IMG_SIZE = 1024 * 500; // 500KB
-// TODO: Better validation!
 export const VAL_IMG_PATTERN = /^(data:image\/)[^\s]+$/;
 
 export const MIN_BIO_SIZE = 1;
@@ -40,8 +38,6 @@ export const MAX_LIST_DURATION = 50;
 
 export const MIN_LOCAT_LENGTH = 5;
 export const MAX_LOCAT_LENGTH = 400;
-// TODO: Better validation
-// export const VAL_LOCAT_PATTERN = /^[a-zA-Z0-9,. ]+$/;
 export const VAL_LOCAT_PATTERN = /./u;
 
 export const VAL_LIST_TIME_PATTERN = /^([01]\d|2[0-3]):([0-5]\d)$/;
@@ -54,7 +50,6 @@ export const MAX_LIST_SKILLS = 5;
 export const MAX_ORG_TYPE_LENGTH = 100;
 export const MIN_ORG_TYPE_LENGTH = 1;
 
-// TODO: Pattern
 export const MAX_ORG_NAME_LENGTH = 100;
 export const MIN_ORG_NAME_LENGTH = 3;
 

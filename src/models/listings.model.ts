@@ -41,7 +41,6 @@ export function selectListings(
 
   const queryParams = [visible, `%${search}%`];
 
-  // TODO: Potential bug
   if (orgId) {
     queryStr += `AND listings.list_org = $3 `;
     queryParams.push(orgId.toString());
@@ -188,7 +187,6 @@ export function createListing(listing: ListingBody, orgId: number) {
         logger.debug(`Skipping image creation!`);
       }
 
-      // TODO: Removed visible!
       const queryStr = `INSERT INTO listings (list_title, list_location, list_longitude, 
         list_latitude, list_date, list_time, list_duration, list_description, list_org, 
         list_img_id)
