@@ -56,6 +56,12 @@ For installation, you will need to have the following applications installed:
 
   _Note: If you would like to remove log messages, set the level to `error`._
 
+- ##### `SECRET_KEY`
+
+  _JSON Web Token (JWT) secret key_
+
+  For example: `SECRET_KEY=keyboard-cat`
+
 #### Instructions
 
 1. Add a `.env.development` file to your root directory.
@@ -66,6 +72,8 @@ For installation, you will need to have the following applications installed:
    PGDATABASE=voluntier_db
 
    LOGL=debug
+
+   SECRET_KEY=keyboard-cat
    ```
 
 2. Add a `.env.test` file to your root directory.
@@ -76,6 +84,8 @@ For installation, you will need to have the following applications installed:
    PGDATABASE=voluntier_db_test
 
    LOGL=error
+
+   SECRET_KEY=keyboard-cat
    ```
 
 3. Add a `.env.production` file to your root directory if you are planning on hosting the API.
@@ -88,6 +98,8 @@ For installation, you will need to have the following applications installed:
    DATABASE_URL=postgres://username:password@db-hostname:5432/voluntier_db
 
    LOGL=error
+
+   SECRET_KEY=keyboard-cat
    ```
 
 4. `npm install`

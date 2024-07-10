@@ -1,4 +1,5 @@
 import { logger } from "../logger";
+import "../env-parser";
 import jwt, { Secret, JwtPayload } from "jsonwebtoken";
 import { Request } from "express";
 import bcrypt from "bcryptjs";
@@ -12,8 +13,11 @@ interface TokenInterface {
 
 const salt = "$2a$10$mjBiK50OQB2g.s.QXSV8zu";
 
-// TODO: Change secret and store in .env
-const SECRET_KEY: Secret = "keyboard-cat";
+if (!process.env.SECRET_KEY) {
+  throw new Error("SECRET_KEY environment variable needs to be set!");
+}
+
+const SECRET_KEY: Secret = process.env.SECRET_KEY;
 
 const hashedPasswordsCache = new Map();
 export function hashPassword(password: string) {
