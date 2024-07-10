@@ -58,5 +58,3 @@ app.use(
     }
   }
 );
-
-// TODO: General error handler

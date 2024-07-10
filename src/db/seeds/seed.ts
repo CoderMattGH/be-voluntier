@@ -305,7 +305,6 @@ function setupVolUsersTable(volUsers: VolUser[]) {
     });
 }
 
-// TODO: Delete cascades and removes listings
 function setupOrgUsersTable(orgUsers: OrgUser[]) {
   logger.debug(`Setting up org_users table!`);
 
@@ -403,8 +402,6 @@ function setupBadgesTable(badges: Badge[]) {
     });
 }
 
-// TODO: Listings cascades and deletes applications
-// TODO: Images
 function setupListingsTable(listings: Listing[]) {
   logger.debug("Setting up listings table!");
 
@@ -652,7 +649,7 @@ function setupFavouriteListingsTable(favouriteListings: FavouriteListing[]) {
 function setupImagesTable(images: Image[]) {
   logger.debug("Setting up images table!");
 
-  // 500KB b64 string size
+  // 500KB max img_b64 string size
   return db
     .query(
       `CREATE TABLE images (
