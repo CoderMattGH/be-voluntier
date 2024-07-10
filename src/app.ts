@@ -58,3 +58,18 @@ app.use(
     }
   }
 );
+
+// Catch-all remaining errors
+app.use(
+  (
+    err: CustomReqError,
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): void => {
+    logger.debug(`In catch-all error handler!`);
+    logger.error(err);
+
+    res.status(500).send({ msg: "An unknown error occurred!" });
+  }
+);
