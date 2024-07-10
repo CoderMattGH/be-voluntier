@@ -68,7 +68,31 @@ export function validateFirstLastName(name: string | undefined) {
 }
 
 export function validateOrgName(name: string | undefined) {
-  return validateFirstLastName(name);
+  // return validateFirstLastName(name);
+  if (!name) {
+    return { valid: false, msg: "Name cannot be empty!" };
+  }
+
+  if (miscValidator.isEmptyString(name)) {
+    return { valid: false, msg: "Name cannot be empty!" };
+  }
+
+  if (miscValidator.startsEndsWSpaces(name)) {
+    return { valid: false, msg: "Name cannot start or end with spaces!" };
+  }
+
+  if (
+    name.length < constants.MIN_ORG_NAME_LENGTH ||
+    name.length > constants.MAX_ORG_NAME_LENGTH
+  ) {
+    const str =
+      `Name must be between ${constants.MIN_ORG_NAME_LENGTH} and ` +
+      `${constants.MAX_ORG_NAME_LENGTH} characters in length!`;
+
+    return { valid: false, msg: str };
+  }
+
+  return { valid: true };
 }
 
 export function validateContactTel(contactTel: string | undefined) {

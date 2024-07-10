@@ -52,6 +52,30 @@
       }
     }
   },
+  "POST /api/org": {
+    "description": "Registers an organisation user.",
+    "requestBody": {
+      "email": "a-valid-unusedemail@email.com",
+      "password": "mypassword",
+      "org_name": "My Charity",
+      "org_type_id": 1,
+      "contact_tel [OPTIONAL]": "82938923",
+      "bio [OPTIONAL]": "A bio",
+      "avatar_img_b64 [OPTIONAL]": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAA"
+    },
+    "exampleResponse": {
+      "user": {
+        "org_id": 11,
+        "org_name": "My Charity",
+        "org_email": "a-valid-unusedemail@email.com",
+        "org_type": 1,
+        "org_contact_tel": "82938923",
+        "org_bio": "A bio",
+        "org_avatar_img_id": 1,
+        "org_verified": true
+      }
+    }
+  },
   "GET /api/vol/:vol_user_id": {
     "authRequired": true,
     "description": "Serves a volunteer user object for the specified :vol_user_id. Must be logged in and have the same :vol_user_id.",

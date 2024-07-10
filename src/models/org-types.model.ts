@@ -4,7 +4,7 @@ import { db } from "../db";
 export function selectOrgTypes() {
   logger.debug(`In selectOrgTypes() in org-types.model`);
 
-  let queryStr = "SELECT type_title FROM org_types";
+  let queryStr = "SELECT type_title FROM org_types;";
 
   return db.query(queryStr).then(({ rows }) => {
     if (!rows) {

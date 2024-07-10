@@ -3,7 +3,6 @@ import { db } from "../db";
 import { doesUserAccountExist } from "./misc-user.model";
 import * as registerUserValidator from "../validators/register-user.validator";
 import * as imageValidator from "../validators/image.validator";
-import * as miscValidator from "../validators/misc.validator";
 import * as imagesModel from "../models/images.model";
 import * as orgTypesModel from "../models/org-types.model";
 
@@ -47,7 +46,7 @@ export function createOrgUser(
   email: string,
   password: string,
   orgName: string,
-  orgType: string,
+  orgTypeId: number,
   contactTel: string | null,
   avatarImg: string | null,
   bio: string | null
@@ -71,7 +70,7 @@ export function createOrgUser(
   }
 
   // Validate org type
-  const orgTypeValObj = registerUserValidator.validateOrgType(orgType);
+  const orgTypeValObj = registerUserValidator.validateOrgTypeId(orgTypeId);
   if (!orgTypeValObj.valid) {
     return Promise.reject({ status: 400, msg: orgTypeValObj.msg });
   }
@@ -124,29 +123,27 @@ export function createOrgUser(
     return Promise.reject({ status: 400, msg: passValObj.msg });
   }
 
-  let foundOrgTypeId = null;
   return orgTypesModel
-    .selectOrgTypes()
+    .selectOrgTypesWithId()
     .then(({ orgTypes }) => {
-      orgType = orgType.toLowerCase();
-
-      let foundOrgType = false;
-      let foundOrgTypeId;
+      let orgTypeFound = false;
       for (const orgT of orgTypes) {
-        if (orgT.type_title.toLowerCase() === orgType) {
-          foundOrgType = true;
-          foundOrgTypeId = orgT.type_id;
-
+        if (orgTypeId === orgT.type_id) {
+          orgTypeFound = true;
           break;
         }
       }
 
-      if (!foundOrgType) {
+      if (!orgTypeFound) {
         return Promise.reject({
           status: 400,
           msg: "Organisation type does not exist and is not valid!",
         });
       }
+
+      logger.debug("Org type OK!");
+
+      logger.debug("Checking whether email already exists!");
 
       return doesUserAccountExist(email);
     })
@@ -154,6 +151,8 @@ export function createOrgUser(
       if (emailAlreadyExists) {
         return Promise.reject({ status: 400, msg: "Email already exists!" });
       }
+
+      logger.debug("Email is OK!");
 
       // Add avatar if attached
       let avatarPromise;
@@ -171,17 +170,26 @@ export function createOrgUser(
       }
 
       const queryStr = `INSERT INTO org_users (org_name, org_email, org_password, org_type, 
-        org_contact_tel, org_avatar_img_id, org_verified) 
-        VALUES ($1, $2, $3, $4, $5, $6, $7, 0) RETURNING *;`;
+        org_contact_tel, org_bio, org_avatar_img_id, org_verified) 
+        VALUES ($1, $2, $3, $4, $5, $6, $7, true) RETURNING *;`;
+
+      logger.debug("Trying to insert org_user into DB table!");
 
       return db.query(queryStr, [
         orgName,
         email,
         password,
-        foundOrgTypeId,
+        orgTypeId,
         contactTel,
+        bio,
         avatarImg,
-        false,
       ]);
+    })
+    .then(({ rows }) => {
+      if (!rows.length) {
+        return Promise.reject("An unknown error occurred!");
+      }
+
+      return rows[0];
     });
 }

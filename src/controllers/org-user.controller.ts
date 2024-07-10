@@ -47,7 +47,7 @@ export function postOrgUser(req: Request, res: Response, next: NextFunction) {
     org_name,
     email,
     password,
-    org_type,
+    org_type_id,
     contact_tel,
     avatar_img_b64,
     bio,
@@ -56,7 +56,7 @@ export function postOrgUser(req: Request, res: Response, next: NextFunction) {
   logger.debug(
     `Trying to register org where email: ${email} password: ${password} ` +
       `org_name: ${org_name} contact_tel: ${contact_tel} avatar_img_b64: ${avatar_img_b64} ` +
-      `bio: ${bio}, orgType: ${org_type}`
+      `bio: ${bio}, orgType: ${org_type_id}`
   );
 
   // Make sure user is logged out
@@ -75,7 +75,7 @@ export function postOrgUser(req: Request, res: Response, next: NextFunction) {
       email,
       password,
       org_name,
-      org_type,
+      org_type_id,
       contact_tel,
       avatar_img_b64,
       bio
@@ -83,9 +83,8 @@ export function postOrgUser(req: Request, res: Response, next: NextFunction) {
     .then((orgUserObj) => {
       logger.info(`Successfully registered organisation user: ${orgUserObj}!`);
 
-      // TODO: IMPORTANT!
       // Remove password from response
-      // delete orgUserObj.org_password;
+      delete orgUserObj.org_password;
 
       res.status(200).send({ user: orgUserObj });
 
