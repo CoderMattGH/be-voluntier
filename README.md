@@ -1,14 +1,8 @@
-## Style Guide
+<img src="https://github.com/hexmax-nc/fe-voluntier/blob/main/assets/voluntierlogo.png?raw=true" width="40%" marginLeft="auto" marginRight="auto">
 
-Please try and follow as closely as you can:
+Voluntier is a mobile app developed by [Northcoders](https://northcoders.com/) Students as the final project of the [Software Development Bootcamp](https://northcoders.com/our-courses/skills-bootcamp-in-software-development). The app connects volunteers with charity organisations that need help.
 
-https://google.github.io/styleguide/tsguide.html
-
-### Main points:
-
-* Avoid default exports.
-* Avoid redundant explicit type declaration.
-* 100 character line limit.
+**This is the backend API component of the project.**
 
 ## Running
 
@@ -26,46 +20,43 @@ Download a ready-made one @ https://github.com/CoderMattGH/voluntier-docs/tree/m
 
 ### Available environment variables
 
-* #### `PGDATABASE` 
+- #### `PGDATABASE`
 
-  *Database name.*
+  _Database name._
 
   For example: `PGDATABASE=voluntier_db`
 
+- #### `LOGL`
 
-* #### `LOGL`  
-  
-  *Log level. Can take values `debug`, `info`, `error`.*
+  _Log level. Can take values `debug`, `info`, `error`._
 
   For example: `LOGL=debug`
 
-  *Note: If you would like to remove log messages, set the level to `error`.*
-
+  _Note: If you would like to remove log messages, set the level to `error`._
 
 ### Setup database
 
 1. Set up the psql databases:
 
-    `npm run setup-dbs`
+   `npm run setup-dbs`
 
 2. Compile the project:
 
-    `npm run build`
+   `npm run build`
 
 3. Seed the database:
 
-    `npm run seed`
-
+   `npm run seed`
 
 ### Compiling and running
 
 1. Compile the project:
 
-    `npm run build`
+   `npm run build`
 
 2. Run the project:
 
-    `npm start`
+   `npm start`
 
 ## Testing
 
