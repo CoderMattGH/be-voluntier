@@ -36,7 +36,7 @@ For installation, you will need to have the following applications installed:
 
 - Make a new directory and clone the repository by running the command:
 
-  `git clone https://github.com/Joseph-Lee98/be-voluntier.git`
+  `git clone https://github.com/CoderMattGH/be-voluntier.git`
 
 ### Setup .env files and install dependencies
 
